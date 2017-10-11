@@ -70,11 +70,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)libs\glm;$(ProjectDir)libs\glew-2.1.0\include;$(ProjectDir)libs\SDL2-2.0.6\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)libs\glew-2.1.0\lib\Release\Win32;$(ProjectDir)libs\SDL2-2.0.6\lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)libs\glew-2.1.0\lib\Win32;$(ProjectDir)libs\SDL2-2.0.6\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)libs\glm;$(ProjectDir)libs\glew-2.1.0\include;$(ProjectDir)libs\SDL2-2.0.6\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)libs\glew-2.1.0\lib\Release\Win32;$(ProjectDir)libs\SDL2-2.0.6\lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)libs\glew-2.1.0\lib\Win32;$(ProjectDir)libs\SDL2-2.0.6\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
