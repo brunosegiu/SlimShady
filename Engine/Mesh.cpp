@@ -169,9 +169,6 @@ Mesh::Mesh(string path) {
 				// No more vertices, normals or texture coords to load, gen arrays on GPU
 				if (currentMtl == "") {
 					// Copy vertices to GPU
-					glGenVertexArrays(1, &handlerID);
-					glBindVertexArray(handlerID);
-
 					glGenBuffers(1, &this->verticesID);
 					glBindBuffer(GL_ARRAY_BUFFER, this->verticesID);
 					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * connectedVert, vertexBuffer, GL_STATIC_DRAW);
@@ -225,19 +222,18 @@ Mesh::Mesh(string path) {
 }
 
 void Mesh::draw() {
-	glBindVertexArray(handlerID);
-	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->verticesID);
-	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,(void*)0);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
 	for (unsigned int i = 0; i < this->indices.size(); i++) {
 		/*glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, glm::value_ptr(this->mats[i].ambient) );
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, glm::value_ptr(this->mats[i].diffuse));
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(this->mats[i].specular));*/
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[i]);
-		glDrawElements(GL_TRIANGLES,this->faces[i],	GL_UNSIGNED_INT,(void*)0);
+		glDrawElements(GL_TRIANGLES,this->faces[i]/3,	GL_UNSIGNED_INT,(void*)0);
 	}
-	glDisableVertexAttribArray(0);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 Mesh::~Mesh() {
