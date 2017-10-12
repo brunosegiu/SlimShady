@@ -4,7 +4,8 @@
 
 class World {
 	public:
-		vector<Mesh> meshes;
+		vector<Mesh*> meshes;
 		World();
 		void draw();
+		~World();
 };

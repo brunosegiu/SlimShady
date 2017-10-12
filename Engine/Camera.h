@@ -10,7 +10,7 @@ class Camera {
 		glm::vec3 pos, ref, up;
 		float yaw, pitch;
 		float width, height;
-		bool in;
+		bool in, set;
 		float moveSpeed, sensitivity;
 		int mouseX, mouseY;
 		SDL_Window* win;

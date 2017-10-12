@@ -16,7 +16,7 @@ Camera::Camera(float width, float height, SDL_Window* win) {
 	this->up = glm::vec3(0, 1, 0);
 	this->in = false;
 	this->moveSpeed = 5.0f;
-	this->sensitivity = 800.0f;
+	this->sensitivity = 80.0f;
 	this->width = width;
 	this->height = height;
 	this->win = win;
@@ -24,9 +24,14 @@ Camera::Camera(float width, float height, SDL_Window* win) {
 	SDL_GetMouseState(&mouseX, &mouseY);
 	gluLookAt(pos.x, pos.y, pos.z, ref.x, ref.y, ref.z, up.x, up.y, up.z);
 	this->lastUpdate = std::clock();
+	this->set = false;
 }
 
 void Camera::update() {
+	if (!set) {
+		set = true;
+		SDL_WarpMouseInWindow(win, unsigned int(width / 2), unsigned int(height / 2));
+	}
 	if (in) {
 		float dur = (std::clock() - lastUpdate) / (double)CLOCKS_PER_SEC;
 		const Uint8* state = SDL_GetKeyboardState(NULL);
