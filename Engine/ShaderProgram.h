@@ -9,6 +9,7 @@ El programa que est'e bindeado determina que shaders se usan al llamar a draw()
 class ShaderProgram{
 public:
     ShaderProgram();
+	ShaderProgram(std::string vertPath, std::string fragPath);
     bool bind();
     void unbind();
     GLuint getId();

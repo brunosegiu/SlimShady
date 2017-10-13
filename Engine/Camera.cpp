@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-Camera::Camera(float width, float height, SDL_Window* win) {
+Camera::Camera(float width, float height, float fov, SDL_Window* win) {
 	this->pos = glm::vec3(5, 5, 5);
 	this->ref = glm::vec3(0, 0, 0);
 	this->up = glm::vec3(0, 1, 0);
@@ -20,11 +20,11 @@ Camera::Camera(float width, float height, SDL_Window* win) {
 	this->width = width;
 	this->height = height;
 	this->win = win;
-	int mouseX, mouseY;
-	SDL_GetMouseState(&mouseX, &mouseY);
-	gluLookAt(pos.x, pos.y, pos.z, ref.x, ref.y, ref.z, up.x, up.y, up.z);
 	this->lastUpdate = std::clock();
 	this->set = false;
+
+	this->projectionMatrix = glm::perspective(glm::radians(fov), width / height, 0.1f, 100.0f);
+	this->modelViewProjectionMatrix = this->projectionMatrix * glm::lookAt(pos, ref, up);
 }
 
 void Camera::update() {
@@ -71,6 +71,6 @@ void Camera::update() {
 		mouseX = unsigned int(width / 2);
 		mouseY = unsigned int(height / 2);
 	}
-	gluLookAt(pos.x, pos.y, pos.z, ref.x, ref.y, ref.z, up.x, up.y, up.z);
+	this->modelViewProjectionMatrix = this->projectionMatrix * glm::lookAt(pos, ref, up);
 	this->lastUpdate = clock();
 }

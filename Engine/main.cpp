@@ -24,8 +24,8 @@ int HEIGHT = 720;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	window = SDL_CreateWindow("Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
@@ -48,20 +48,11 @@ void initGL() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_LIGHT0);
-	glEnable(GL_FLAT);
 }
 
-void draw(World &w, Camera &cam) {
+void draw(World &w) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	GLfloat spec[] = { 0.0, 0.0, 0.0, 0.0 };
-	GLfloat dif[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat pos[] = { -1.0, 1.0, 0.0, 0.0 };
-	glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
-	glLightfv(GL_LIGHT0, GL_POSITION, pos);
-	cam.update();	
 	w.draw();
 }
 
@@ -76,12 +67,12 @@ int main(int argc, char* argv[]) {
 	bool exit = false;
 	bool wireframe = false;
 	SDL_Event event;
-	World test;
-	double frameTime = 1000.0f / 65.0f;
-
-	Camera cam = Camera(WIDTH, HEIGHT, window);
 	
-	test.meshes.push_back(new Mesh("assets/models/stormtrooper"));
+	double frameTime = 1000.0f / 65.0f;
+	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
+	World test = World(cam);
+
+	test.worldEntities.push_back(new Entity(new Mesh("assets/models/teapot")));
 	
 	std::clock_t start;
 	while (!exit) {
@@ -109,8 +100,8 @@ int main(int argc, char* argv[]) {
 				}
 				break;
 				case SDL_MOUSEBUTTONDOWN: {
-					cam.in = !cam.in;
-					if (cam.in) {
+					cam->in = !cam->in;
+					if (cam->in) {
 						SDL_ShowCursor(SDL_DISABLE);
 					}
 					else
@@ -119,7 +110,7 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
-		draw(test, cam);
+		draw(test);
 		double dif = frameTime - ((clock() - start) * (1000.0 / double(CLOCKS_PER_SEC)) );
 		if (dif > 0) {
 			Sleep(int(dif));

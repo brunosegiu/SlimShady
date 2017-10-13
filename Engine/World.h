@@ -1,11 +1,17 @@
 #pragma once
 
-#include "Mesh.h"
+#include "Entity.h"
+#include "Camera.h"
+#include "ShaderProgram.h"
 
 class World {
 	public:
-		vector<Mesh*> meshes;
-		World();
+		vector<Entity*> worldEntities;
+		Camera* cam;
+		
+		ShaderProgram* basic;
+
+		World(Camera* cam);
 		void draw();
 		~World();
 };

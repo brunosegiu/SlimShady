@@ -1,4 +1,5 @@
 #include "ShaderProgram.h"
+
 #include <fstream>
 #include <iostream>
 
@@ -9,6 +10,18 @@ ShaderProgram::ShaderProgram(){
 	geometryId = NULL;
 }
 
+ShaderProgram::ShaderProgram(std::string vertPath, std::string fragPath){
+	programId = NULL; //NULL = 0
+	vertexId = NULL;
+	fragmentId = NULL;
+	geometryId = NULL;
+	this->loadShader(vertPath, GL_VERTEX_SHADER);
+	this->loadShader(fragPath, GL_FRAGMENT_SHADER);
+	if (!this->loadProgram()) {
+		printf("Unable to load shader!\n");
+	}
+}
+
 GLuint ShaderProgram::getId(){
     return programId;
 }
@@ -17,8 +30,8 @@ bool ShaderProgram::bind() {
 	glUseProgram(programId);
 	GLenum err = glGetError();
 	if (err != GLEW_NO_ERROR) {
-		printf("Error binding shader! %s\n", gluErrorString(err));
-		printProgramLog();
+		//printf("Error binding shader! %s\n", gluErrorString(err));
+		//printProgramLog();
 		return false;
 	}
 	return true;

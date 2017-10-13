@@ -213,7 +213,22 @@ Mesh::Mesh(string path) {
 			glBindBuffer(GL_ARRAY_BUFFER, this->textID);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * (connectedVert / 3), finalTextureBuffer, GL_STATIC_DRAW);
 		}
-		
+
+		//Set up the VAO
+		glGenVertexArrays(1, &vaoID);
+		glBindVertexArray(vaoID);
+		//Bind Vertices
+		glBindBuffer(GL_ARRAY_BUFFER, this->verticesID);
+		glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		//Bind Normals
+		glBindBuffer(GL_ARRAY_BUFFER, this->normalsID);
+		glVertexAttribPointer(1,3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		//Bind textures
+		if (textureCoords > 0) {
+			glBindBuffer(GL_ARRAY_BUFFER, this->textID);
+			glVertexAttribPointer(2,2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		}
+			
 		if (currentMtl != "" && indices.size() < inserted) {
 			// Copy indices since the last one wont be copied.
 			this->indices.push_back(0);
@@ -241,30 +256,23 @@ Mesh::Mesh(string path) {
 	}
 }
 
-void Mesh::draw() {
-	glBindBuffer(GL_ARRAY_BUFFER, this->verticesID);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, (void*)0);
-	glBindBuffer(GL_ARRAY_BUFFER, this->normalsID);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glNormalPointer(GL_FLOAT, 0, (void*)0);
-	if (this->textures) {
-		glBindBuffer(GL_ARRAY_BUFFER, this->textID);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glTexCoordPointer(2, GL_FLOAT, 0, (void*)0);
+void Mesh::draw(GLuint shaderID) {
+	glBindVertexArray(vaoID);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	if (textures) {
+		glActiveTexture(GL_TEXTURE0);
+		glEnableVertexAttribArray(2);
 	}
+	GLuint textured = glGetUniformLocation(shaderID, "isTextured");
+	GLuint kd = glGetUniformLocation(shaderID, "Kd");
 	for (unsigned int i = 0; i < this->indices.size(); i++) {
+		glUniform1i(textured, this->mats[i]->isTextured);
 		if (this->mats[i]->isTextured) {
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, this->mats[i]->textID);
 		}
-		else {
-			glColor3f(this->mats[i]->diffuse.x, this->mats[i]->diffuse.y, this->mats[i]->diffuse.z);
-		}
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, &mats[i]->ambient.x);
-		/*GLfloat dif[] = {1.0f,1.0f,1.0f };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);*/
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, &mats[i]->specular.x);
+		glUniform3f(kd,this->mats[i]->diffuse.x, this->mats[i]->diffuse.y, this->mats[i]->diffuse.z);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[i]);
 		glDrawElements(GL_TRIANGLES,this->faces[i],	GL_UNSIGNED_INT,(void*)0);
 		if (this->mats[i]->isTextured) {
@@ -272,10 +280,10 @@ void Mesh::draw() {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 	}
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	if (this->textures)
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	if (textures)
+		glDisableVertexAttribArray(2);
 }
 
 Mesh::~Mesh() {
@@ -283,6 +291,7 @@ Mesh::~Mesh() {
 	glDeleteBuffers(1, &this->normalsID);
 	if (this->textures)
 		glDeleteBuffers(1, &this->textID);
+	glDeleteVertexArrays(1, &vaoID);
 	for (unsigned int i = 0; i < this->indices.size(); i++) {
 		glDeleteBuffers(1, &this->indices[i]);
 		delete mats[i];
