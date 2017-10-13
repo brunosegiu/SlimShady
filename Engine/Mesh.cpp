@@ -258,20 +258,24 @@ void Mesh::draw() {
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, this->mats[i]->textID);
 		}
+		else {
+			glColor3f(this->mats[i]->diffuse.x, this->mats[i]->diffuse.y, this->mats[i]->diffuse.z);
+		}
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, &mats[i]->ambient.x);
-		GLfloat dif[] = {1.0f,1.0f,1.0f };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);
+		/*GLfloat dif[] = {1.0f,1.0f,1.0f };
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);*/
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, &mats[i]->specular.x);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[i]);
 		glDrawElements(GL_TRIANGLES,this->faces[i],	GL_UNSIGNED_INT,(void*)0);
 		if (this->mats[i]->isTextured) {
 			glDisable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 	}
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	if (this->textures)
-		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 Mesh::~Mesh() {

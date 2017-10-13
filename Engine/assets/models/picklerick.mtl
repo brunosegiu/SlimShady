@@ -10,6 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 6
+map_Kd assets/textures/pickerickbody.tif
 
 newmtl Highpoly_Highpoly_blinnSG
 Ns 96.078431
@@ -20,7 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 6
-map_Kd assets/textures/pickerickbody.tif
+#map_Kd assets/textures/pickerickbody.tif
 
 newmtl eye_4_eye_4_blinnSG
 Ns 96.078431
@@ -31,4 +32,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd assets/textures/picklerickeye.tif
+#map_Kd assets/textures/picklerickeye.tif
