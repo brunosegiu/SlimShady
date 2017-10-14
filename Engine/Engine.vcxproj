@@ -148,8 +148,12 @@
   <ItemGroup>
     <None Include="assets\shaders\basic.frag" />
     <None Include="assets\shaders\basic.vert" />
+    <None Include="assets\shaders\dirLightPass.frag" />
+    <None Include="assets\shaders\dirLightPass.vert" />
     <None Include="assets\shaders\geometryPass.frag" />
     <None Include="assets\shaders\geometryPass.vert" />
+    <None Include="assets\shaders\pointLightPass.frag" />
+    <None Include="assets\shaders\pointLightPass.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
