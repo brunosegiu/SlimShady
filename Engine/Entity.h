@@ -10,10 +10,14 @@ class Entity {
 	public:
 		Entity(Mesh* mesh);
 		//Entity(Animation* anim);
-		void applyTransform(glm::mat4 &transform);
+		void rotate(float angle, glm::vec3 &dir);
+		void translate(glm::vec3 &trs);
+		void scale(glm::vec3 &scale);
+		void scaleInOrigin(glm::vec3 &scale);
 		void draw(GLuint shaderID);
 		~Entity();
 
 		glm::mat4 modelMatrix;
+		glm::mat4 normalRotations;
 		Mesh* mesh;
 };

@@ -27,7 +27,7 @@ void init() {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	window = SDL_CreateWindow("Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
+	window = SDL_CreateWindow("SlimShady", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	context = SDL_GL_CreateContext(window);
 	glewExperimental = GL_TRUE;
@@ -53,7 +53,7 @@ void initGL() {
 void draw(World &w) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	w.draw();
+	w.dummyDraw(); // Using basic shading
 }
 
 void close() {
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
 	World test = World(cam);
 
-	test.worldEntities.push_back(new Entity(new Mesh("assets/models/teapot")));
+	test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
 	
 	std::clock_t start;
 	while (!exit) {

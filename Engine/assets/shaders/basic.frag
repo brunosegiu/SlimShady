@@ -1,14 +1,25 @@
 #version 330 core
 
-uniform sampler2D tex;
-
 in vec3 normalToFrag;
-in vec2 textCoord;
-in vec4 baseColor;
+in vec2 textCoordFrag;
 
 out vec4 color;
 
+uniform bool isTextured;
+uniform sampler2D textSampler;
+uniform vec3 Kd;
+
 void main() {
-	vec3 directional = vec3(1.0f,0.0f,0.0f); 
-	color = baseColor * dot(normalToFrag, directional);
+	vec3 directional = vec3(0.0f,0.0f,1.0f); 
+	vec4 baseColor;
+	if (isTextured){
+	    baseColor = texture(textSampler, textCoordFrag);
+	}else{
+		baseColor = vec4(Kd,1);
+	}
+	float coef = dot(normalToFrag, directional);
+	if (coef > 0.0f)
+		color = baseColor * coef;
+	else
+		color = vec4(0.0f,0.0f,0.0f,0.0f);
 }

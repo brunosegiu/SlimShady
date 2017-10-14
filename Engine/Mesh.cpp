@@ -80,6 +80,19 @@ vector<Material*> loadMtl(string path) {
 	}
 }
 
+void push(std::vector<float> &v, int cant) {
+	for (int i = 0; i < cant; i++) {
+		v.push_back(0);
+	}
+}
+
+void push(std::vector<unsigned int> &v, int cant) {
+	for (int i = 0; i < cant; i++) {
+		v.push_back(0);
+	}
+}
+
+
 Mesh::Mesh(string path) {
 	float* normals;
 	float* faces;
@@ -97,15 +110,15 @@ Mesh::Mesh(string path) {
 
 		string currentMtl = "";
 
-		float* vertexBuffer = new float[fileSize];
-		float* textureBuffer = new float[fileSize];
-		float* normalBuffer = new float[fileSize];
-		float* finalNormalBuffer = new float[fileSize];
-		float* finalTextureBuffer = new float[fileSize];
+		vector<float> vertexBuffer;
+		vector<float> textureBuffer;
+		vector<float> normalBuffer;
+		vector<float> finalNormalBuffer;
+		vector<float> finalTextureBuffer;
 
-		unsigned int* vertexIndices = new unsigned int[fileSize];
-		unsigned int* normalIndices = new unsigned int[fileSize];
-		unsigned int* textureIndices = new unsigned int[fileSize];
+		vector<unsigned int> vertexIndices;
+		vector<unsigned int> normalIndices;
+		vector<unsigned int> textureIndices;
 
 		int connectedVert = 0;
 		int textureCoords = 0;
@@ -119,6 +132,7 @@ Mesh::Mesh(string path) {
 			getline(objFile, line);
 			if (line.c_str()[0] == 'v' && line.c_str()[1] == ' ') {
 				line[0] = ' ';
+				push(vertexBuffer, 3);
 				sscanf_s(line.c_str(), "%f %f %f ",
 					&vertexBuffer[connectedVert],
 					&vertexBuffer[connectedVert + 1],
@@ -128,6 +142,7 @@ Mesh::Mesh(string path) {
 			else if (line.c_str()[0] == 'v' && line.c_str()[1] == 't') {
 				line[0] = ' ';
 				line[1] = ' ';
+				push(textureBuffer, 2);
 				sscanf_s(line.c_str(), "%f %f ",
 					&textureBuffer[textureCoords],
 					&textureBuffer[textureCoords + 1]);
@@ -136,6 +151,7 @@ Mesh::Mesh(string path) {
 			else if (line.c_str()[0] == 'v' && line.c_str()[1] == 'n') {
 				line[0] = ' ';
 				line[1] = ' ';
+				push(normalBuffer, 3);
 				sscanf_s(line.c_str(), "%f %f %f ",
 					&normalBuffer[normalsCount],
 					&normalBuffer[normalsCount + 1],
@@ -144,8 +160,12 @@ Mesh::Mesh(string path) {
 			}
 			else if (line.c_str()[0] == 'f') {
 				line[0] = ' ';
+
+				push(vertexIndices, 3);
+				push(normalIndices, 3);
 				
 				if (textureCoords > 0) {
+					push(textureIndices, 3);
 					sscanf_s(line.c_str(), "%i/%i/%i %i/%i/%i %i/%i/%i",
 						&vertexIndices[vertexIndex], &textureIndices[vertexIndex], &normalIndices[vertexIndex],
 						&vertexIndices[vertexIndex + 1], &textureIndices[vertexIndex +1], &normalIndices[vertexIndex +1],
@@ -164,7 +184,10 @@ Mesh::Mesh(string path) {
 					normalIndices[vertexIndex +j] -= 1;
 					textureIndices[vertexIndex +j] -= 1;
 				}
-
+				
+				if (finalNormalBuffer.size() < vertexBuffer.size()) {
+					push(finalNormalBuffer, vertexBuffer.size() - finalNormalBuffer.size());
+				}
 				// Since OpenGL doesn't support normal/texture indirection, set a normal per vertex (and a text coord)
 				for (int i = 0; i < 3; i++) {
 					for (int j = 0; j < 3; j++) {
@@ -172,6 +195,9 @@ Mesh::Mesh(string path) {
 					}
 				}
 				if (textureCoords > 0) {
+					if (finalTextureBuffer.size() < vertexBuffer.size()) {
+						push(finalTextureBuffer, 2*vertexBuffer.size()/3 - finalTextureBuffer.size());
+					}
 					for (int i = 0; i < 3; i++) {
 						for (int j = 0; j < 2; j++) {
 							finalTextureBuffer[2 * (vertexIndices[vertexIndex + i]) + j] = textureBuffer[2 * textureIndices[vertexIndex + i] + j];
@@ -190,7 +216,7 @@ Mesh::Mesh(string path) {
 					this->faces.push_back(vertexIndex);
 					glGenBuffers(1, &this->indices[this->indices.size() - 1]);
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[this->indices.size() - 1]);
-					glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexIndex, vertexIndices, GL_STATIC_DRAW);
+					glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexIndex, &vertexIndices[0], GL_STATIC_DRAW);
 				}
 				currentMtl = line.substr(7, line.length());
 				vertexIndex = 0;
@@ -200,18 +226,18 @@ Mesh::Mesh(string path) {
 		//Copy vertices to GPU
 		glGenBuffers(1, &this->verticesID);
 		glBindBuffer(GL_ARRAY_BUFFER, this->verticesID);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * connectedVert, vertexBuffer, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * connectedVert, &vertexBuffer[0], GL_STATIC_DRAW);
 
 		//Copy normals to GPU
 		glGenBuffers(1, &this->normalsID);
 		glBindBuffer(GL_ARRAY_BUFFER, this->normalsID);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * connectedVert, finalNormalBuffer, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * connectedVert, &finalNormalBuffer[0], GL_STATIC_DRAW);
 
 		//Copy UV to GPU
 		if (textureCoords > 0) {
 			glGenBuffers(1, &this->textID);
 			glBindBuffer(GL_ARRAY_BUFFER, this->textID);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * (connectedVert / 3), finalTextureBuffer, GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * (connectedVert / 3), &finalTextureBuffer[0], GL_STATIC_DRAW);
 		}
 
 		//Set up the VAO
@@ -235,20 +261,10 @@ Mesh::Mesh(string path) {
 			this->faces.push_back(vertexIndex);
 			glGenBuffers(1, &this->indices[this->indices.size() - 1]);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[this->indices.size() - 1]);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexIndex, vertexIndices, GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexIndex, &vertexIndices[0], GL_STATIC_DRAW);
 		}
 
 		objFile.close();
-		delete[] vertexBuffer;
-		delete[] textureBuffer;
-		delete[] normalBuffer;
-		delete[] finalTextureBuffer;
-		delete[] finalNormalBuffer;
-
-		delete[] vertexIndices;
-		delete[] normalIndices;
-		delete[] textureIndices;
-
 		this->textures = textureCoords > 0;
 	}
 	else {
