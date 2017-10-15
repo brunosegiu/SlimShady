@@ -6,11 +6,13 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "GBuffer.h"
+#include "FreeMesh.h"
 
 class World {
 	public:
 		// Entidades
 		vector<Entity*> worldEntities;
+		vector<FreeMesh> meshes;
 		Camera* cam;
 
 		//Luces
@@ -18,6 +20,7 @@ class World {
 		
 		//Shaders
 		ShaderProgram* basic;
+		ShaderProgram* veryBasic;
 
 		//Deferred Shading
 		ShaderProgram* geomertyPassShader;

@@ -8,7 +8,7 @@ World::World(Camera* cam) {
 	
 	//Shaders
 	this->basic = new ShaderProgram("assets/shaders/basic.vert", "assets/shaders/basic.frag");
-
+	this->veryBasic = new ShaderProgram("assets/shaders/veryBasic.vert", "assets/shaders/veryBasic.frag");
 	this->geomertyPassShader = new ShaderProgram("assets/shaders/geometryPass.vert", "assets/shaders/geometryPass.frag");
 	this->gbuf = new GBuffer(cam->width, cam->height);
 }
@@ -77,6 +77,14 @@ void World::dummyDraw() {
 		glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &modelTransf[0][0]);
 		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 		this->worldEntities[i]->draw(basic->getId());
+	}
+
+	this->veryBasic->bind();
+	worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
+	for (unsigned int j = 0; j < meshes.size(); j++) {
+		glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
+		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+		this->meshes[j].draw(veryBasic->getId());
 	}
 }
 

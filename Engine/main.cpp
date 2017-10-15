@@ -19,8 +19,8 @@ void close();
 SDL_Window* window = NULL;
 SDL_GLContext context;
 
-int WIDTH = 1280;
-int HEIGHT = 720;
+int WIDTH = 800;
+int HEIGHT = 600;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -73,6 +73,27 @@ int main(int argc, char* argv[]) {
 	World test = World(cam);
 
 	test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
+
+	/*float coords[] = {
+		0.0f,0.0f,0.0f,
+		50.0f,0.0f,0.0f,
+		50.0f,0.0f,50.0f
+	};
+	vector<float> positions (coords, coords + sizeof(coords) / sizeof(coords[0]));*/
+	vector<float> positions;
+	positions.push_back(0.0f);
+	positions.push_back(0.0f);
+	positions.push_back(0.0f);
+	
+	positions.push_back(50.0f);
+	positions.push_back(0.0f);
+	positions.push_back(0.0f);
+
+	positions.push_back(50.0f);
+	positions.push_back(0.0f);
+	positions.push_back(50.0f);
+
+	test.meshes.push_back(FreeMesh(positions));
 	
 	std::clock_t start;
 	while (!exit) {
