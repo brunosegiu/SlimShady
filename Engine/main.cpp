@@ -74,26 +74,16 @@ int main(int argc, char* argv[]) {
 
 	test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
 
-	/*float coords[] = {
+	float coords[] = {
 		0.0f,0.0f,0.0f,
-		50.0f,0.0f,0.0f,
-		50.0f,0.0f,50.0f
+		10.0f,0.0f,0.0f,
+		10.0f,0.0f,-10.0f,
+		0.0f,0.0f,-10.0f
 	};
-	vector<float> positions (coords, coords + sizeof(coords) / sizeof(coords[0]));*/
-	vector<float> positions;
-	positions.push_back(0.0f);
-	positions.push_back(0.0f);
-	positions.push_back(0.0f);
-	
-	positions.push_back(50.0f);
-	positions.push_back(0.0f);
-	positions.push_back(0.0f);
-
-	positions.push_back(50.0f);
-	positions.push_back(0.0f);
-	positions.push_back(50.0f);
-
-	test.meshes.push_back(FreeMesh(positions));
+	vector<float> positions (coords, coords + sizeof(coords) / sizeof(coords[0]));
+	unsigned int indices[] = { 0,1,2,2,3,0 };
+	vector<unsigned int> index(indices, indices + sizeof(indices) / sizeof(indices[0]));
+	test.meshes.push_back(new FreeMesh(positions,index));
 	
 	std::clock_t start;
 	while (!exit) {

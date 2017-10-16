@@ -12,7 +12,7 @@ class World {
 	public:
 		// Entidades
 		vector<Entity*> worldEntities;
-		vector<FreeMesh> meshes;
+		vector<FreeMesh*> meshes;
 		Camera* cam;
 
 		//Luces

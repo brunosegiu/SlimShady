@@ -6,12 +6,12 @@
 
 class FreeMesh {
 public:
-	GLuint verticesID, normalsID, vaoID;
-	unsigned int vertexCount;
-
+	GLuint verticesID, normalsID, vaoID, shaderID;
+	unsigned int vertexCount, indexCount;
 public:
-	FreeMesh(std::vector<float> positions/*, GLenum type, unsigned int grouping*/);
-	void draw(GLuint shaderID);
+	FreeMesh(std::vector<float> positions, std::vector<unsigned int>/*, GLenum type, unsigned int grouping*/);
+	void setShader(GLuint shaderID); //No se si poner un puntero al shader que usa
+	void draw();
 	~FreeMesh();
 };
 

@@ -84,7 +84,7 @@ void World::dummyDraw() {
 	for (unsigned int j = 0; j < meshes.size(); j++) {
 		glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
 		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-		this->meshes[j].draw(veryBasic->getId());
+		this->meshes[j]->draw();
 	}
 }
 
