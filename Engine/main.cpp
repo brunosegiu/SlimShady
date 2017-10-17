@@ -46,7 +46,7 @@ void initGL() {
 	glEnable(GL_LIGHTING);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_LIGHT0);
 }
 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 
 	test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
 
-	float coords[] = {
+	/*float coords[] = {
 		0.0f,0.0f,0.0f,
 		10.0f,0.0f,0.0f,
 		10.0f,0.0f,-10.0f,
@@ -82,7 +82,27 @@ int main(int argc, char* argv[]) {
 	};
 	vector<float> positions (coords, coords + sizeof(coords) / sizeof(coords[0]));
 	unsigned int indices[] = { 0,1,2,2,3,0 };
-	vector<unsigned int> index(indices, indices + sizeof(indices) / sizeof(indices[0]));
+	vector<unsigned int> index(indices, indices + sizeof(indices) / sizeof(indices[0]));*/
+	vector<float> positions;
+	vector<unsigned int> index;
+	for (unsigned int i = 0; i <= 10; i++) {
+		for (unsigned int j = 0; j <= 10; j++) {
+			positions.push_back((float)-5+j);
+			positions.push_back(0.0f);
+			positions.push_back((float)-5+i);
+		}
+	}
+	for (unsigned int i = 0; i <= 9; i++) {
+		for (unsigned int j = 0; j <= 9; j++) {
+			index.push_back(i * 11 + j);
+			index.push_back(i * 11 + j + 1);
+			index.push_back(i * 11 + j + 11 +1);
+
+			index.push_back(i * 11 + j + 11 + 1);
+			index.push_back(i * 11 + j + 11);
+			index.push_back(i * 11 + j);
+		}
+	}
 	test.meshes.push_back(new FreeMesh(positions,index));
 	
 	std::clock_t start;
