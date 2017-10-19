@@ -29,7 +29,7 @@ class World {
 	public:
 		World(Camera* cam);
 		void draw(); // Deferred shading
-		void dummyDraw(); // Basic shading
+		void dummyDraw(float time); // Basic shading
 		~World();
 	private:
 		void geomertyPass();

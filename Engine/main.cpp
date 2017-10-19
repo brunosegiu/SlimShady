@@ -50,11 +50,11 @@ void initGL() {
 	glEnable(GL_LIGHT0);
 }
 
-void draw(World &w) {
+/*void draw(World &w) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	w.dummyDraw(); // Using basic shading
-}
+}*/
 
 void close() {
 	SDL_DestroyWindow(window);
@@ -85,17 +85,17 @@ int main(int argc, char* argv[]) {
 	vector<unsigned int> index(indices, indices + sizeof(indices) / sizeof(indices[0]));*/
 	vector<float> positions;
 	vector<unsigned int> index;
-	for (unsigned int i = 0; i <= 10; i++) {
+	for (unsigned int i = 0; i <= 10; i++) {  //n = 100
 		for (unsigned int j = 0; j <= 10; j++) {
-			positions.push_back((float)-5+j);
+			positions.push_back((float)-5+j); // n/2 = 50
 			positions.push_back(0.0f);
 			positions.push_back((float)-5+i);
 		}
 	}
 	for (unsigned int i = 0; i <= 9; i++) {
-		for (unsigned int j = 0; j <= 9; j++) {
+		for (unsigned int j = 0; j <= 9; j++) { //n-1 = 99
 			index.push_back(i * 11 + j);
-			index.push_back(i * 11 + j + 1);
+			index.push_back(i * 11 + j + 1); //n+1 = 101
 			index.push_back(i * 11 + j + 11 +1);
 
 			index.push_back(i * 11 + j + 11 + 1);
@@ -106,6 +106,8 @@ int main(int argc, char* argv[]) {
 	test.meshes.push_back(new FreeMesh(positions,index));
 	
 	std::clock_t start;
+	std::clock_t wave = clock();
+	//std::time_t  timev;
 	while (!exit) {
 		start = clock();
 		while (SDL_PollEvent(&event) != 0) {
@@ -141,7 +143,10 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
-		draw(test);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		test.dummyDraw(float((clock()-wave)*0.001));
+		//draw(test);
 		double dif = frameTime - ((clock() - start) * (1000.0 / double(CLOCKS_PER_SEC)) );
 		if (dif > 0) {
 			Sleep(int(dif));

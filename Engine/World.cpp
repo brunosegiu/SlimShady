@@ -2,13 +2,14 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <ctime>
 
 World::World(Camera* cam) {
 	this->cam = cam;
 	
 	//Shaders
 	this->basic = new ShaderProgram("assets/shaders/basic.vert", "assets/shaders/basic.frag");
-	this->veryBasic = new ShaderProgram("assets/shaders/veryBasic.vert", "assets/shaders/veryBasic.frag");
+	this->veryBasic = new ShaderProgram("assets/shaders/sinusoide.vert", "assets/shaders/veryBasic.frag");
 	this->geomertyPassShader = new ShaderProgram("assets/shaders/geometryPass.vert", "assets/shaders/geometryPass.frag");
 	this->gbuf = new GBuffer(cam->width, cam->height);
 }
@@ -62,7 +63,7 @@ void World::draw() {
 	lightPass();
 }
 
-void World::dummyDraw() {
+void World::dummyDraw(float time) {
 	this->cam->update();
 	this->basic->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -81,6 +82,9 @@ void World::dummyDraw() {
 
 	this->veryBasic->bind();
 	worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
+	GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
+	glUniform1f(phiID, time);
+	//printf("%f\n", time);
 	for (unsigned int j = 0; j < meshes.size(); j++) {
 		glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
 		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
