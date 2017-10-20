@@ -9,7 +9,11 @@ World::World(Camera* cam) {
 	
 	//Shaders
 	this->basic = new ShaderProgram("assets/shaders/basic.vert", "assets/shaders/basic.frag");
-	this->veryBasic = new ShaderProgram("assets/shaders/sinusoide.vert", "assets/shaders/veryBasic.frag");
+	this->veryBasic = new ShaderProgram();
+	this->veryBasic->loadShader("assets/shaders/sinusoide.vert", GL_VERTEX_SHADER);
+	this->veryBasic->loadShader("assets/shaders/sinusoide.geo", GL_GEOMETRY_SHADER);
+	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
+	this->veryBasic->loadProgram();
 	this->geomertyPassShader = new ShaderProgram("assets/shaders/geometryPass.vert", "assets/shaders/geometryPass.frag");
 	this->gbuf = new GBuffer(cam->width, cam->height);
 }
