@@ -31,6 +31,12 @@
     <ClCompile Include="GBuffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="FreeMesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -60,6 +66,12 @@
     <ClInclude Include="GBuffer.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="FreeMesh.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\basic.frag">
@@ -84,6 +96,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\pointLightPass.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\veryBasic.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\veryBasic.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\sinusoide.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\sinusoide.geo">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

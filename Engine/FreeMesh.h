@@ -9,6 +9,7 @@ public:
 	GLuint verticesID, normalsID, vaoID, shaderID;
 	unsigned int vertexCount, indexCount;
 public:
+	FreeMesh();
 	FreeMesh(std::vector<float> positions, std::vector<unsigned int>/*, GLenum type, unsigned int grouping*/);
 	void setShader(GLuint shaderID); //No se si poner un puntero al shader que usa
 	void draw();

@@ -6,13 +6,13 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "GBuffer.h"
-#include "FreeMesh.h"
+#include "Water.h"
 
 class World {
 	public:
 		// Entidades
 		vector<Entity*> worldEntities;
-		vector<FreeMesh*> meshes;
+		Water water;
 		Camera* cam;
 
 		//Luces

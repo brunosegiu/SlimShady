@@ -11,7 +11,7 @@ World::World(Camera* cam) {
 	this->basic = new ShaderProgram("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 	this->veryBasic = new ShaderProgram();
 	this->veryBasic->loadShader("assets/shaders/sinusoide.vert", GL_VERTEX_SHADER);
-	this->veryBasic->loadShader("assets/shaders/sinusoide.geo", GL_GEOMETRY_SHADER);
+	//this->veryBasic->loadShader("assets/shaders/sinusoide.geo", GL_GEOMETRY_SHADER);
 	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
 	this->veryBasic->loadProgram();
 	this->geomertyPassShader = new ShaderProgram("assets/shaders/geometryPass.vert", "assets/shaders/geometryPass.frag");
@@ -87,13 +87,14 @@ void World::dummyDraw(float time) {
 	this->veryBasic->bind();
 	worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
 	GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
+	GLuint camID = glGetUniformLocation(veryBasic->getId(), "cameraPos");
+	glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
+	glm::vec3 camPos = this->cam->pos;
 	glUniform1f(phiID, time);
-	//printf("%f\n", time);
-	for (unsigned int j = 0; j < meshes.size(); j++) {
-		glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
-		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-		this->meshes[j]->draw();
-	}
+	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+	glUniform3fv(camID, 1, &camPos[0]);
+	this->water.mesh.draw();
+	
 }
 
 

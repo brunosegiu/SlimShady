@@ -72,38 +72,9 @@ int main(int argc, char* argv[]) {
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
 	World test = World(cam);
 
-	test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
+	//test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
 
-	/*float coords[] = {
-		0.0f,0.0f,0.0f,
-		10.0f,0.0f,0.0f,
-		10.0f,0.0f,-10.0f,
-		0.0f,0.0f,-10.0f
-	};
-	vector<float> positions (coords, coords + sizeof(coords) / sizeof(coords[0]));
-	unsigned int indices[] = { 0,1,2,2,3,0 };
-	vector<unsigned int> index(indices, indices + sizeof(indices) / sizeof(indices[0]));*/
-	vector<float> positions;
-	vector<unsigned int> index;
-	for (unsigned int i = 0; i <= 10; i++) {  //n = 100
-		for (unsigned int j = 0; j <= 10; j++) {
-			positions.push_back((float)-5+j); // n/2 = 50
-			positions.push_back(0.0f);
-			positions.push_back((float)-5+i);
-		}
-	}
-	for (unsigned int i = 0; i <= 9; i++) {
-		for (unsigned int j = 0; j <= 9; j++) { //n-1 = 99
-			index.push_back(i * 11 + j);
-			index.push_back(i * 11 + j + 1); //n+1 = 101
-			index.push_back(i * 11 + j + 11 +1);
-
-			index.push_back(i * 11 + j + 11 + 1);
-			index.push_back(i * 11 + j + 11);
-			index.push_back(i * 11 + j);
-		}
-	}
-	test.meshes.push_back(new FreeMesh(positions,index));
+	test.water = Water();
 	
 	std::clock_t start;
 	std::clock_t wave = clock();
