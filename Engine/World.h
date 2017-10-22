@@ -7,12 +7,14 @@
 #include "ShaderProgram.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "FreeMesh.h"
 
 class World {
 	public:
 		// Entidades
 		std::vector<Entity*> meshes;
 		std::vector<Entity*> meshes_nm;
+		std::vector<Entity*> meshes_free;
 		Camera* cam;
 
 		//Luces
@@ -21,9 +23,10 @@ class World {
 		//Shaders
 		ShaderProgram* basic;
 		ShaderProgram* basicNM;
+		ShaderProgram* veryBasic;
 
 	public:
 		World(Camera* cam);
-		void draw(); // Basic shading
+		void draw();
 		~World();
 };

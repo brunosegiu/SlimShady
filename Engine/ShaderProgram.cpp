@@ -45,8 +45,11 @@ bool ShaderProgram::loadProgram() {
 	GLint success = GL_TRUE;
 	programId = glCreateProgram();
 	if (vertexId) glAttachShader(programId, vertexId);
-	if (fragmentId) glAttachShader(programId, fragmentId);
 	if (geometryId) glAttachShader(programId, geometryId);
+	if (fragmentId) glAttachShader(programId, fragmentId);
+
+	glGetProgramiv(programId, GL_ATTACHED_SHADERS, &success);
+	printf("%i", success);
 
 	glLinkProgram(programId);
 	glGetProgramiv(programId, GL_LINK_STATUS, &success);
@@ -79,11 +82,14 @@ void ShaderProgram::loadShader(std::string path, GLenum type) {
 			shaderId = NULL;
 		}
 		else {
-			switch (type) {
-			case GL_VERTEX_SHADER: vertexId = shaderId;
-			case GL_FRAGMENT_SHADER: fragmentId = shaderId;
-			case GL_GEOMETRY_SHADER: geometryId = shaderId;
-			}
+			if(type == GL_VERTEX_SHADER) vertexId = shaderId;
+			else if(type == GL_GEOMETRY_SHADER) geometryId = shaderId;
+			else if (type == GL_FRAGMENT_SHADER) fragmentId = shaderId;
+			/*switch (type) {
+			case 0x8B31 GL_VERTEX_SHADER: vertexId = shaderId;
+			case 0x8B30 GL_FRAGMENT_SHADER: fragmentId = shaderId;
+			case 0x8DD9 GL_GEOMETRY_SHADER: geometryId = shaderId;
+			}*/
 		}
 	} else{
 		printf("Unable to open file %s\n", path.c_str());
