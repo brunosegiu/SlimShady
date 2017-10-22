@@ -7,7 +7,7 @@
 
 class Entity {
 	public:
-		Entity(std::string path);
+		Entity();
 		void rotate(float angle, glm::vec3 &dir);
 		void translate(glm::vec3 &trs);
 		void scale(glm::vec3 &scale);

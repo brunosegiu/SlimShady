@@ -2,16 +2,19 @@
 
 #include <string>
 #include <vector>
+
 #include <GL/glew.h>
 
-class FreeMesh {
+#include "Entity.h"
+
+class FreeMesh : public Entity {
 public:
 	GLuint verticesID, normalsID, vaoID, shaderID;
 	unsigned int vertexCount, indexCount;
 public:
 	FreeMesh(std::vector<float> positions, std::vector<unsigned int>/*, GLenum type, unsigned int grouping*/);
 	void setShader(GLuint shaderID); //No se si poner un puntero al shader que usa
-	void draw();
+	void draw(GLuint shaderID);
 	~FreeMesh();
 };
 

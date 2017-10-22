@@ -20,7 +20,7 @@ void NormalMappedMesh::push(std::vector<unsigned int> &v, int cant) {
 	}
 }
 
-NormalMappedMesh::NormalMappedMesh(string path) : Entity(path){
+NormalMappedMesh::NormalMappedMesh(string path) : Entity(){
 	string fullpath = path + ".obj";
 	this->mats = Material::loadMtl(path);
 	string line;

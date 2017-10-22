@@ -45,10 +45,9 @@ void initGL() {
 	glEnable(GL_CULL_FACE);
 }
 
-/*void draw(World &w) {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	w.draw(); // Using basic shading
+void draw(World &w) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	w.draw();
 }
 
 void close() {
@@ -67,17 +66,20 @@ int main(int argc, char* argv[]) {
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
 	World test = World(cam);
 
-	test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
+	Entity* test_mesh, *test_normal_map;
+	test_mesh = new Mesh("assets/models/boulder");
+	test_mesh->translate(glm::vec3(10.0f, 0.0f, 0.0f));
+	test_normal_map = new NormalMappedMesh("assets/models/boulder");
+	test_normal_map->translate(glm::vec3(-10.0f, 0.0f, 0.0f));
+	test.meshes.push_back(test_mesh);
+	test.meshes_nm.push_back(test_normal_map);
 
-	/*float coords[] = {
+	float coords[] = {
 		0.0f,0.0f,0.0f,
 		10.0f,0.0f,0.0f,
 		10.0f,0.0f,-10.0f,
 		0.0f,0.0f,-10.0f
 	};
-	vector<float> positions (coords, coords + sizeof(coords) / sizeof(coords[0]));
-	unsigned int indices[] = { 0,1,2,2,3,0 };
-	vector<unsigned int> index(indices, indices + sizeof(indices) / sizeof(indices[0]));*/
 	vector<float> positions;
 	vector<unsigned int> index;
 	for (unsigned int i = 0; i <= 10; i++) {  //n = 100
@@ -98,11 +100,11 @@ int main(int argc, char* argv[]) {
 			index.push_back(i * 11 + j);
 		}
 	}
-	test.meshes.push_back(new FreeMesh(positions,index));
+	Entity* grid = new FreeMesh(positions, index);
+	test.meshes_free.push_back(grid);
 	
 	std::clock_t start;
 	std::clock_t wave = clock();
-	//std::time_t  timev;
 	while (!exit) {
 		start = clock();
 		while (SDL_PollEvent(&event) != 0) {
@@ -118,19 +120,16 @@ int main(int argc, char* argv[]) {
 						wireframe = !wireframe;
 						if (wireframe) {
 							glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-							glDisable(GL_LIGHTING);
 						}
 						else {
 							glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-							glEnable(GL_LIGHTING);
 						}
 					}
 				}
 				break;
 				case SDL_MOUSEBUTTONDOWN: {
 					cam->in = !cam->in;
-					if (cam->in)  {-
-
+					if (cam->in)  {
 						SDL_ShowCursor(SDL_DISABLE);
 					}
 					else
@@ -139,10 +138,7 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClear(GL_DEPTH_BUFFER_BIT);
-		test.dummyDraw(float((clock()-wave)*0.001));
-		//draw(test);
+		draw(test);
 		double dif = frameTime - ((clock() - start) * (1000.0 / double(CLOCKS_PER_SEC)) );
 		if (dif > 0) {
 			Sleep(int(dif));

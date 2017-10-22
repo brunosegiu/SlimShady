@@ -49,7 +49,7 @@ bool ShaderProgram::loadProgram() {
 	if (fragmentId) glAttachShader(programId, fragmentId);
 
 	glGetProgramiv(programId, GL_ATTACHED_SHADERS, &success);
-	printf("%i", success);
+	//printf("%i", success);
 
 	glLinkProgram(programId);
 	glGetProgramiv(programId, GL_LINK_STATUS, &success);

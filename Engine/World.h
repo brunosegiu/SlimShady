@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <ctime>
 
 #include "Entity.h"
 #include "Camera.h"
@@ -24,6 +25,8 @@ class World {
 		ShaderProgram* basic;
 		ShaderProgram* basicNM;
 		ShaderProgram* veryBasic;
+
+		clock_t lastDraw;
 
 	public:
 		World(Camera* cam);

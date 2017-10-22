@@ -7,7 +7,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index) {
+FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index) : Entity() {
 	vertexCount = positions.size() / 3;
 	indexCount = index.size();
 
@@ -40,7 +40,7 @@ FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index
 
 }
 
-void FreeMesh::draw() {
+void FreeMesh::draw(GLuint shaderID) {
 	glBindVertexArray(vaoID);
 	glEnableVertexAttribArray(0);
 	//glEnableVertexAttribArray(1);

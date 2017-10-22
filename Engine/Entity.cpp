@@ -2,7 +2,7 @@
 
 #include <glm/gtx/transform.hpp>
 
-Entity::Entity(std::string path) {
+Entity::Entity() {
 	this->modelMatrix = glm::mat4(1.0f);
 }
 

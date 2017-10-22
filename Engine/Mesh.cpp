@@ -20,7 +20,7 @@ void push(std::vector<unsigned int> &v, int cant) {
 	}
 }
 
-Mesh::Mesh(string path) : Entity(path) {
+Mesh::Mesh(string path) : Entity() {
 	string fullpath = path + ".obj";
 	this->mats = Material::loadMtl(path);
 	string line;

@@ -13,12 +13,13 @@ World::World(Camera* cam) {
 	this->veryBasic->loadShader("assets/shaders/sinusoide.geo", GL_GEOMETRY_SHADER);
 	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
 	this->veryBasic->loadProgram();
-	this->geomertyPassShader = new ShaderProgram("assets/shaders/geometryPass.vert", "assets/shaders/geometryPass.frag");
-	this->gbuf = new GBuffer(cam->width, cam->height);
 	this->basicNM = new ShaderProgram("assets/shaders/basic_normalmap.vert", "assets/shaders/basic_normalmap.frag");
+	this->lastDraw = clock()/double(CLOCKS_PER_SEC);
 }
 
 void World::draw() {
+	float elapsed = clock()/double(CLOCKS_PER_SEC) - this->lastDraw;
+	this->lastDraw = clock()/double(CLOCKS_PER_SEC);
 	this->cam->update();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (meshes.size() > 0){
@@ -60,16 +61,19 @@ void World::draw() {
 		this->basicNM->unbind();
 	}
 
-	this->veryBasic->bind();
-	worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
-	GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
-	glUniform1f(phiID, time);
-	//printf("%f\n", time);
-	for (unsigned int j = 0; j < meshes.size(); j++) {
-		glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
-		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-		this->meshes[j]->draw();
+	//Draw free meshes
+	if (meshes_free.size() > 0){
+		this->veryBasic->bind();
+		GLuint worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
+		GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
+		glUniform1f(phiID, elapsed);
+		for (unsigned int j = 0; j < meshes.size(); j++) {
+			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
+			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+			this->meshes[j]->draw(0);
+		}
 	}
+	
 }
 
 World::~World() {
@@ -78,6 +82,9 @@ World::~World() {
 	}
 	for (unsigned int i = 0; i < meshes_nm.size(); i++) {
 		delete this->meshes_nm[i];
+	}
+	for (unsigned int i = 0; i < meshes_free.size(); i++) {
+		delete this->meshes_free[i];
 	}
 	for (unsigned int i = 0; i < dirLights.size(); i++) {
 		delete this->dirLights[i];
