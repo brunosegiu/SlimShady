@@ -14,16 +14,21 @@ World::World(Camera* cam) {
 	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
 	this->veryBasic->loadProgram();
 	this->basicNM = new ShaderProgram("assets/shaders/basic_normalmap.vert", "assets/shaders/basic_normalmap.frag");
-	this->lastDraw = clock()/double(CLOCKS_PER_SEC);
+	this->lastDraw = clock();
 }
 
 void World::draw() {
-	float elapsed = clock()/double(CLOCKS_PER_SEC) - this->lastDraw;
-	this->lastDraw = clock()/double(CLOCKS_PER_SEC);
+	// Update drawing timer
+	float elapsed = (clock() - this->lastDraw)/double(CLOCKS_PER_SEC);
+	this->lastDraw = clock();
+
+	// Update Camera view
 	this->cam->update();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//Render meshes
 	if (meshes.size() > 0){
-		//Render meshes
 		this->basic->bind();
 		GLuint worldTransformID = glGetUniformLocation(basic->getId(), "worldTransform");
 		GLuint textID = glGetUniformLocation(basic->getId(), "textSampler");
@@ -39,8 +44,8 @@ void World::draw() {
 		}
 		this->basic->unbind();
 	}
+	//Render normal mapped meshes
 	if (meshes_nm.size() > 0){
-		//Render normal mapped meshes
 		this->basicNM->bind();
 		GLuint worldTransformID = glGetUniformLocation(basicNM->getId(), "worldTransform");
 		GLuint textID = glGetUniformLocation(basicNM->getId(), "textSampler");
@@ -60,20 +65,20 @@ void World::draw() {
 		}
 		this->basicNM->unbind();
 	}
-
-	//Draw free meshes
+	//Render free meshes
+	glDisable(GL_CULL_FACE);
 	if (meshes_free.size() > 0){
 		this->veryBasic->bind();
 		GLuint worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
 		GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
-		glUniform1f(phiID, elapsed);
+		glUniform1f(phiID, this->lastDraw / double(CLOCKS_PER_SEC));
 		for (unsigned int j = 0; j < meshes.size(); j++) {
 			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
 			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-			this->meshes[j]->draw(0);
+			this->meshes_free[j]->draw(0);
 		}
 	}
-	
+	glEnable(GL_CULL_FACE);
 }
 
 World::~World() {
