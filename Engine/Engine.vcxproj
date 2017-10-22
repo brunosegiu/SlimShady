@@ -133,6 +133,7 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +146,7 @@
     <ClInclude Include="NormalMappedMesh.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +156,8 @@
     <None Include="assets\shaders\basic_normalmap.vert" />
     <None Include="assets\shaders\sinusoide.geo" />
     <None Include="assets\shaders\sinusoide.vert" />
+    <None Include="assets\shaders\terrain.frag" />
+    <None Include="assets\shaders\terrain.vert" />
     <None Include="assets\shaders\veryBasic.frag" />
     <None Include="assets\shaders\veryBasic.vert" />
   </ItemGroup>

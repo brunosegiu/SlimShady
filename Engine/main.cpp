@@ -26,7 +26,7 @@ int HEIGHT = 600;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	window = SDL_CreateWindow("SlimShady", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
@@ -74,12 +74,6 @@ int main(int argc, char* argv[]) {
 	test.meshes.push_back(test_mesh);
 	test.meshes_nm.push_back(test_normal_map);
 
-	float coords[] = {
-		0.0f,0.0f,0.0f,
-		10.0f,0.0f,0.0f,
-		10.0f,0.0f,-10.0f,
-		0.0f,0.0f,-10.0f
-	};
 	vector<float> positions;
 	vector<unsigned int> index;
 	for (unsigned int i = 0; i <= 10; i++) {  //n = 100
@@ -104,7 +98,6 @@ int main(int argc, char* argv[]) {
 	test.meshes_free.push_back(grid);
 	
 	std::clock_t start;
-	std::clock_t wave = clock();
 	while (!exit) {
 		start = clock();
 		while (SDL_PollEvent(&event) != 0) {

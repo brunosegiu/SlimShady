@@ -9,6 +9,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "FreeMesh.h"
+#include "Terrain.h"
 
 class World {
 	public:
@@ -16,6 +17,7 @@ class World {
 		std::vector<Entity*> meshes;
 		std::vector<Entity*> meshes_nm;
 		std::vector<Entity*> meshes_free;
+		Terrain* terrain;
 		Camera* cam;
 
 		//Luces
@@ -25,6 +27,7 @@ class World {
 		ShaderProgram* basic;
 		ShaderProgram* basicNM;
 		ShaderProgram* veryBasic;
+		ShaderProgram* terrainShader;
 
 		clock_t lastDraw;
 
