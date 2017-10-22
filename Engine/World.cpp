@@ -10,7 +10,7 @@ World::World(Camera* cam) {
 	this->basic = new ShaderProgram("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 	this->veryBasic = new ShaderProgram();
 	this->veryBasic->loadShader("assets/shaders/sinusoide.vert", GL_VERTEX_SHADER);
-	this->veryBasic->loadShader("assets/shaders/sinusoide.geo", GL_GEOMETRY_SHADER);
+	//this->veryBasic->loadShader("assets/shaders/sinusoide.geo", GL_GEOMETRY_SHADER);
 	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
 	this->veryBasic->loadProgram();
 	this->basicNM = new ShaderProgram("assets/shaders/basic_normalmap.vert", "assets/shaders/basic_normalmap.frag");
