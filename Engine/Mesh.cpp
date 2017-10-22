@@ -8,78 +8,6 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-vector<Material*> loadMtl(string path) {
-	string mtlExt = path + ".mtl";
-	string line;
-	ifstream mtlFile(mtlExt.c_str());
-	vector<Material*> mats;
-	if (mtlFile.is_open()) {
-
-		unsigned int inserted = 0;
-		string currentMtl = "";
-		string prefixMTL = "newmtl";
-		string prefixKa = "Ka";
-		string prefixKd = "Kd";
-		string prefixKs = "Ks";
-		string prefixNs = "Ns";
-		string prefixMapKd = "map_Kd";
-
-		float aux1, aux2, aux3;
-		float ambient1, ambient2, ambient3 = 0;
-		float diffuse1, diffuse2, diffuse3 = 0;
-		float specular1, specular2, specular3 = 0;
-		string texturePath = "";
-
-		while (!mtlFile.eof()) {
-			getline(mtlFile, line);
-			if (!strncmp(line.c_str(), prefixMTL.c_str(), strlen(prefixMTL.c_str()))) {
-				inserted++;
-				if (currentMtl != "") {
-					Material* mat = new Material(glm::vec3(ambient1, ambient2, ambient3), glm::vec3(diffuse1, diffuse2, diffuse3), glm::vec3(specular1, specular2, specular3), texturePath);
-					mats.push_back(mat);
-				}
-				currentMtl = line.substr(7, line.length());
-			}
-			else if (!strncmp(line.c_str(), prefixKa.c_str(), strlen(prefixKa.c_str()))) {
-				string data = line.substr(strlen(prefixKa.c_str()) - 1, strlen(line.c_str()));
-				data[0] = data[1] = ' ';
-				sscanf_s(data.c_str(), "%f %f %f", &aux1, &aux2, &aux3);
-				ambient1 = aux1;
-				ambient2 = aux2;
-				ambient3 = aux3;
-			}
-			else if (!strncmp(line.c_str(), prefixKd.c_str(), strlen(prefixKd.c_str()))) {
-				string data = line.substr(strlen(prefixKd.c_str()) - 1, strlen(line.c_str())).c_str();
-				data[0] = data[1] = ' ';
-				sscanf_s(data.c_str(), "%f %f %f", &aux1, &aux2, &aux3);
-				diffuse1 = aux1;
-				diffuse2 = aux2;
-				diffuse3 = aux3;
-			}
-			else if (!strncmp(line.c_str(), prefixKs.c_str(), strlen(prefixKs.c_str()))) {
-				string data = line.substr(strlen(prefixKs.c_str()) - 1, strlen(line.c_str())).c_str();
-				sscanf_s(data.c_str(), "%f %f %f", &aux1, &aux2, &aux3);
-				specular1 = aux1;
-				specular2 = aux2;
-				specular3 = aux3;
-			}
-			else if (!strncmp(line.c_str(), prefixMapKd.c_str(), strlen(prefixMapKd.c_str()))) {
-				texturePath = line.substr(strlen(prefixMapKd.c_str()) + 1, strlen(line.c_str())).c_str();
-			}
-		}
-
-		if (currentMtl != "" && mats.size() < inserted) {
-			mats.push_back( new Material(glm::vec3(ambient1, ambient2, ambient3), glm::vec3(diffuse1, diffuse2, diffuse3), glm::vec3(specular1, specular2, specular3), texturePath));
-		}
-
-		mtlFile.close();
-		return mats;
-	}
-	else {
-		throw runtime_error("Unable to load mtl file: " + path + ".mtl");
-	}
-}
-
 void push(std::vector<float> &v, int cant) {
 	for (int i = 0; i < cant; i++) {
 		v.push_back(0);
@@ -92,13 +20,9 @@ void push(std::vector<unsigned int> &v, int cant) {
 	}
 }
 
-
-Mesh::Mesh(string path) {
-	float* normals;
-	float* faces;
-	float* textures;
+Mesh::Mesh(string path) : Entity() {
 	string fullpath = path + ".obj";
-	this->mats = loadMtl(path);
+	this->mats = Material::loadMtl(path);
 	string line;
 	ifstream objFile(fullpath.c_str());
 	if (objFile.is_open()) {
@@ -163,6 +87,7 @@ Mesh::Mesh(string path) {
 
 				push(vertexIndices, 3);
 				push(normalIndices, 3);
+				push(textureIndices, 3);
 				
 				if (textureCoords > 0) {
 					push(textureIndices, 3);
@@ -286,13 +211,23 @@ void Mesh::draw(GLuint shaderID) {
 		glUniform1i(textured, this->mats[i]->isTextured);
 		if (this->mats[i]->isTextured) {
 			glEnable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, this->mats[i]->textID);
+		}
+		if (this->mats[i]->isNormalMapped) {
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, this->mats[i]->normalID);
 		}
 		glUniform3f(kd,this->mats[i]->diffuse.x, this->mats[i]->diffuse.y, this->mats[i]->diffuse.z);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[i]);
 		glDrawElements(GL_TRIANGLES,this->faces[i],	GL_UNSIGNED_INT,(void*)0);
 		if (this->mats[i]->isTextured) {
 			glDisable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		if (this->mats[i]->isNormalMapped) {
+			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 	}

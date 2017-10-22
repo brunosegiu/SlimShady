@@ -11,10 +11,10 @@ ShaderProgram::ShaderProgram(){
 }
 
 ShaderProgram::ShaderProgram(std::string vertPath, std::string fragPath){
-	programId = NULL; //NULL = 0
-	vertexId = NULL;
-	fragmentId = NULL;
-	geometryId = NULL;
+	programId = 0;
+	vertexId = 0;
+	fragmentId = 0;
+	geometryId = 0;
 	this->loadShader(vertPath, GL_VERTEX_SHADER);
 	this->loadShader(fragPath, GL_FRAGMENT_SHADER);
 	if (!this->loadProgram()) {
@@ -49,7 +49,7 @@ bool ShaderProgram::loadProgram() {
 	if (fragmentId) glAttachShader(programId, fragmentId);
 
 	glGetProgramiv(programId, GL_ATTACHED_SHADERS, &success);
-	printf("%i", success);
+	//printf("%i", success);
 
 	glLinkProgram(programId);
 	glGetProgramiv(programId, GL_LINK_STATUS, &success);
@@ -59,9 +59,6 @@ bool ShaderProgram::loadProgram() {
 		printProgramLog();
 		return false;
 	}
-	if (vertexId) { glDetachShader(programId, vertexId); glDeleteShader(vertexId); };
-	if (fragmentId) { glDetachShader(programId, fragmentId); glDeleteShader(fragmentId); };
-	if (geometryId) { glDetachShader(programId, geometryId); glDeleteShader(geometryId); };
 	return true;
 }
 
@@ -158,6 +155,9 @@ void ShaderProgram::printShaderLog(GLuint shader)
 
 ShaderProgram::~ShaderProgram(){
     glDeleteProgram(programId);
+	if (vertexId) { glDetachShader(programId, vertexId); glDeleteShader(vertexId); };
+	if (fragmentId) { glDetachShader(programId, fragmentId); glDeleteShader(fragmentId); };
+	if (geometryId) { glDetachShader(programId, geometryId); glDeleteShader(geometryId); };
 }
 
 /*

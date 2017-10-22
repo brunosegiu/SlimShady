@@ -28,7 +28,10 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="GBuffer.cpp">
+    <ClCompile Include="NormalMappedMesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeMesh.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="FreeMesh.cpp">
@@ -63,7 +66,10 @@
     <ClInclude Include="PointLight.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="GBuffer.h">
+    <ClInclude Include="NormalMappedMesh.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeMesh.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="FreeMesh.h">
@@ -80,22 +86,22 @@
     <None Include="assets\shaders\basic.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shaders\geometryPass.frag">
+    <None Include="assets\shaders\basic_normalmap.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shaders\geometryPass.vert">
+    <None Include="assets\shaders\basic_normalmap.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shaders\dirLightPass.frag">
+    <None Include="assets\shaders\sinusoide.geo">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shaders\dirLightPass.vert">
+    <None Include="assets\shaders\sinusoide.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shaders\pointLightPass.frag">
+    <None Include="assets\shaders\veryBasic.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shaders\pointLightPass.vert">
+    <None Include="assets\shaders\veryBasic.vert">
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\veryBasic.frag">

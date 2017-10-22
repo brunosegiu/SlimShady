@@ -8,12 +8,14 @@
 
 #include "World.h"
 #include "Camera.h"
+#include "NormalMappedMesh.h"
+#include "Mesh.h"
 
 using namespace std;
 
 void init();
 void initGL();
-void draw(World &w, Camera &cam);
+void draw(World &w);
 void close();
 
 SDL_Window* window = NULL;
@@ -24,7 +26,7 @@ int HEIGHT = 600;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	window = SDL_CreateWindow("SlimShady", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
@@ -36,25 +38,17 @@ void init() {
 }
 
 void initGL() {
-	glMatrixMode(GL_PROJECTION);
-	gluPerspective(45, (WIDTH / float(HEIGHT)), 0.1, 100);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 	//OpenGL attribs
-	glEnable(GL_LIGHTING);
-	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
-	glEnable(GL_LIGHT0);
+	glEnable(GL_CULL_FACE);
 }
 
-/*void draw(World &w) {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	w.dummyDraw(); // Using basic shading
-}*/
+void draw(World &w) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	w.draw();
+}
 
 void close() {
 	SDL_DestroyWindow(window);
@@ -72,13 +66,45 @@ int main(int argc, char* argv[]) {
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
 	World test = World(cam);
 
-	//test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
+	Entity* test_mesh, *test_normal_map;
+	test_mesh = new Mesh("assets/models/boulder");
+	test_mesh->translate(glm::vec3(10.0f, 0.0f, 0.0f));
+	test_normal_map = new NormalMappedMesh("assets/models/boulder");
+	test_normal_map->translate(glm::vec3(-10.0f, 0.0f, 0.0f));
+	test.meshes.push_back(test_mesh);
+	test.meshes_nm.push_back(test_normal_map);
 
-	test.water = Water();
+	float coords[] = {
+		0.0f,0.0f,0.0f,
+		10.0f,0.0f,0.0f,
+		10.0f,0.0f,-10.0f,
+		0.0f,0.0f,-10.0f
+	};
+	vector<float> positions;
+	vector<unsigned int> index;
+	for (unsigned int i = 0; i <= 10; i++) {  //n = 100
+		for (unsigned int j = 0; j <= 10; j++) {
+			positions.push_back((float)-5+j); // n/2 = 50
+			positions.push_back(0.0f);
+			positions.push_back((float)-5+i);
+		}
+	}
+	for (unsigned int i = 0; i <= 9; i++) {
+		for (unsigned int j = 0; j <= 9; j++) { //n-1 = 99
+			index.push_back(i * 11 + j);
+			index.push_back(i * 11 + j + 1); //n+1 = 101
+			index.push_back(i * 11 + j + 11 +1);
+
+			index.push_back(i * 11 + j + 11 + 1);
+			index.push_back(i * 11 + j + 11);
+			index.push_back(i * 11 + j);
+		}
+	}
+	Entity* grid = new FreeMesh(positions, index);
+	test.meshes_free.push_back(grid);
 	
 	std::clock_t start;
 	std::clock_t wave = clock();
-	//std::time_t  timev;
 	while (!exit) {
 		start = clock();
 		while (SDL_PollEvent(&event) != 0) {
@@ -94,18 +120,16 @@ int main(int argc, char* argv[]) {
 						wireframe = !wireframe;
 						if (wireframe) {
 							glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-							glDisable(GL_LIGHTING);
 						}
 						else {
 							glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-							glEnable(GL_LIGHTING);
 						}
 					}
 				}
 				break;
 				case SDL_MOUSEBUTTONDOWN: {
 					cam->in = !cam->in;
-					if (cam->in) {
+					if (cam->in)  {
 						SDL_ShowCursor(SDL_DISABLE);
 					}
 					else
@@ -114,10 +138,7 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClear(GL_DEPTH_BUFFER_BIT);
-		test.dummyDraw(float((clock()-wave)*0.001));
-		//draw(test);
+		draw(test);
 		double dif = frameTime - ((clock() - start) * (1000.0 / double(CLOCKS_PER_SEC)) );
 		if (dif > 0) {
 			Sleep(int(dif));

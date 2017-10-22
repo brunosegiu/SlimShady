@@ -6,7 +6,6 @@
 
 World::World(Camera* cam) {
 	this->cam = cam;
-	
 	//Shaders
 	this->basic = new ShaderProgram("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 	this->veryBasic = new ShaderProgram();
@@ -14,101 +13,87 @@ World::World(Camera* cam) {
 	//this->veryBasic->loadShader("assets/shaders/sinusoide.geo", GL_GEOMETRY_SHADER);
 	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
 	this->veryBasic->loadProgram();
-	this->geomertyPassShader = new ShaderProgram("assets/shaders/geometryPass.vert", "assets/shaders/geometryPass.frag");
-	this->gbuf = new GBuffer(cam->width, cam->height);
-}
-
-void World::geomertyPass() {
-	this->gbuf->bindW();
-	this->geomertyPassShader->bind();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	GLuint worldTransformID = glGetUniformLocation(geomertyPassShader->getId(), "worldTransform");
-	GLuint textID = glGetUniformLocation(geomertyPassShader->getId(), "textSampler");
-	GLuint modelTransformID = glGetUniformLocation(geomertyPassShader->getId(), "modelTransform");
-	glUniform1i(textID, 0);
-	for (unsigned int i = 0; i < worldEntities.size(); i++) {
-		glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->worldEntities[i]->modelMatrix;
-		glm::mat4 modelTransf = this->worldEntities[i]->modelMatrix;
-		glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &modelTransf[0][0]);
-		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-		this->worldEntities[i]->draw(geomertyPassShader->getId());
-	}
-}
-
-void World::lightPass() {
-	unsigned int width, height;
-	width = unsigned int(this->cam->width);
-	height = unsigned int(this->cam->height);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	this->gbuf->bindR();
-
-	GLsizei hwidth = (GLsizei)(this->cam->width / 2.0f);
-	GLsizei hheight = (GLsizei)(this->cam->height / 2.0f);
-
-	this->gbuf->readPos();
-	glBlitFramebuffer(0, 0, width, height,0, 0, hwidth, hheight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
-
-	this->gbuf->readDiff();
-	glBlitFramebuffer(0, 0, width, height,0, hheight, hwidth, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
-
-	this->gbuf->readNorm();
-	glBlitFramebuffer(0, 0, width, height, hwidth, hheight, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
-
-	this->gbuf->readText();
-	glBlitFramebuffer(0, 0, width, height, hwidth, 0, width, hheight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+	this->basicNM = new ShaderProgram("assets/shaders/basic_normalmap.vert", "assets/shaders/basic_normalmap.frag");
+	this->lastDraw = clock();
 }
 
 void World::draw() {
-	this->cam->update();
-	geomertyPass();
-	lightPass();
-}
+	// Update drawing timer
+	float elapsed = (clock() - this->lastDraw)/double(CLOCKS_PER_SEC);
+	this->lastDraw = clock();
 
-void World::dummyDraw(float time) {
+	// Update Camera view
 	this->cam->update();
-	this->basic->bind();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	GLuint worldTransformID = glGetUniformLocation(basic->getId(), "worldTransform");
-	GLuint textID = glGetUniformLocation(basic->getId(), "textSampler");
-	GLuint modelTransformID = glGetUniformLocation(basic->getId(), "modelTransform");
-	glUniform1i(textID, 0);
-	for (unsigned int i = 0; i < worldEntities.size(); i++) {
-		this->worldEntities[i]->rotate(0.04f, glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->worldEntities[i]->modelMatrix;
-		glm::mat4 modelTransf = this->worldEntities[i]->modelMatrix;
-		glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &modelTransf[0][0]);
-		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-		this->worldEntities[i]->draw(basic->getId());
+
+	//Render meshes
+	if (meshes.size() > 0){
+		this->basic->bind();
+		GLuint worldTransformID = glGetUniformLocation(basic->getId(), "worldTransform");
+		GLuint textID = glGetUniformLocation(basic->getId(), "textSampler");
+		GLuint modelTransformID = glGetUniformLocation(basic->getId(), "modelTransform");
+		glUniform1i(textID, 0);
+		for (unsigned int i = 0; i < meshes.size(); i++) {
+			//this->worldEntities[i]->rotate(0.04f, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->meshes[i]->modelMatrix;
+			glm::mat4 modelTransf = this->meshes[i]->modelMatrix;
+			glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &modelTransf[0][0]);
+			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+			this->meshes[i]->draw(basic->getId());
+		}
+		this->basic->unbind();
 	}
+	//Render normal mapped meshes
+	if (meshes_nm.size() > 0){
+		this->basicNM->bind();
+		GLuint worldTransformID = glGetUniformLocation(basicNM->getId(), "worldTransform");
+		GLuint textID = glGetUniformLocation(basicNM->getId(), "textSampler");
+		GLuint normTextID = glGetUniformLocation(basicNM->getId(), "normTextSampler");
+		GLuint modelTransformID = glGetUniformLocation(basicNM->getId(), "modelTransform");
+		GLuint modelViewID = glGetUniformLocation(basicNM->getId(), "modelView");
+		glUniform1i(textID, 0);
+		glUniform1i(normTextID, 1);
 
-	this->veryBasic->bind();
-	worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
-	GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
-	GLuint camID = glGetUniformLocation(veryBasic->getId(), "cameraPos");
-	glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
-	glm::vec3 camPos = this->cam->pos;
-	glUniform1f(phiID, time);
-	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-	glUniform3fv(camID, 1, &camPos[0]);
-	this->water.mesh.draw();
-	
+		for (unsigned int i = 0; i < meshes_nm.size(); i++) {
+			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->meshes_nm[i]->modelMatrix;
+			glm::mat4 modelTransf = this->meshes_nm[i]->modelMatrix;
+			glUniformMatrix3fv(modelViewID, 1, GL_FALSE, &glm::mat3(this->cam->viewMatrix * this->meshes_nm[i]->modelMatrix)[0][0]);
+			glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &modelTransf[0][0]);
+			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+			this->meshes_nm[i]->draw(basic->getId());
+		}
+		this->basicNM->unbind();
+	}
+	//Render free meshes
+	glDisable(GL_CULL_FACE);
+	if (meshes_free.size() > 0){
+		this->veryBasic->bind();
+		GLuint worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
+		GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
+		glUniform1f(phiID, this->lastDraw / double(CLOCKS_PER_SEC));
+		for (unsigned int j = 0; j < meshes.size(); j++) {
+			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
+			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+			this->meshes_free[j]->draw(0);
+		}
+	}
+	glEnable(GL_CULL_FACE);
 }
-
-
 
 World::~World() {
-	for (unsigned int i = 0; i < worldEntities.size(); i++) {
-		delete this->worldEntities[i];
+	for (unsigned int i = 0; i < meshes.size(); i++) {
+		delete this->meshes[i];
+	}
+	for (unsigned int i = 0; i < meshes_nm.size(); i++) {
+		delete this->meshes_nm[i];
+	}
+	for (unsigned int i = 0; i < meshes_free.size(); i++) {
+		delete this->meshes_free[i];
 	}
 	for (unsigned int i = 0; i < dirLights.size(); i++) {
 		delete this->dirLights[i];
 	}
 	delete cam;
 	delete basic;
-
-	delete this->geomertyPassShader;
-	delete gbuf;
 }
