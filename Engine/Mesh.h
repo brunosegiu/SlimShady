@@ -6,10 +6,11 @@
 #include <GL/glew.h>
 
 #include "Material.h"
+#include "Entity.h"
 
 using namespace std;
 
-class Mesh {
+class Mesh : public Entity {
 	public:
 		GLuint verticesID, textID, normalsID, vaoID;
 		vector<GLuint> indices;

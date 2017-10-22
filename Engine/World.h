@@ -1,34 +1,29 @@
 #pragma once
 
+#include <vector>
+
 #include "Entity.h"
 #include "Camera.h"
 #include "ShaderProgram.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
-#include "GBuffer.h"
 
 class World {
 	public:
 		// Entidades
-		vector<Entity*> worldEntities;
+		std::vector<Entity*> meshes;
+		std::vector<Entity*> meshes_nm;
 		Camera* cam;
 
 		//Luces
-		vector<DirectionalLight*> dirLights;
+		std::vector<DirectionalLight*> dirLights;
 		
 		//Shaders
 		ShaderProgram* basic;
+		ShaderProgram* basicNM;
 
-		//Deferred Shading
-		ShaderProgram* geomertyPassShader;
-		ShaderProgram* lightPassShader;
-		GBuffer* gbuf;
 	public:
 		World(Camera* cam);
-		void draw(); // Deferred shading
-		void dummyDraw(); // Basic shading
+		void draw(); // Basic shading
 		~World();
-	private:
-		void geomertyPass();
-		void lightPass();
 };

@@ -8,12 +8,14 @@
 
 #include "World.h"
 #include "Camera.h"
+#include "NormalMappedMesh.h"
+#include "Mesh.h"
 
 using namespace std;
 
 void init();
 void initGL();
-void draw(World &w, Camera &cam);
+void draw(World &w);
 void close();
 
 SDL_Window* window = NULL;
@@ -24,7 +26,7 @@ int HEIGHT = 720;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	window = SDL_CreateWindow("SlimShady", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
@@ -36,24 +38,17 @@ void init() {
 }
 
 void initGL() {
-	glMatrixMode(GL_PROJECTION);
-	gluPerspective(45, (WIDTH / float(HEIGHT)), 0.1, 100);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 	//OpenGL attribs
-	glEnable(GL_LIGHTING);
-	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-	glEnable(GL_LIGHT0);
 }
 
 void draw(World &w) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	w.dummyDraw(); // Using basic shading
+	w.draw(); // Using basic shading
 }
 
 void close() {
@@ -72,7 +67,12 @@ int main(int argc, char* argv[]) {
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
 	World test = World(cam);
 
-	test.worldEntities.push_back(new Entity(new Mesh("assets/models/stormtrooper")));
+	Entity* noNormals = new Mesh("assets/models/boulder");
+	noNormals->translate(glm::vec3(6.0f, 0.0f, 0.0f));
+	test.meshes.push_back(noNormals);
+	Entity* normals = new NormalMappedMesh("assets/models/boulder");
+	test.meshes_nm.push_back(normals);
+	test.dirLights.push_back(new DirectionalLight(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
 	
 	std::clock_t start;
 	while (!exit) {
@@ -101,7 +101,8 @@ int main(int argc, char* argv[]) {
 				break;
 				case SDL_MOUSEBUTTONDOWN: {
 					cam->in = !cam->in;
-					if (cam->in) {
+					if (cam->in)  {-
+
 						SDL_ShowCursor(SDL_DISABLE);
 					}
 					else

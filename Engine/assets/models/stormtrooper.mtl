@@ -11,6 +11,7 @@ Ni 1.000000
 d 1.000000
 illum 3
 map_Kd assets/textures/helmet.png
+map_Bump assets/textures/helmet_normals.png
 
 newmtl m_body
 Ns 9.803922
@@ -22,6 +23,7 @@ Ni 1.000000
 d 1.000000
 illum 3
 map_Kd assets/textures/body.png
+map_Bump assets/textures/body_normals.png
 
 newmtl m_hands
 Ns 9.803922
@@ -33,3 +35,4 @@ Ni 1.000000
 d 1.000000
 illum 3
 map_Kd assets/textures/hands.png
+map_Bump assets/textures/hands_normals.png

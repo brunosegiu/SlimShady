@@ -24,7 +24,8 @@ Camera::Camera(float width, float height, float fov, SDL_Window* win) {
 	this->set = false;
 
 	this->projectionMatrix = glm::perspective(glm::radians(fov), width / height, 0.1f, 100.0f);
-	this->modelViewProjectionMatrix = this->projectionMatrix * glm::lookAt(pos, ref, up);
+	this->viewMatrix = glm::lookAt(pos, ref, up);
+	this->modelViewProjectionMatrix = this->projectionMatrix * this->viewMatrix;
 }
 
 void Camera::update() {
@@ -71,6 +72,7 @@ void Camera::update() {
 		mouseX = unsigned int(width / 2);
 		mouseY = unsigned int(height / 2);
 	}
-	this->modelViewProjectionMatrix = this->projectionMatrix * glm::lookAt(pos, ref, up);
+	this->viewMatrix = glm::lookAt(pos, ref, up);
+	this->modelViewProjectionMatrix = this->projectionMatrix * this->viewMatrix;
 	this->lastUpdate = clock();
 }

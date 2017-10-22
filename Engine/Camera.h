@@ -9,7 +9,6 @@
 class Camera {
 	public:
 		glm::vec3 pos, ref, up;
-		float yaw, pitch;
 		float width, height;
 		bool in, set;
 		float moveSpeed, sensitivity;
@@ -18,6 +17,7 @@ class Camera {
 		std::clock_t lastUpdate;
 
 		glm::mat4 modelViewProjectionMatrix;
+		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
 
 		Camera(float width, float height, float fov, SDL_Window* win);

@@ -125,10 +125,10 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
-    <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="NormalMappedMesh.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -138,9 +138,9 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="DirectionalLight.h" />
-    <ClInclude Include="GBuffer.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="NormalMappedMesh.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="World.h" />
@@ -148,12 +148,8 @@
   <ItemGroup>
     <None Include="assets\shaders\basic.frag" />
     <None Include="assets\shaders\basic.vert" />
-    <None Include="assets\shaders\dirLightPass.frag" />
-    <None Include="assets\shaders\dirLightPass.vert" />
-    <None Include="assets\shaders\geometryPass.frag" />
-    <None Include="assets\shaders\geometryPass.vert" />
-    <None Include="assets\shaders\pointLightPass.frag" />
-    <None Include="assets\shaders\pointLightPass.vert" />
+    <None Include="assets\shaders\basic_normalmap.frag" />
+    <None Include="assets\shaders\basic_normalmap.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
