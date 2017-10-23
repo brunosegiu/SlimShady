@@ -18,7 +18,5 @@ void main(){
   vec3 normalToFrag = normalize((modelTransform * vec4(normal,0.0f)).xyz);
   vec3 tangentToFrag = normalize((modelTransform * vec4(tangent,0.0f)).xyz);
   vec3 bitangentToFrag = normalize(cross(tangentToFrag, normalToFrag));
-  toModelSpace = inverse(mat3(tangentToFrag.x, bitangentToFrag.x ,normal.x,
-					    tangentToFrag.y, bitangentToFrag.y ,normal.y,
-				        tangentToFrag.z, bitangentToFrag.z ,normal.z));	
+  toModelSpace = mat3(tangentToFrag,bitangentToFrag,normalToFrag);
 }

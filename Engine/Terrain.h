@@ -19,6 +19,9 @@ class Terrain : public Entity{
 		ShaderProgram* terrainShader;
 		vector<TerrainTile*> tiles;
 		GLuint textureID;
+		string path;
+		float maxHeight;
+		int tilesX, tilesY;
 		glm::mat4 viewProjectionMatrix;
 		
 };

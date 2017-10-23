@@ -16,6 +16,7 @@ class Mesh : public Entity {
 		vector<GLuint> indices;
 		vector<unsigned int> faces;
 		vector<Material*> mats;
+		string path;
 		bool textures;
 	public:
 		Mesh(string path);

@@ -135,6 +135,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainTile.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainTile.h" />
+    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

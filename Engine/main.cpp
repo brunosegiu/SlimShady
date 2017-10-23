@@ -65,20 +65,23 @@ int main(int argc, char* argv[]) {
 	
 	double frameTime = 1000.0f / 65.0f;
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
-	World test = World(cam);
+	World* test = new World(cam);
 
 	Entity* test_mesh, *test_normal_map;
 	test_mesh = new Mesh("assets/models/boulder");
 	test_mesh->translate(glm::vec3(10.0f, 0.0f, 0.0f));
 	test_normal_map = new NormalMappedMesh("assets/models/boulder");
 	test_normal_map->translate(glm::vec3(-10.0f, 0.0f, 0.0f));
-	test.meshes.push_back(test_mesh);
-	test.meshes_nm.push_back(test_normal_map);
+	test->meshes.push_back(test_mesh);
+	test->meshes_nm.push_back(test_normal_map);
 
 	Water* water = new Water();
 	Entity* grid = water->mesh;
-	test.meshes_free.push_back(grid);
-	
+	test->meshes_free.push_back(grid);
+
+	test->save("test.world");
+	test = World::load("test.world", window, WIDTH, HEIGHT);
+	cam = test->cam;
 	std::clock_t start;
 	while (!exit) {
 		start = clock();
@@ -113,7 +116,7 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
-		draw(test);
+		draw(*test);
 		double dif = frameTime - ((clock() - start) * (1000.0 / double(CLOCKS_PER_SEC)) );
 		if (dif > 0) {
 			Sleep(int(dif));

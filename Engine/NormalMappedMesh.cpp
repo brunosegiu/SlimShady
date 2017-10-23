@@ -21,6 +21,7 @@ void NormalMappedMesh::push(std::vector<unsigned int> &v, int cant) {
 }
 
 NormalMappedMesh::NormalMappedMesh(string path) : Entity(){
+	this->path = path;
 	string fullpath = path + ".obj";
 	this->mats = Material::loadMtl(path);
 	string line;

@@ -16,6 +16,7 @@ public:
 	vector<GLuint> indices;
 	vector<unsigned int> faces;
 	vector<Material*> mats;
+	string path;
 public:
 	NormalMappedMesh(string path);
 	void draw(GLuint shaderID);

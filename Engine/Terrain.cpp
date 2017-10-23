@@ -7,6 +7,10 @@
 #include "Material.h"
 
 Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY) : Entity(){
+	this->path = heightmapPath;
+	this->maxHeight = maxHeight;
+	this->tilesX = tilesX;
+	this->tilesY = tilesY;
 	this->terrainShader = new ShaderProgram("assets/shaders/terrain.vert", "assets/shaders/terrain.frag");
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(heightmapPath.c_str());
 	FIBITMAP* bitmap = FreeImage_Load(fif, heightmapPath.c_str());

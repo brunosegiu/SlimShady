@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <ctime>
+#include <string>
 
 #include "Entity.h"
 #include "Camera.h"
@@ -10,6 +11,8 @@
 #include "PointLight.h"
 #include "FreeMesh.h"
 #include "Terrain.h"
+
+using namespace std;
 
 class World {
 	public:
@@ -32,6 +35,9 @@ class World {
 
 	public:
 		World(Camera* cam);
+		World();
 		void draw();
+		void save(string path);
+		static World* load(string path, SDL_Window* win, float width, float height);
 		~World();
 };
