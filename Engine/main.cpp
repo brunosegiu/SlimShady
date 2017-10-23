@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "NormalMappedMesh.h"
 #include "Mesh.h"
+#include "Water.h"
 
 using namespace std;
 
@@ -74,27 +75,8 @@ int main(int argc, char* argv[]) {
 	test.meshes.push_back(test_mesh);
 	test.meshes_nm.push_back(test_normal_map);
 
-	vector<float> positions;
-	vector<unsigned int> index;
-	for (unsigned int i = 0; i <= 10; i++) {  //n = 100
-		for (unsigned int j = 0; j <= 10; j++) {
-			positions.push_back((float)-5+j); // n/2 = 50
-			positions.push_back(0.0f);
-			positions.push_back((float)-5+i);
-		}
-	}
-	for (unsigned int i = 0; i <= 9; i++) {
-		for (unsigned int j = 0; j <= 9; j++) { //n-1 = 99
-			index.push_back(i * 11 + j);
-			index.push_back(i * 11 + j + 1); //n+1 = 101
-			index.push_back(i * 11 + j + 11 +1);
-
-			index.push_back(i * 11 + j + 11 + 1);
-			index.push_back(i * 11 + j + 11);
-			index.push_back(i * 11 + j);
-		}
-	}
-	Entity* grid = new FreeMesh(positions, index);
+	Water* water = new Water();
+	Entity* grid = water->mesh;
 	test.meshes_free.push_back(grid);
 	
 	std::clock_t start;

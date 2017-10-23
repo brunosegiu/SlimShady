@@ -40,6 +40,9 @@
     <ClCompile Include="Water.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="TerrainTile.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -76,6 +79,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Water.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainTile.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

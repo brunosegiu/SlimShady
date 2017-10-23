@@ -3,8 +3,7 @@
 in vec3 normalToFrag;
 in vec2 textCoordFrag;
 
-layout (location = 0) out vec4 color;
-layout (location = 1) out vec4 normal;
+out vec4 color;
 
 uniform bool isTextured;
 uniform sampler2D textSampler;
