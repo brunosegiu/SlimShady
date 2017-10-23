@@ -9,5 +9,5 @@ class TerrainTile {
 		void draw();
 
 		unsigned int vertexCount, indexCount;
-		GLuint verticesID, normalsID, indexID, vaoID;
+		GLuint verticesID, normalsID, textureID, indexID, vaoID;
 };

@@ -36,6 +36,7 @@ TerrainTile::TerrainTile(int width, int height, int offsetx, int offsety, float 
 	int widthHeightMap = FreeImage_GetWidth(bitmap);
 	std::vector<float> positions;
 	std::vector<float> normals;
+	std::vector<float> textCoords;
 	std::vector<unsigned int> index;
 	for (int i = 0; i <= width; i++) {
 		for (int j = 0; j <= height; j++) {
@@ -44,6 +45,8 @@ TerrainTile::TerrainTile(int width, int height, int offsetx, int offsety, float 
 			positions.push_back((normalizedHeight)* maxHeight);
 			positions.push_back(float(offsetx) + float(i));
 			addNormal(normals, i+offsetx, j+offsety, widthHeightMap, heightHeightMap, bitmap);
+			textCoords.push_back(float(i) / width);
+			textCoords.push_back(float(j) / height);
 		}
 	}
 	for (unsigned int i = 0; i <= width - 1; i++) {
@@ -77,14 +80,23 @@ TerrainTile::TerrainTile(int width, int height, int offsetx, int offsety, float 
 	glBindBuffer(GL_ARRAY_BUFFER, this->normalsID);
 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), &normals[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glGenBuffers(1, &this->textureID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->textureID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textCoords.size(), &textCoords[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+
 }
 
 void TerrainTile::draw() {
 	glBindVertexArray(vaoID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)0);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 }

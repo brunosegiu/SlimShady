@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <GL/glew.h>
+
 #include "FreeMesh.h"
 #include "ShaderProgram.h"
 #include "TerrainTile.h"
@@ -16,5 +18,7 @@ class Terrain : public Entity{
 
 		ShaderProgram* terrainShader;
 		vector<TerrainTile*> tiles;
+		GLuint textureID;
+		glm::mat4 viewProjectionMatrix;
 		
 };

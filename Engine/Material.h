@@ -21,4 +21,5 @@ class Material {
 		Material(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, std::string text, std::string normal);
 		~Material();
 		static std::vector<Material*> Material::loadMtl(std::string path);
+		static GLuint loadTexture(std::string path);
 };
