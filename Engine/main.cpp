@@ -22,8 +22,8 @@ void close();
 SDL_Window* window = NULL;
 SDL_GLContext context;
 
-int WIDTH = 1280/2;
-int HEIGHT = 720/2;
+int WIDTH = 800;
+int HEIGHT = 600;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -75,8 +75,8 @@ int main(int argc, char* argv[]) {
 	test.meshes.push_back(test_mesh);
 	test.meshes_nm.push_back(test_normal_map);
 
-	Water water = Water();
-	Entity* grid = water.mesh;
+	Water* water = new Water();
+	Entity* grid = water->mesh;
 	test.meshes_free.push_back(grid);
 	
 	std::clock_t start;

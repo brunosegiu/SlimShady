@@ -40,7 +40,7 @@ vec3 specular(vec3 cameraPos, vec3 normal){
 }
 
 void main(){
-  gl_Position =  worldTransform*vec4(position.x,generateHeight(),position.z,1.0);
+  gl_Position =  worldTransform*vec4(position.x,position.y + generateHeight(),position.z,1.0);
   vec3 normal = gradient();
   vec3 specular = specular(cameraPos, normal);
   float factor = max(dot(-lightdir,normal),0.0);

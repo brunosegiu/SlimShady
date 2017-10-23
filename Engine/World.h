@@ -27,7 +27,6 @@ class World {
 		ShaderProgram* basic;
 		ShaderProgram* basicNM;
 		ShaderProgram* veryBasic;
-		ShaderProgram* terrainShader;
 
 		clock_t lastDraw;
 

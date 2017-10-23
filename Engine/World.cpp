@@ -14,8 +14,11 @@ World::World(Camera* cam) {
 	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
 	this->veryBasic->loadProgram();
 	this->basicNM = new ShaderProgram("assets/shaders/basic_normalmap.vert", "assets/shaders/basic_normalmap.frag");
-	this->terrainShader = new ShaderProgram("assets/shaders/terrain.vert", "assets/shaders/terrain.frag");
-	this->terrain = new Terrain("");
+
+	this->terrain = new Terrain("assets/textures/heightmap.png", 10.0f, 10, 10);
+	//this->terrain->scale(glm::vec3(0.4f, 0.4f, 0.4f));
+	this->terrain->translate(glm::vec3(-128, 0, -128));
+
 	this->lastDraw = clock();
 }
 
@@ -37,7 +40,6 @@ void World::draw() {
 		GLuint modelTransformID = glGetUniformLocation(basic->getId(), "modelTransform");
 		glUniform1i(textID, 0);
 		for (unsigned int i = 0; i < meshes.size(); i++) {
-			//this->worldEntities[i]->rotate(0.04f, glm::vec3(0.0f, 1.0f, 0.0f));
 			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->meshes[i]->modelMatrix;
 			glm::mat4 modelTransf = this->meshes[i]->modelMatrix;
 			glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &modelTransf[0][0]);
@@ -86,15 +88,8 @@ void World::draw() {
 	glEnable(GL_CULL_FACE);
 
 	//Render terrain
-	this->terrainShader->bind();
-	if (terrain) {
-		glDisable(GL_CULL_FACE);
-		GLuint worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
-		glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
-		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-		this->terrain->draw(0);
-		glEnable(GL_CULL_FACE);
-	}
+	this->terrain->viewProjectionMatrix = this->cam->modelViewProjectionMatrix;
+	this->terrain->draw(0);
 }
 
 World::~World() {
