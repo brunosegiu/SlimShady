@@ -88,10 +88,13 @@ void World::draw() {
 		this->veryBasic->bind();
 		GLuint worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
 		GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
+		GLuint camID = glGetUniformLocation(veryBasic->getId(), "cameraPos");
 		glUniform1f(phiID, this->lastDraw / double(CLOCKS_PER_SEC));
 		for (unsigned int j = 0; j < meshes.size(); j++) {
 			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
+			glm::vec3 camDir = this->cam->pos;
 			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+			glUniform3fv(camID, 1, &camDir[0]);
 			this->meshes_free[j]->draw(0);
 		}
 	}

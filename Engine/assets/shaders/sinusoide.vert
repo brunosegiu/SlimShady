@@ -33,9 +33,10 @@ vec3 gradient(){ //F(x,y,x) = y - f(x,z)
 }
 
 vec3 specular(vec3 cameraPos, vec3 normal){
-	vec3 view = normalize(cameraPos - (worldTransform*vec4(position.xyz,1.0)).xyz);
+	vec3 view = normalize(cameraPos - gl_Position.xyz);
 	vec3 reflected = normalize((worldTransform*vec4(reflect(-lightdir, normal),1.0)).xyz);
-	return speccol*pow(dot(reflected,view),15)*reffactor;
+	float factor = max(dot(reflected,view),0);
+	return speccol*pow(factor,15)*reffactor;
 }
 
 void main(){
