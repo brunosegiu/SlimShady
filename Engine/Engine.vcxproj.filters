@@ -46,6 +46,9 @@
     <ClCompile Include="tinyxml2.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="OBJIndexer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -88,6 +91,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="tinyxml2.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="OBJIndexer.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

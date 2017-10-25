@@ -8,6 +8,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "OBJIndexer.h"
+
 void push(std::vector<float> &v, int cant) {
 	for (int i = 0; i < cant; i++) {
 		v.push_back(0);
@@ -38,18 +40,14 @@ Mesh::Mesh(string path) : Entity() {
 		vector<float> vertexBuffer;
 		vector<float> textureBuffer;
 		vector<float> normalBuffer;
-		vector<float> finalNormalBuffer;
-		vector<float> finalTextureBuffer;
+		
+		OBJIndexer indexer;
 
-		vector<unsigned int> vertexIndices;
-		vector<unsigned int> normalIndices;
-		vector<unsigned int> textureIndices;
+		vector<unsigned int> finalVertexIndices;
 
 		int connectedVert = 0;
 		int textureCoords = 0;
 		int normalsCount = 0;
-
-		int vertexIndex = 0;
 
 		string prefix = "usemtl";
 
@@ -86,6 +84,7 @@ Mesh::Mesh(string path) : Entity() {
 			else if (line.c_str()[0] == 'f') {
 				line[0] = ' ';
 
+				vector<unsigned int> vertexIndices, normalIndices, textureIndices;
 				push(vertexIndices, 3);
 				push(normalIndices, 3);
 				push(textureIndices, 3);
@@ -93,45 +92,26 @@ Mesh::Mesh(string path) : Entity() {
 				if (textureCoords > 0) {
 					push(textureIndices, 3);
 					sscanf_s(line.c_str(), "%i/%i/%i %i/%i/%i %i/%i/%i",
-						&vertexIndices[vertexIndex], &textureIndices[vertexIndex], &normalIndices[vertexIndex],
-						&vertexIndices[vertexIndex + 1], &textureIndices[vertexIndex +1], &normalIndices[vertexIndex +1],
-						&vertexIndices[vertexIndex + 2], &textureIndices[vertexIndex +2], &normalIndices[vertexIndex +2]);
+						&vertexIndices[0], &textureIndices[0], &normalIndices[0],
+						&vertexIndices[0 + 1], &textureIndices[0 +1], &normalIndices[0 +1],
+						&vertexIndices[0 + 2], &textureIndices[0 +2], &normalIndices[0 +2]);
 				}
 				else {
 					sscanf_s(line.c_str(), "%i//%i %i//%i %i//%i",
-						&vertexIndices[vertexIndex], &normalIndices[vertexIndex],
-						&vertexIndices[vertexIndex+1], &normalIndices[vertexIndex +1],
-						&vertexIndices[vertexIndex+2], &normalIndices[vertexIndex +2]);
+						&vertexIndices[0], &normalIndices[0],
+						&vertexIndices[0+1], &normalIndices[0 +1],
+						&vertexIndices[0+2], &normalIndices[0 +2]);
 				}
 
-				// Indices are offset by 1
-				for (int j = 0; j < 3; j++) {
-					vertexIndices[vertexIndex+j] -= 1;
-					normalIndices[vertexIndex +j] -= 1;
-					textureIndices[vertexIndex +j] -= 1;
+				for (unsigned int i = 0; i < 3; i++) {
+					vertexIndices[i] -= 1;
+					normalIndices[i] -= 1;
+					textureIndices[i] -= 1;
+					unsigned int index = indexer.getIndex(vertexBuffer[3 * vertexIndices[i]], vertexBuffer[3 * vertexIndices[i] + 1], vertexBuffer[3 * vertexIndices[i] + 2],
+														  normalBuffer[3 * normalIndices[i]], normalBuffer[3 * normalIndices[i] + 1], normalBuffer[3 * normalIndices[i] + 2],
+														  textureBuffer[2*textureIndices[i]], textureBuffer[2*textureIndices[i] + 1]);
+					finalVertexIndices.push_back(index);
 				}
-				
-				if (finalNormalBuffer.size() < vertexBuffer.size()) {
-					push(finalNormalBuffer, vertexBuffer.size() - finalNormalBuffer.size());
-				}
-				// Since OpenGL doesn't support normal/texture indirection, set a normal per vertex (and a text coord)
-				for (int i = 0; i < 3; i++) {
-					for (int j = 0; j < 3; j++) {
-						finalNormalBuffer[3 * (vertexIndices[vertexIndex+i]) + j] = normalBuffer[3 * normalIndices[vertexIndex + i] + j];
-					}
-				}
-				if (textureCoords > 0) {
-					if (finalTextureBuffer.size() < vertexBuffer.size()) {
-						push(finalTextureBuffer, 2*vertexBuffer.size()/3 - finalTextureBuffer.size());
-					}
-					for (int i = 0; i < 3; i++) {
-						for (int j = 0; j < 2; j++) {
-							finalTextureBuffer[2 * (vertexIndices[vertexIndex + i]) + j] = textureBuffer[2 * textureIndices[vertexIndex + i] + j];
-						}
-					}
-				}
-
-				vertexIndex += 3;
 			}
 			else if (!strncmp(line.c_str(), prefix.c_str(), strlen(prefix.c_str()))) {
 				inserted++;
@@ -139,31 +119,31 @@ Mesh::Mesh(string path) : Entity() {
 				if (currentMtl != "") {
 					// Filled up an index array, copy it.
 					this->indices.push_back(0);
-					this->faces.push_back(vertexIndex);
+					this->faces.push_back(finalVertexIndices.size());
 					glGenBuffers(1, &this->indices[this->indices.size() - 1]);
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[this->indices.size() - 1]);
-					glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexIndex, &vertexIndices[0], GL_STATIC_DRAW);
+					glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * finalVertexIndices.size(), &finalVertexIndices[0], GL_STATIC_DRAW);
+					finalVertexIndices.clear();
 				}
 				currentMtl = line.substr(7, line.length());
-				vertexIndex = 0;
 			}
 		}
 
 		//Copy vertices to GPU
 		glGenBuffers(1, &this->verticesID);
 		glBindBuffer(GL_ARRAY_BUFFER, this->verticesID);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * connectedVert, &vertexBuffer[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * indexer.vertices.size(), &indexer.vertices[0], GL_STATIC_DRAW);
 
 		//Copy normals to GPU
 		glGenBuffers(1, &this->normalsID);
 		glBindBuffer(GL_ARRAY_BUFFER, this->normalsID);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * connectedVert, &finalNormalBuffer[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * indexer.normals.size(), &indexer.normals[0], GL_STATIC_DRAW);
 
 		//Copy UV to GPU
 		if (textureCoords > 0) {
 			glGenBuffers(1, &this->textID);
 			glBindBuffer(GL_ARRAY_BUFFER, this->textID);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * (connectedVert / 3), &finalTextureBuffer[0], GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * indexer.textures.size(), &indexer.textures[0], GL_STATIC_DRAW);
 		}
 
 		//Set up the VAO
@@ -184,10 +164,11 @@ Mesh::Mesh(string path) : Entity() {
 		if (currentMtl != "" && indices.size() < inserted) {
 			// Copy indices since the last one wont be copied.
 			this->indices.push_back(0);
-			this->faces.push_back(vertexIndex);
+			this->faces.push_back(finalVertexIndices.size());
 			glGenBuffers(1, &this->indices[this->indices.size() - 1]);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[this->indices.size() - 1]);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexIndex, &vertexIndices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * finalVertexIndices.size(), &finalVertexIndices[0], GL_STATIC_DRAW);
+			finalVertexIndices.clear();
 		}
 
 		objFile.close();

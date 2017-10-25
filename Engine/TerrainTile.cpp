@@ -19,11 +19,11 @@ float getHeight(FIBITMAP* bitmap, int i, int j, int width, int height) {
 }
 
 void addNormal(vector<float> &normals, int i, int j, int width, int height, FIBITMAP* bitmap) {
-	int offset = 20;
-	float heightL = getHeight(bitmap, i - offset, j, width, height);
-	float heightR = getHeight(bitmap, i + offset, j, width, height);
-	float heightD = getHeight(bitmap, i, j - offset, width, height);
-	float heightU = getHeight(bitmap, i, j + offset, width, height);
+	int offset = 1;
+	float heightL = 10.0f * getHeight(bitmap, i - offset, j, width, height);
+	float heightR = 10.0f *  getHeight(bitmap, i + offset, j, width, height);
+	float heightD = 10.0f * getHeight(bitmap, i, j - offset, width, height);
+	float heightU = 10.0f * getHeight(bitmap, i, j + offset, width, height);
 	glm::vec3 normal = glm::vec3(heightL - heightR, 1.0f, heightD - heightU);
 	normal = normalize(normal);
 	normals.push_back(normal.x);

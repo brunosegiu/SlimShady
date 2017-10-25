@@ -16,7 +16,7 @@ GLuint Material::loadTexture(std::string path) {
 	GLuint id;
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(path.c_str());
 	FIBITMAP* bitmap = FreeImage_Load(fif, path.c_str());
-	bitmap = FreeImage_ConvertTo24Bits(bitmap);
+	bitmap = FreeImage_ConvertTo32Bits(bitmap);
 
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
@@ -30,7 +30,7 @@ GLuint Material::loadTexture(std::string path) {
 	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
 	//gluBuild2DMipmaps(GL_TEXTURE_2D, 3, w, h, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 	FreeImage_Unload(bitmap);
 	return id;

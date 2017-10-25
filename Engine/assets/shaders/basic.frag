@@ -14,6 +14,8 @@ void main() {
 	vec4 baseColor;
 	if (isTextured){
 	    baseColor = texture(textSampler, textCoordFrag);
+		if (baseColor.a < 0.5f)
+			discard;
 	}else{
 		baseColor = vec4(Kd,1);
 	}

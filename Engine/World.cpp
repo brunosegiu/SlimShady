@@ -18,9 +18,9 @@ World::World(Camera* cam) {
 	this->veryBasic->loadProgram();
 	this->basicNM = new ShaderProgram("assets/shaders/basic_normalmap.vert", "assets/shaders/basic_normalmap.frag");
 
-	this->terrain = new Terrain("assets/textures/heightmap.png", 10.0f, 10, 10);
-	//this->terrain->scale(glm::vec3(0.4f, 0.4f, 0.4f));
-	this->terrain->translate(glm::vec3(-128, 0, -128));
+	this->terrain = new Terrain("assets/textures/valley.png", 10.0f, 30, 30);
+	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
+	this->terrain->translate(glm::vec3(-128, 10.0f, -128));
 
 	this->lastDraw = clock();
 }
@@ -47,6 +47,7 @@ void World::draw() {
 
 	//Render meshes
 	if (meshes.size() > 0){
+		glDisable(GL_CULL_FACE);
 		this->basic->bind();
 		GLuint worldTransformID = glGetUniformLocation(basic->getId(), "worldTransform");
 		GLuint textID = glGetUniformLocation(basic->getId(), "textSampler");
@@ -60,6 +61,7 @@ void World::draw() {
 			this->meshes[i]->draw(basic->getId());
 		}
 		this->basic->unbind();
+		glEnable(GL_CULL_FACE);
 	}
 	//Render normal mapped meshes
 	if (meshes_nm.size() > 0){
@@ -90,8 +92,8 @@ void World::draw() {
 		GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
 		GLuint camID = glGetUniformLocation(veryBasic->getId(), "cameraPos");
 		glUniform1f(phiID, this->lastDraw / double(CLOCKS_PER_SEC));
-		for (unsigned int j = 0; j < meshes.size(); j++) {
-			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
+		for (unsigned int j = 0; j < meshes_free.size(); j++) {
+			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->meshes_free[j]->modelMatrix;
 			glm::vec3 camDir = this->cam->pos;
 			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 			glUniform3fv(camID, 1, &camDir[0]);

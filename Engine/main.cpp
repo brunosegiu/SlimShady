@@ -22,8 +22,8 @@ void close();
 SDL_Window* window = NULL;
 SDL_GLContext context;
 
-int WIDTH = 800;
-int HEIGHT = 600;
+int WIDTH = 1280;
+int HEIGHT = 720;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -39,7 +39,7 @@ void init() {
 }
 
 void initGL() {
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.0f, 0.7f, 1.0f, 1.0f);
 
 	//OpenGL attribs
 	glEnable(GL_DEPTH_TEST);
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 
 	Entity* test_mesh, *test_normal_map;
 	test_mesh = new Mesh("assets/models/boulder");
-	test_mesh->translate(glm::vec3(10.0f, 0.0f, 0.0f));
+	//test_mesh->translate(glm::vec3(250.0f, 5.0f, 100.0f));
 	test_normal_map = new NormalMappedMesh("assets/models/boulder");
 	test_normal_map->translate(glm::vec3(-10.0f, 0.0f, 0.0f));
 	test->meshes.push_back(test_mesh);
@@ -77,11 +77,10 @@ int main(int argc, char* argv[]) {
 
 	Water* water = new Water();
 	Entity* grid = water->mesh;
+	grid->scale(glm::vec3(5.0f, 1.0f, 5.0f));
+	grid->translate(glm::vec3(0.0f, 1.0f, 27.0f));
 	test->meshes_free.push_back(grid);
 
-	test->save("test.world");
-	test = World::load("test.world", window, WIDTH, HEIGHT);
-	cam = test->cam;
 	std::clock_t start;
 	while (!exit) {
 		start = clock();

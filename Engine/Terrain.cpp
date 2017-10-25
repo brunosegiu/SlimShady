@@ -16,6 +16,7 @@ Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY) 
 	FIBITMAP* bitmap = FreeImage_Load(fif, heightmapPath.c_str());
 	int terrSizeY = FreeImage_GetHeight(bitmap);
 	int terrSizeX = FreeImage_GetWidth(bitmap);
+	
 	int tileSizeX = terrSizeX / tilesX;
 	int tileSizeY = terrSizeY / tilesY;
 	for (int i = 0; i < tilesX; i++) {
@@ -27,7 +28,7 @@ Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY) 
 		}
 	}
 	FreeImage_Unload(bitmap);
-	this->textureID = Material::loadTexture("assets/textures/terrain.jpg");
+	this->textureID = Material::loadTexture("assets/textures/grass.jpg");
 }
 
 void Terrain::draw(GLuint shaderID) {
