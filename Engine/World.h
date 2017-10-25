@@ -11,6 +11,7 @@
 #include "PointLight.h"
 #include "FreeMesh.h"
 #include "Terrain.h"
+#include "Water.h"
 
 using namespace std;
 
@@ -22,6 +23,7 @@ class World {
 		std::vector<Entity*> meshes_free;
 		Terrain* terrain;
 		Camera* cam;
+		Water* water;
 
 		//Luces
 		std::vector<DirectionalLight*> dirLights;

@@ -98,38 +98,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\basic.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\basic.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\basic_normalmap.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\basic_normalmap.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\sinusoide.geo">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\sinusoide.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\veryBasic.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\veryBasic.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\terrain.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\terrain.vert">
-      <Filter>Shaders</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Headers">
       <UniqueIdentifier>{9ee3a804-535e-46c8-b22e-5c1971bee874}</UniqueIdentifier>
     </Filter>
@@ -139,5 +107,31 @@
     <Filter Include="Source">
       <UniqueIdentifier>{3ef79270-b2bd-4ca8-b854-e089e844e438}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\mesh.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\mesh.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\mesh_normalmap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\mesh_normalmap.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\terrain.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\terrain.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\water.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\water.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

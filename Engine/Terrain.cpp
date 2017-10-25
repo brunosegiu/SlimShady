@@ -49,4 +49,9 @@ void Terrain::draw(GLuint shaderID) {
 }
 
 Terrain::~Terrain() {
+	delete this->terrainShader;
+	for (unsigned int i = 0; i < this->tiles.size(); i++) {
+		delete tiles[i];
+	}
+	glDeleteTextures(1, &this->textureID);
 }

@@ -75,12 +75,6 @@ int main(int argc, char* argv[]) {
 	test->meshes.push_back(test_mesh);
 	test->meshes_nm.push_back(test_normal_map);
 
-	Water* water = new Water();
-	Entity* grid = water->mesh;
-	grid->scale(glm::vec3(5.0f, 1.0f, 5.0f));
-	grid->translate(glm::vec3(0.0f, 1.0f, 27.0f));
-	test->meshes_free.push_back(grid);
-
 	std::clock_t start;
 	while (!exit) {
 		start = clock();

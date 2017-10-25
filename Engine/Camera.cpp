@@ -54,7 +54,7 @@ void Camera::update() {
 		SDL_WarpMouseInWindow(win, unsigned int(width / 2), unsigned int(height / 2));
 	}
 	if (in) {
-		float dur = (std::clock() - lastUpdate) / (double)CLOCKS_PER_SEC;
+		float dur = float((std::clock() - lastUpdate) / (double)CLOCKS_PER_SEC);
 		const Uint8* state = SDL_GetKeyboardState(NULL);
 		glm::vec3 dir = glm::normalize(ref - pos);
 		glm::vec3 right = glm::cross(dir, up);

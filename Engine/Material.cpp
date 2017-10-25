@@ -130,7 +130,6 @@ std::vector<Material*> Material::loadMtl(string path) {
 }
 
 Material::~Material() {
-	if (isTextured) {
-		glDeleteTextures(1, &this->textID);
-	}
+	glDeleteTextures(1, &this->textID);
+	glDeleteTextures(1, &this->normalID);
 }

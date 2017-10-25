@@ -10,29 +10,22 @@
 World::World(Camera* cam) {
 	this->cam = cam;
 	//Shaders
-	this->basic = new ShaderProgram("assets/shaders/basic.vert", "assets/shaders/basic.frag");
-	this->veryBasic = new ShaderProgram();
-	this->veryBasic->loadShader("assets/shaders/sinusoide.vert", GL_VERTEX_SHADER);
-	//this->veryBasic->loadShader("assets/shaders/sinusoide.geo", GL_GEOMETRY_SHADER);
-	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
-	this->veryBasic->loadProgram();
-	this->basicNM = new ShaderProgram("assets/shaders/basic_normalmap.vert", "assets/shaders/basic_normalmap.frag");
+	this->basic = new ShaderProgram("assets/shaders/mesh.vert", "assets/shaders/mesh.frag");
+	this->basicNM = new ShaderProgram("assets/shaders/mesh_normalmap.vert", "assets/shaders/mesh_normalmap.frag");
 
-	this->terrain = new Terrain("assets/textures/valley.png", 10.0f, 30, 30);
+	this->terrain = new Terrain("assets/textures/valley.png", 10.0f, 20, 20);
+	this->terrain->translate(glm::vec3(-256, 7.0f, -256));
 	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
-	this->terrain->translate(glm::vec3(-128, 10.0f, -128));
+	
+	this->water = new Water(300, 300);
 
 	this->lastDraw = clock();
 }
 
 World::World() {
 	//Shaders
-	this->basic = new ShaderProgram("assets/shaders/basic.vert", "assets/shaders/basic.frag");
-	this->veryBasic = new ShaderProgram();
-	this->veryBasic->loadShader("assets/shaders/sinusoide.vert", GL_VERTEX_SHADER);
-	this->veryBasic->loadShader("assets/shaders/veryBasic.frag", GL_FRAGMENT_SHADER);
-	this->veryBasic->loadProgram();
-	this->basicNM = new ShaderProgram("assets/shaders/basic_normalmap.vert", "assets/shaders/basic_normalmap.frag");
+	this->basic = new ShaderProgram("assets/shaders/mesh.vert", "assets/shaders/mesh.frag");
+	this->basicNM = new ShaderProgram("assets/shaders/mesh_normalmap.vert", "assets/shaders/mesh_normalmap.frag");
 }
 
 void World::draw() {
@@ -47,7 +40,6 @@ void World::draw() {
 
 	//Render meshes
 	if (meshes.size() > 0){
-		glDisable(GL_CULL_FACE);
 		this->basic->bind();
 		GLuint worldTransformID = glGetUniformLocation(basic->getId(), "worldTransform");
 		GLuint textID = glGetUniformLocation(basic->getId(), "textSampler");
@@ -61,7 +53,6 @@ void World::draw() {
 			this->meshes[i]->draw(basic->getId());
 		}
 		this->basic->unbind();
-		glEnable(GL_CULL_FACE);
 	}
 	//Render normal mapped meshes
 	if (meshes_nm.size() > 0){
@@ -84,23 +75,12 @@ void World::draw() {
 		}
 		this->basicNM->unbind();
 	}
-	//Render free meshes
-	glDisable(GL_CULL_FACE);
-	if (meshes_free.size() > 0){
-		this->veryBasic->bind();
-		GLuint worldTransformID = glGetUniformLocation(veryBasic->getId(), "worldTransform");
-		GLuint phiID = glGetUniformLocation(veryBasic->getId(), "phi");
-		GLuint camID = glGetUniformLocation(veryBasic->getId(), "cameraPos");
-		glUniform1f(phiID, this->lastDraw / double(CLOCKS_PER_SEC));
-		for (unsigned int j = 0; j < meshes_free.size(); j++) {
-			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->meshes_free[j]->modelMatrix;
-			glm::vec3 camDir = this->cam->pos;
-			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-			glUniform3fv(camID, 1, &camDir[0]);
-			this->meshes_free[j]->draw(0);
-		}
-	}
-	glEnable(GL_CULL_FACE);
+
+	//Render water
+	this->water->mvp = this->cam->modelViewProjectionMatrix;
+	this->water->lastDraw = this->lastDraw;
+	this->water->camPos = this->cam->pos;
+	this->water->draw(0);
 
 	//Render terrain
 	this->terrain->viewProjectionMatrix = this->cam->modelViewProjectionMatrix;
@@ -262,4 +242,6 @@ World::~World() {
 	}
 	delete cam;
 	delete basic;
+	delete water;
+	delete terrain;
 }
