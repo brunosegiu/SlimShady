@@ -12,6 +12,9 @@
 #include "Mesh.h"
 #include "Water.h"
 
+#include "imgui.h"
+#include "imgui_impl_sdl_gl3.h"
+
 using namespace std;
 
 void init();
@@ -59,6 +62,9 @@ void close() {
 
 int main(int argc, char* argv[]) {
 	init();
+
+	ImGui_ImplSdlGL3_Init(window);
+
 	bool exit = false;
 	bool wireframe = false;
 	SDL_Event event;
@@ -80,36 +86,57 @@ int main(int argc, char* argv[]) {
 		start = clock();
 		while (SDL_PollEvent(&event) != 0) {
 			switch (event.type) {
-				case SDL_QUIT:
+			case SDL_QUIT:
+				exit = true;
+				break;
+			case SDL_KEYDOWN: {
+				if (event.key.keysym.sym == SDLK_ESCAPE) {
 					exit = true;
-					break;
-				case SDL_KEYDOWN: {
-					if (event.key.keysym.sym == SDLK_ESCAPE) {
-						exit = true;
+				}
+				else if (event.key.keysym.sym == SDLK_z) {
+					wireframe = !wireframe;
+					if (wireframe) {
+						glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 					}
-					else if (event.key.keysym.sym == SDLK_z) {
-						wireframe = !wireframe;
-						if (wireframe) {
-							glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-						}
-						else {
-							glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-						}
+					else {
+						glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 					}
 				}
-				break;
-				case SDL_MOUSEBUTTONDOWN: {
-					cam->in = !cam->in;
-					if (cam->in)  {
-						SDL_ShowCursor(SDL_DISABLE);
-					}
-					else
-						SDL_ShowCursor(SDL_ENABLE);
-				}
-				break;
 			}
+							  break;
+			case SDL_MOUSEBUTTONDOWN: {
+				cam->in = !cam->in;
+				if (cam->in) {
+					SDL_ShowCursor(SDL_DISABLE);
+				}
+				else
+					SDL_ShowCursor(SDL_ENABLE);
+			}
+									  break;
+			}
+			ImGui_ImplSdlGL3_ProcessEvent(&event);
 		}
+
+		ImGui_ImplSdlGL3_NewFrame(window);
+			if (ImGui::BeginMainMenuBar()) {
+				if (ImGui::BeginMenu("Archivo")) {
+					if (ImGui::MenuItem("Nuevo")) {
+					}
+					if (ImGui::MenuItem("Abrir")) {
+					}
+					if (ImGui::MenuItem("Guardar")) {
+					}
+					if (ImGui::MenuItem("Guardar y renderizar")) {
+					}
+					ImGui::EndMenu();
+				}
+				ImGui::EndMainMenuBar();
+			}
+		glClear(GL_COLOR_BUFFER_BIT);
+		
+
 		draw(*test);
+		ImGui::Render();
 		double dif = frameTime - ((clock() - start) * (1000.0 / double(CLOCKS_PER_SEC)) );
 		if (dif > 0) {
 			Sleep(int(dif));

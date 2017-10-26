@@ -49,6 +49,15 @@
     <ClCompile Include="OBJIndexer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_sdl_gl3.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -94,6 +103,24 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="OBJIndexer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_sdl_gl3.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_rect_pack.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_textedit.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_truetype.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
