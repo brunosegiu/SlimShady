@@ -20,6 +20,8 @@ World::World(Camera* cam) {
 	this->water = new Water(300, 300);
 
 	this->lastDraw = clock();
+
+	this->sun = new Sun(lastDraw);
 }
 
 World::World() {
@@ -32,6 +34,9 @@ void World::draw() {
 	// Update drawing timer
 	float elapsed = (clock() - this->lastDraw)/double(CLOCKS_PER_SEC);
 	this->lastDraw = clock();
+
+	//Update Sun
+	this->sun->updateLight(lastDraw);
 
 	// Update Camera view
 	this->cam->update();
@@ -80,6 +85,7 @@ void World::draw() {
 	this->water->mvp = this->cam->modelViewProjectionMatrix;
 	this->water->lastDraw = this->lastDraw;
 	this->water->camPos = this->cam->pos;
+	this->water->lightDir = sun->light->dir;
 	this->water->draw(0);
 
 	//Render terrain

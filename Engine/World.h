@@ -12,6 +12,7 @@
 #include "FreeMesh.h"
 #include "Terrain.h"
 #include "Water.h"
+#include "Sun.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ class World {
 		Water* water;
 
 		//Luces
+		Sun* sun;
 		std::vector<DirectionalLight*> dirLights;
 		
 		//Shaders
