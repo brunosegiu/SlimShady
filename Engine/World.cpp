@@ -86,6 +86,7 @@ void World::draw() {
 	this->water->lastDraw = this->lastDraw;
 	this->water->camPos = this->cam->pos;
 	this->water->lightDir = sun->light->dir;
+	this->water->lightColor = sun->light->color;
 	this->water->draw(0);
 
 	//Render terrain

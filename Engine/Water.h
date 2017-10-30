@@ -17,6 +17,7 @@ public:
 	clock_t lastDraw;
 	glm::vec3 camPos;
 	glm::vec3 lightDir;  //No, porque van a tener todos lo mismo
+	glm::vec3 lightColor;
 public:
 	Water(int width, int height);
 	void draw(GLuint shaderID);

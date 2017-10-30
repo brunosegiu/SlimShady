@@ -6,11 +6,12 @@ uniform mat4 worldTransform;
 uniform vec3 cameraPos;
 uniform float phi;
 uniform vec3 lightdir;
+uniform vec3 lightcolor;
 
 const float PI = 3.1415926535897932384626433832795;
 const float amplitude = 0.5;
 //const vec3 lightdir = normalize(vec3(-1.0,-1.0,0.0));
-const vec3 watercolor = vec3(0.1,0.1,0.45);
+const vec3 watercolor = vec3(0.2,0.2,0.5);
 const vec3 speccol = vec3(1.0,1.0,1.0);
 const float reffactor = 0.5; 
 
@@ -44,6 +45,6 @@ void main(){
   gl_Position =  worldTransform*vec4(position.x,position.y + generateHeight(),position.z,1.0);
   vec3 normal = gradient();
   vec3 specular = specular(cameraPos, normal);
-  float factor = max(dot(-lightdir,normal),0.0);
-  color = (watercolor*factor)+specular;
+  float factor = max(dot(-lightdir,normal),0.3);
+  color = (watercolor*lightcolor*factor)+specular;
 }
