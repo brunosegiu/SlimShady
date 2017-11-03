@@ -58,6 +58,12 @@
     <ClCompile Include="imgui.cpp">
       <Filter>Headers</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Sun.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -121,6 +127,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="stb_truetype.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sun.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -22,7 +22,7 @@ void NormalMappedMesh::push(std::vector<unsigned int> &v, int cant) {
 	}
 }
 
-NormalMappedMesh::NormalMappedMesh(string path) : Entity(){
+NormalMappedMesh::NormalMappedMesh(string path){
 	this->path = path;
 	string fullpath = path + ".obj";
 	this->mats = Material::loadMtl(path);
@@ -51,10 +51,15 @@ NormalMappedMesh::NormalMappedMesh(string path) : Entity(){
 		int normalsCount = 0;
 
 		string prefix = "usemtl";
+		string name = "None";
 
 		while (!objFile.eof()) {
 			getline(objFile, line);
-			if (line.c_str()[0] == 'v' && line.c_str()[1] == ' ') {
+			if (line.c_str()[0] == 'o' && line.c_str()[1] == ' ') {
+				line[0] = ' ';
+				name = line.substr(2, line.size());
+			}
+			else if (line.c_str()[0] == 'v' && line.c_str()[1] == ' ') {
 				line[0] = ' ';
 				push(vertexBuffer, 3);
 				sscanf_s(line.c_str(), "%f %f %f ",
@@ -198,6 +203,7 @@ NormalMappedMesh::NormalMappedMesh(string path) : Entity(){
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * finalVertexIndices.size(), &finalVertexIndices[0], GL_STATIC_DRAW);
 		}
 
+		this->name = name;
 		objFile.close();
 	}
 	else {

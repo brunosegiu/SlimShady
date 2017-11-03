@@ -6,11 +6,15 @@
 
 #include "FreeMesh.h"
 #include "ShaderProgram.h"
+#include "Model.h"
 
-class Water{
+class FreeMesh;
+
+class Water : public Model{
 public:
 	FreeMesh* mesh;
 	ShaderProgram* shader;
+	GLuint textureID;
 
 	//States
 	glm::mat4 mvp;
@@ -20,6 +24,7 @@ public:
 	glm::vec3 lightColor;
 public:
 	Water(int width, int height);
+	GLuint loadTexture(std::string path);
 	void draw(GLuint shaderID);
 	~Water();
 };

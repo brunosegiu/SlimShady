@@ -22,7 +22,7 @@ void push(std::vector<unsigned int> &v, int cant) {
 	}
 }
 
-Mesh::Mesh(string path) : Entity() {
+Mesh::Mesh(string path) : Model() {
 	this->path = path;
 	string fullpath = path + ".obj";
 	this->mats = Material::loadMtl(path);
@@ -49,11 +49,18 @@ Mesh::Mesh(string path) : Entity() {
 		int textureCoords = 0;
 		int normalsCount = 0;
 
-		string prefix = "usemtl";
+		string prefix = "usemtl"; 
+		string prefixName = "o";
+		
+		this->name = "None";
 
 		while (!objFile.eof()) {
 			getline(objFile, line);
-			if (line.c_str()[0] == 'v' && line.c_str()[1] == ' ') {
+			if (line.c_str()[0] == 'o') {
+				line[0] = ' ';
+				name = line.substr(2, line.size());
+			}
+			else if (line.c_str()[0] == 'v' && line.c_str()[1] == ' ') {
 				line[0] = ' ';
 				push(vertexBuffer, 3);
 				sscanf_s(line.c_str(), "%f %f %f ",

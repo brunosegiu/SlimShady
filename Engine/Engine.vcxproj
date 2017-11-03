@@ -132,11 +132,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="NormalMappedMesh.cpp" />
     <ClCompile Include="OBJIndexer.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Sun.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainTile.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
@@ -153,6 +155,7 @@
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="NormalMappedMesh.h" />
     <ClInclude Include="OBJIndexer.h" />
     <ClInclude Include="PointLight.h" />
@@ -160,6 +163,7 @@
     <ClInclude Include="stb_rect_pack.h" />
     <ClInclude Include="stb_textedit.h" />
     <ClInclude Include="stb_truetype.h" />
+    <ClInclude Include="Sun.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainTile.h" />
     <ClInclude Include="tinyxml2.h" />

@@ -7,7 +7,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index) : Entity() {
+FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index){
 	vertexCount = positions.size() / 3;
 	indexCount = index.size();
 
@@ -38,15 +38,25 @@ FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, normales.size() * sizeof(float), &normales[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);*/
 
+	textured = false;
 }
 
 void FreeMesh::draw(GLuint shaderID) {
 	glBindVertexArray(vaoID);
 	glEnableVertexAttribArray(0);
-	//glEnableVertexAttribArray(1);
+	if(textured) glEnableVertexAttribArray(1);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)0);
 	glDisableVertexAttribArray(0);
-	//glDisableVertexAttribArray(1);
+	if(textured) glDisableVertexAttribArray(1);
+}
+
+void FreeMesh::addTexture(std::vector<float> textcoords) {
+	glGenBuffers(1, &textureID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->textureID);
+	glBufferData(GL_ARRAY_BUFFER, textcoords.size() * sizeof(float), &textcoords[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	textured = true;
 }
 
 void FreeMesh::setShader(GLuint shaderID) {

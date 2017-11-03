@@ -6,7 +6,8 @@
 
 #include "Material.h"
 
-Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY) : Entity(){
+Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY){
+	this->name = "Terrain";
 	this->path = heightmapPath;
 	this->maxHeight = maxHeight;
 	this->tilesX = tilesX;
@@ -33,16 +34,9 @@ Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY) 
 
 void Terrain::draw(GLuint shaderID) {
 	this->terrainShader->bind();
-	GLuint modelTransformID = glGetUniformLocation(terrainShader->getId(), "modelTransform");
-	GLuint worldTransformID = glGetUniformLocation(terrainShader->getId(), "worldTransform");
-	glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &this->modelMatrix[0][0]);
-	glm::mat4 toWorldCoords = this->viewProjectionMatrix * this->modelMatrix;
-	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->textureID);
-	GLuint textID = glGetUniformLocation(shaderID, "textSampler");
-	glUniform1i(textID, 0);
 	for (unsigned int i = 0; i < tiles.size(); i++) {
 		tiles[i]->draw();
 	}
