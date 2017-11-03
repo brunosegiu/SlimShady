@@ -12,6 +12,6 @@ uniform mat4 modelTransform;
 
 void main(){
   gl_Position =  worldTransform * vec4(position,1.0);
-  normalToFrag = (modelTransform * vec4(normal,0.0f)).xyz;
+  normalToFrag = normalize((modelTransform * vec4(normal,0.0f)).xyz);
   textureCoordToFrag = textureCoord;
 }

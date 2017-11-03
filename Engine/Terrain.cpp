@@ -34,16 +34,9 @@ Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY){
 
 void Terrain::draw(GLuint shaderID) {
 	this->terrainShader->bind();
-	GLuint modelTransformID = glGetUniformLocation(terrainShader->getId(), "modelTransform");
-	GLuint worldTransformID = glGetUniformLocation(terrainShader->getId(), "worldTransform");
-	glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &glm::mat4(1.0f)[0][0]/*&this->modelMatrix[0][0]*/);
-	glm::mat4 toWorldCoords = this->viewProjectionMatrix;
-	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->textureID);
-	GLuint textID = glGetUniformLocation(shaderID, "textSampler");
-	glUniform1i(textID, 0);
 	for (unsigned int i = 0; i < tiles.size(); i++) {
 		tiles[i]->draw();
 	}

@@ -5,17 +5,18 @@
 #include <string>
 #include <map>
 
-#include "Entity.h"
 #include "Camera.h"
 #include "ShaderProgram.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
-#include "FreeMesh.h"
 #include "Terrain.h"
 #include "Water.h"
 #include "Sun.h"
+#include "Entity.h"
 
 using namespace std;
+
+class Entity;
 
 class World {
 	public:

@@ -8,6 +8,8 @@
 #include "ShaderProgram.h"
 #include "Model.h"
 
+class FreeMesh;
+
 class Water : public Model{
 public:
 	FreeMesh* mesh;

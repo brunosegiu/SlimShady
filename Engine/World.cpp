@@ -15,8 +15,8 @@ World::World(Camera* cam) {
 
 	addModel(new Terrain("assets/textures/valley.png", 10.0f, 20, 20));
 	addModel(new Water(300, 300));
-	this->terrain = new Entity(models["Terrain"], cam);
-	this->water = new Entity(models["Water"], cam);
+	this->terrain = new Entity(models["Terrain"], this);
+	this->water = new Entity(models["Water"], this);
 //	this->terrain->translate(glm::vec3(-256, 7.0f, -256));
 //	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
 
@@ -65,9 +65,7 @@ void World::draw() {
 	w->draw(0);
 
 	//Render terrain
-	Terrain* t = dynamic_cast<Terrain*>(this->terrain->model);
-	t->viewProjectionMatrix = this->cam->modelViewProjectionMatrix;
-	t->draw(0);
+	terrain->draw(0);
 }
 
 void World::addModel(Model* model) {
@@ -80,7 +78,7 @@ void World::addModel(Model* model) {
 void World::addEntity(string name) {
 	if (this->models.count(name) > 0) {
 		Model* model = this->models[name];
-		Entity* ent = new Entity(model, cam);
+		Entity* ent = new Entity(model, this);
 		if (dynamic_cast<Mesh*>(model)) {
 			this->meshes.push_back(ent);
 		}
