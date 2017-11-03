@@ -2,7 +2,7 @@
 	<Name>boulder</Name>
 	<PrimCount>8</PrimCount>
 	<Coordinates>
-		<Position x="0" y="0" z="0"/>
+		<Position x="20" y="0" z="0"/>
 		<Position x="10" y="0" z="0"/>
 		<Position x="0" y="0" z="10"/>
 		<Position x="10" y="0" z="10"/>

@@ -132,6 +132,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshInstanced.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="NormalMappedMesh.cpp" />
     <ClCompile Include="OBJIndexer.cpp" />
@@ -150,11 +151,13 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="FreeMesh.h" />
+    <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_sdl_gl3.h" />
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshInstanced.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="NormalMappedMesh.h" />
     <ClInclude Include="OBJIndexer.h" />
@@ -173,6 +176,8 @@
   <ItemGroup>
     <None Include="assets\shaders\mesh.frag" />
     <None Include="assets\shaders\mesh.vert" />
+    <None Include="assets\shaders\meshInst.frag" />
+    <None Include="assets\shaders\meshInst.vert" />
     <None Include="assets\shaders\mesh_normalmap.frag" />
     <None Include="assets\shaders\mesh_normalmap.vert" />
     <None Include="assets\shaders\terrain.frag" />

@@ -21,5 +21,5 @@ class Mesh : public Model {
 	public:
 		Mesh(string path);
 		void draw(GLuint shaderID);
-		~Mesh();
+		virtual ~Mesh();
 };

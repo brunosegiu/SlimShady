@@ -14,5 +14,5 @@ public:
 	MeshInstanced(string modelPath, vector<float> coords);
 	//Pense en sobrecargar la operacion, pero mejor darle otro metodo
 	void drawInstanced(GLuint shaderID);
-
+	virtual ~MeshInstanced();
 };

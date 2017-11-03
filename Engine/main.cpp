@@ -9,6 +9,7 @@
 #include "World.h"
 #include "Camera.h"
 #include "NormalMappedMesh.h"
+#include "MeshInstanced.h"
 #include "Mesh.h"
 #include "Water.h"
 
@@ -83,10 +84,13 @@ int main(int argc, char* argv[]) {
 
 	Model* mesh = new Mesh("assets/models/boulder");
 	Model* mesh2 = new NormalMappedMesh("assets/models/boulder");
+	Model* mesh3 = new MeshInstanced("assets/models/boulder", "assets/models/boulder");
 	test->addModel(mesh);
 	test->addModel(mesh2);
+	test->addModel(mesh3);
 	test->addEntity(mesh->name);
 	test->addEntity(mesh2->name);
+	test->addEntity(mesh3->name);
 
 	std::clock_t start;
 	while (!exit) {

@@ -134,3 +134,8 @@ MeshInstanced::MeshInstanced(string modelPath, string coordsPath)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
+
+MeshInstanced::~MeshInstanced() {
+	this->instancesCoords.clear();
+	glDeleteBuffers(1, &this->verticesID);
+}

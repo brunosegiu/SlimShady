@@ -24,6 +24,7 @@ class World {
 		std::vector<Entity*> meshes;
 		std::vector<Entity*> meshes_nm;
 		std::vector<Entity*> meshes_free;
+		std::vector<Entity*> meshes_inst;
 		std::map<string, Model*> models;
 		Entity* terrain;
 		Entity* water;
@@ -37,6 +38,7 @@ class World {
 		//Shaders
 		ShaderProgram* basic;
 		ShaderProgram* basicNM;
+		ShaderProgram* basicInst;
 		ShaderProgram* veryBasic;
 
 		clock_t lastDraw;

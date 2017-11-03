@@ -1,24 +1,26 @@
 #include "World.h"
-
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
 #include "tinyxml2.h"
 #include "Mesh.h"
 #include "NormalMappedMesh.h"
+#include "MeshInstanced.h"
 
 World::World(Camera* cam) {
 	this->cam = cam;
 	//Shaders
 	this->basic = new ShaderProgram("assets/shaders/mesh.vert", "assets/shaders/mesh.frag");
 	this->basicNM = new ShaderProgram("assets/shaders/mesh_normalmap.vert", "assets/shaders/mesh_normalmap.frag");
+	this->basicInst = new ShaderProgram("assets/shaders/meshInst.vert", "assets/shaders/meshInst.frag");
 
 	addModel(new Terrain("assets/textures/valley.png", 10.0f, 20, 20));
 	addModel(new Water(300, 300));
 	this->terrain = new Entity(models["Terrain"], this);
 	this->water = new Entity(models["Water"], this);
-//	this->terrain->translate(glm::vec3(-256, 7.0f, -256));
-//	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
+	//	this->terrain->translate(glm::vec3(-256, 7.0f, -256));
+	//	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
 
 	this->lastDraw = clock();
 
@@ -27,7 +29,7 @@ World::World(Camera* cam) {
 
 void World::draw() {
 	// Update drawing timer
-	float elapsed = (clock() - this->lastDraw)/double(CLOCKS_PER_SEC);
+	float elapsed = (clock() - this->lastDraw) / double(CLOCKS_PER_SEC);
 	this->lastDraw = clock();
 
 	//Update Sun
@@ -39,21 +41,31 @@ void World::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//Render meshes
-	if (meshes.size() > 0){
+	if (meshes.size() > 0) {
 		this->basic->bind();
 		for (unsigned int i = 0; i < meshes.size(); i++) {
 			this->meshes[i]->draw(basic->getId());
 		}
 		this->basic->unbind();
 	}
+	
 	//Render normal mapped meshes
-	if (meshes_nm.size() > 0){
+	if (meshes_nm.size() > 0) {
 		this->basicNM->bind();
 		for (unsigned int i = 0; i < meshes_nm.size(); i++) {
 			this->meshes_nm[i]->draw(basicNM->getId());
 		}
 		this->basicNM->unbind();
 	}
+	//Render instanced meshes
+	if (meshes_inst.size() > 0) {
+		this->basicInst->bind();
+		for (unsigned int i = 0; i < meshes_inst.size(); i++) {
+			this->meshes_inst[i]->draw(basicInst->getId());
+		}
+		this->basicInst->unbind();
+	}
+	
 
 	//Render water
 	Water* w = dynamic_cast<Water*>(this->water->model);
@@ -66,6 +78,9 @@ void World::draw() {
 
 	//Render terrain
 	terrain->draw(0);
+	
+	
+	
 }
 
 void World::addModel(Model* model) {
@@ -79,11 +94,14 @@ void World::addEntity(string name) {
 	if (this->models.count(name) > 0) {
 		Model* model = this->models[name];
 		Entity* ent = new Entity(model, this);
-		if (dynamic_cast<Mesh*>(model)) {
-			this->meshes.push_back(ent);
-		}
-		else if (dynamic_cast<NormalMappedMesh*>(model)) {
+		if (dynamic_cast<NormalMappedMesh*>(model)) {
 			this->meshes_nm.push_back(ent);
+		}
+		else if (dynamic_cast<MeshInstanced*>(model)) {
+			this->meshes_inst.push_back(ent);
+		}
+		else if (dynamic_cast<Mesh*>(model)) {
+			this->meshes.push_back(ent);
 		}
 	}
 }
@@ -235,6 +253,9 @@ World::~World() {
 	}
 	for (unsigned int i = 0; i < meshes_nm.size(); i++) {
 		delete this->meshes_nm[i];
+	}
+	for (unsigned int i = 0; i < meshes_nm.size(); i++) {
+		delete this->meshes_inst[i];
 	}
 	for (unsigned int i = 0; i < meshes_free.size(); i++) {
 		delete this->meshes_free[i];
