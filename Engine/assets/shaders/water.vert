@@ -1,22 +1,17 @@
 #version 330 core
 
 layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 textureCoord;
 
 uniform mat4 worldTransform;
-uniform vec3 cameraPos;
 uniform float phi;
-uniform vec3 lightdir;
-uniform vec3 lightcolor;
 
 const float PI = 3.1415926535897932384626433832795;
 const float amplitude = 0.5;
-//const vec3 lightdir = normalize(vec3(-1.0,-1.0,0.0));
-const vec3 watercolor = vec3(0.2,0.2,0.5);
-const vec3 speccol = vec3(1.0,1.0,1.0);
-const float reffactor = 0.5; 
+//const vec3 watercolor = vec3(0.2,0.2,0.5);
 
-out vec3 color;
 out vec3 normal;
+out vec2 passTextCoord;
 
 float generateHeight(){
 	float wave1 = sin(phi + position.z/16)*0.5;			//Deep Water
@@ -34,17 +29,8 @@ vec3 gradient(){ //F(x,y,x) = y - f(x,z)
 	return normalize(wave1+wave2+wave3+wave4);
 }
 
-vec3 specular(vec3 cameraPos, vec3 normal){
-	vec3 view = normalize(cameraPos - gl_Position.xyz);
-	vec3 reflected = normalize((worldTransform*vec4(reflect(-lightdir, normal),1.0)).xyz);
-	float factor = max(dot(reflected,view),0);
-	return speccol*pow(factor,15)*reffactor;
-}
-
 void main(){
   gl_Position =  worldTransform*vec4(position.x,position.y + generateHeight(),position.z,1.0);
-  vec3 normal = gradient();
-  vec3 specular = specular(cameraPos, normal);
-  float factor = max(dot(-lightdir,normal),0.3);
-  color = (watercolor*lightcolor*factor)+specular;
+  normal = gradient();
+  passTextCoord = textureCoord;
 }
