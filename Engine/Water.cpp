@@ -33,11 +33,15 @@ void Water::draw(GLuint shaderID) {
 	GLuint worldTransformID = glGetUniformLocation(shader->getId(), "worldTransform");
 	GLuint phiID = glGetUniformLocation(shader->getId(), "phi");
 	GLuint camID = glGetUniformLocation(shader->getId(), "cameraPos");
+	GLuint lightDirID = glGetUniformLocation(shader->getId(), "lightdir");
+	GLuint lightColorID = glGetUniformLocation(shader->getId(), "lightcolor");
 	glUniform1f(phiID, this->lastDraw / double(CLOCKS_PER_SEC));
 	glm::mat4 toWorldCoords = mvp /** this->mesh->modelMatrix*/;
 	glm::vec3 camDir = this->camPos;
 	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 	glUniform3fv(camID, 1, &camDir[0]);
+	glUniform3fv(lightDirID, 1, &this->lightDir[0]);
+	glUniform3fv(lightColorID, 1, &this->lightColor[0]);
 	this->mesh->draw(0);
 	glEnable(GL_CULL_FACE);
 }

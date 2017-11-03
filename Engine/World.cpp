@@ -21,12 +21,17 @@ World::World(Camera* cam) {
 //	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
 
 	this->lastDraw = clock();
+
+	this->sun = new Sun(lastDraw);
 }
 
 void World::draw() {
 	// Update drawing timer
 	float elapsed = (clock() - this->lastDraw)/double(CLOCKS_PER_SEC);
 	this->lastDraw = clock();
+
+	//Update Sun
+	this->sun->updateLight(lastDraw);
 
 	// Update Camera view
 	this->cam->update();
@@ -55,6 +60,8 @@ void World::draw() {
 	w->mvp = this->cam->modelViewProjectionMatrix;
 	w->lastDraw = this->lastDraw;
 	w->camPos = this->cam->pos;
+	w->lightDir = sun->light->dir;
+	w->lightColor = sun->light->color;
 	w->draw(0);
 
 	//Render terrain
