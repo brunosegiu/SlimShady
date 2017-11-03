@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class Terrain : public Entity{
+class Terrain : public Model{
 	public:
 		Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY);
 		~Terrain();

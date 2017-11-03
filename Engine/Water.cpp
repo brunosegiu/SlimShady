@@ -2,6 +2,7 @@
 #include <FreeImage.h>
 
 Water::Water(int width, int height){
+	this->name = "Water";
 	std::vector<float> positions;
 	std::vector<unsigned int> index;
 	for (float i = 0; i <= width; i+=0.5) {  //n = 100
@@ -33,7 +34,7 @@ void Water::draw(GLuint shaderID) {
 	GLuint phiID = glGetUniformLocation(shader->getId(), "phi");
 	GLuint camID = glGetUniformLocation(shader->getId(), "cameraPos");
 	glUniform1f(phiID, this->lastDraw / double(CLOCKS_PER_SEC));
-	glm::mat4 toWorldCoords = mvp * this->mesh->modelMatrix;
+	glm::mat4 toWorldCoords = mvp /** this->mesh->modelMatrix*/;
 	glm::vec3 camDir = this->camPos;
 	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 	glUniform3fv(camID, 1, &camDir[0]);

@@ -6,8 +6,9 @@
 
 #include "FreeMesh.h"
 #include "ShaderProgram.h"
+#include "Model.h"
 
-class Water{
+class Water : public Model{
 public:
 	FreeMesh* mesh;
 	ShaderProgram* shader;

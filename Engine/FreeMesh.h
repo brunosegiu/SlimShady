@@ -7,7 +7,7 @@
 
 #include "Entity.h"
 
-class FreeMesh : public Entity {
+class FreeMesh{
 public:
 	GLuint verticesID, normalsID, vaoID, shaderID;
 	unsigned int vertexCount, indexCount;

@@ -7,7 +7,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index) : Entity() {
+FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index){
 	vertexCount = positions.size() / 3;
 	indexCount = index.size();
 

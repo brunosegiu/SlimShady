@@ -132,6 +132,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="NormalMappedMesh.cpp" />
     <ClCompile Include="OBJIndexer.cpp" />
     <ClCompile Include="PointLight.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="NormalMappedMesh.h" />
     <ClInclude Include="OBJIndexer.h" />
     <ClInclude Include="PointLight.h" />

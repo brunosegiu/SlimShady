@@ -13,19 +13,14 @@ World::World(Camera* cam) {
 	this->basic = new ShaderProgram("assets/shaders/mesh.vert", "assets/shaders/mesh.frag");
 	this->basicNM = new ShaderProgram("assets/shaders/mesh_normalmap.vert", "assets/shaders/mesh_normalmap.frag");
 
-	this->terrain = new Terrain("assets/textures/valley.png", 10.0f, 20, 20);
-	this->terrain->translate(glm::vec3(-256, 7.0f, -256));
-	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
-	
-	this->water = new Water(300, 300);
+	addModel(new Terrain("assets/textures/valley.png", 10.0f, 20, 20));
+	addModel(new Water(300, 300));
+	this->terrain = new Entity(models["Terrain"], cam);
+	this->water = new Entity(models["Water"], cam);
+//	this->terrain->translate(glm::vec3(-256, 7.0f, -256));
+//	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
 
 	this->lastDraw = clock();
-}
-
-World::World() {
-	//Shaders
-	this->basic = new ShaderProgram("assets/shaders/mesh.vert", "assets/shaders/mesh.frag");
-	this->basicNM = new ShaderProgram("assets/shaders/mesh_normalmap.vert", "assets/shaders/mesh_normalmap.frag");
 }
 
 void World::draw() {
@@ -41,15 +36,7 @@ void World::draw() {
 	//Render meshes
 	if (meshes.size() > 0){
 		this->basic->bind();
-		GLuint worldTransformID = glGetUniformLocation(basic->getId(), "worldTransform");
-		GLuint textID = glGetUniformLocation(basic->getId(), "textSampler");
-		GLuint modelTransformID = glGetUniformLocation(basic->getId(), "modelTransform");
-		glUniform1i(textID, 0);
 		for (unsigned int i = 0; i < meshes.size(); i++) {
-			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->meshes[i]->modelMatrix;
-			glm::mat4 modelTransf = this->meshes[i]->modelMatrix;
-			glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &modelTransf[0][0]);
-			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 			this->meshes[i]->draw(basic->getId());
 		}
 		this->basic->unbind();
@@ -57,38 +44,47 @@ void World::draw() {
 	//Render normal mapped meshes
 	if (meshes_nm.size() > 0){
 		this->basicNM->bind();
-		GLuint worldTransformID = glGetUniformLocation(basicNM->getId(), "worldTransform");
-		GLuint textID = glGetUniformLocation(basicNM->getId(), "textSampler");
-		GLuint normTextID = glGetUniformLocation(basicNM->getId(), "normTextSampler");
-		GLuint modelTransformID = glGetUniformLocation(basicNM->getId(), "modelTransform");
-		GLuint modelViewID = glGetUniformLocation(basicNM->getId(), "modelView");
-		glUniform1i(textID, 0);
-		glUniform1i(normTextID, 1);
-
 		for (unsigned int i = 0; i < meshes_nm.size(); i++) {
-			glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix * this->meshes_nm[i]->modelMatrix;
-			glm::mat4 modelTransf = this->meshes_nm[i]->modelMatrix;
-			glUniformMatrix3fv(modelViewID, 1, GL_FALSE, &glm::mat3(this->cam->viewMatrix * this->meshes_nm[i]->modelMatrix)[0][0]);
-			glUniformMatrix4fv(modelTransformID, 1, GL_FALSE, &modelTransf[0][0]);
-			glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-			this->meshes_nm[i]->draw(basic->getId());
+			this->meshes_nm[i]->draw(basicNM->getId());
 		}
 		this->basicNM->unbind();
 	}
 
 	//Render water
-	this->water->mvp = this->cam->modelViewProjectionMatrix;
-	this->water->lastDraw = this->lastDraw;
-	this->water->camPos = this->cam->pos;
-	this->water->draw(0);
+	Water* w = dynamic_cast<Water*>(this->water->model);
+	w->mvp = this->cam->modelViewProjectionMatrix;
+	w->lastDraw = this->lastDraw;
+	w->camPos = this->cam->pos;
+	w->draw(0);
 
 	//Render terrain
-	this->terrain->viewProjectionMatrix = this->cam->modelViewProjectionMatrix;
-	this->terrain->draw(0);
+	Terrain* t = dynamic_cast<Terrain*>(this->terrain->model);
+	t->viewProjectionMatrix = this->cam->modelViewProjectionMatrix;
+	t->draw(0);
+}
+
+void World::addModel(Model* model) {
+	if (models.count(model->name) > 0) {
+		model->name += " bis";
+	}
+	this->models[model->name] = model;
+}
+
+void World::addEntity(string name) {
+	if (this->models.count(name) > 0) {
+		Model* model = this->models[name];
+		Entity* ent = new Entity(model, cam);
+		if (dynamic_cast<Mesh*>(model)) {
+			this->meshes.push_back(ent);
+		}
+		else if (dynamic_cast<NormalMappedMesh*>(model)) {
+			this->meshes_nm.push_back(ent);
+		}
+	}
 }
 
 void World::save(string path) {
-	using namespace tinyxml2;
+	/*using namespace tinyxml2;
 	XMLDocument xmlDoc;
 
 	XMLNode * pRoot = xmlDoc.NewElement("root");
@@ -153,11 +149,11 @@ void World::save(string path) {
 		pdirectionallights->InsertEndChild(plight);
 	}
 	pRoot->InsertEndChild(pdirectionallights);
-	xmlDoc.SaveFile(path.c_str());
+	xmlDoc.SaveFile(path.c_str());*/
 }
 
 World* World::load(string path, SDL_Window* win, float width, float height) {
-	using namespace tinyxml2;
+	/*using namespace tinyxml2;
 	XMLDocument xmlDoc;
 	xmlDoc.LoadFile(path.c_str());
 
@@ -224,7 +220,8 @@ World* World::load(string path, SDL_Window* win, float width, float height) {
 		DirectionalLight* dir = new DirectionalLight(glm::vec3(dirx, diry, dirz), glm::vec3(colorr, colorg, colorb));
 		world->dirLights.push_back(dir);
 	}
-	return world;
+	*/
+	return 0;// world;
 }
 
 World::~World() {
@@ -236,6 +233,9 @@ World::~World() {
 	}
 	for (unsigned int i = 0; i < meshes_free.size(); i++) {
 		delete this->meshes_free[i];
+	}
+	for (auto &elem : this->models) {
+		delete elem.second;
 	}
 	for (unsigned int i = 0; i < dirLights.size(); i++) {
 		delete this->dirLights[i];
