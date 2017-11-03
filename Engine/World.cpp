@@ -90,8 +90,8 @@ void World::draw() {
 	this->water->draw(0);
 
 	//Render terrain
-	this->terrain->viewProjectionMatrix = this->cam->modelViewProjectionMatrix;
-	this->terrain->draw(0);
+	//this->terrain->viewProjectionMatrix = this->cam->modelViewProjectionMatrix;
+	//this->terrain->draw(0);
 }
 
 void World::save(string path) {
