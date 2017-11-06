@@ -1,5 +1,6 @@
 #include "Entity.h"
-
+#include "MeshInstanced.h"
+#include <iostream>
 #include <glm/gtx/transform.hpp>
 
 Entity::Entity(Model* model, World* world) {
@@ -57,8 +58,13 @@ void Entity::draw(GLuint shaderID) {
 	glUniform3fv(lightDirID, 1, &world->sun->light->dir[0]);
 	glUniform3fv(lightColorID, 1, &world->sun->light->color[0]);
 
-	this->model->draw(shaderID);
-	
+	MeshInstanced* meshi = dynamic_cast<MeshInstanced*>(this->model);
+	if (meshi) {
+		meshi->drawInstanced(shaderID);
+	}
+	else {
+		this->model->draw(shaderID);
+	}
 }
 
 Entity::~Entity() {

@@ -64,6 +64,9 @@
     <ClCompile Include="Sun.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="MeshInstanced.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -135,6 +138,12 @@
     <ClInclude Include="Sun.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="MeshInstanced.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -170,6 +179,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\water.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\meshInst.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\meshInst.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
