@@ -26,6 +26,7 @@ void close();
 
 void showEntities(World &world);
 void addEntity(World &world);
+void selectPath(World &world, int type);
 
 SDL_Window* window = NULL;
 SDL_GLContext context;
@@ -63,7 +64,12 @@ void close() {
 	SDL_DestroyWindow(window);
 	window = NULL;
 	SDL_Quit();
-}bool addent = false;
+}
+
+bool entities = false;
+bool path1 = false;
+bool path2 = false;
+bool addent = false;
 
 int main(int argc, char* argv[]) {
 	init();
@@ -74,7 +80,7 @@ int main(int argc, char* argv[]) {
 	bool editing = false;
 	
 	bool wireframe = false;
-	bool entities = false;
+
 	SDL_Event event;
 	
 	double frameTime = 1000.0f / 65.0f;
@@ -98,7 +104,12 @@ int main(int argc, char* argv[]) {
 				break;
 			case SDL_KEYDOWN: {
 				if (event.key.keysym.sym == SDLK_ESCAPE) {
-					exit = true;
+					editing = !editing;
+					cam->in = !editing;
+
+					if (!editing) {
+						entities = false;
+					}
 				}
 				else if (event.key.keysym.sym == SDLK_z) {
 					wireframe = !wireframe;
@@ -107,14 +118,6 @@ int main(int argc, char* argv[]) {
 					}
 					else {
 						glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-					}
-				}
-				else if (event.key.keysym.sym == SDLK_e) {
-					editing = !editing;
-					cam->in = !editing;
-
-					if (!editing) {
-						entities = false;
 					}
 				}
 			}
@@ -146,10 +149,10 @@ int main(int argc, char* argv[]) {
 				if (ImGui::BeginMenu("Scene")) {
 					if (ImGui::BeginMenu("Add model")) {
 						if (ImGui::MenuItem("Mesh")) {
-
+							path1 = true;
 						}
 						if (ImGui::MenuItem("Normal mapped mesh")) {
-
+							path2 = true;
 						}
 						ImGui::EndMenu();
 					}
@@ -165,6 +168,12 @@ int main(int argc, char* argv[]) {
 			}
 			if (addent) {
 				addEntity(*test);
+			}
+			if (path1) {
+				selectPath(*test, 1);
+			}
+			if (path2) {
+				selectPath(*test, 2);
 			}
 		}
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -184,7 +193,7 @@ int main(int argc, char* argv[]) {
 }
 
 void showEntities(World &world) {
-	ImGui::Begin("Entities");
+	ImGui::Begin("Entities", &entities);
 	for (unsigned int i = 0; i < world.meshes.size(); i++) {
 		if (ImGui::CollapsingHeader( (world.meshes[i]->model->name + "-ent: " + to_string(i) ).c_str())) {
 			ImGui::Text("Translate:");
@@ -228,11 +237,40 @@ void showEntities(World &world) {
 }
 
 void addEntity(World &world) {
-	ImGui::Begin("Add entity");
+	ImGui::Begin("Add entity", &addent);
 	for (auto const &ent : world.models){
 		if (ImGui::Selectable(ent.first.c_str())){
 			world.addEntity(ent.first);
 			addent = false;
+		}
+	}
+	ImGui::End();
+}
+
+char input[160] = "Write the file path here, you dummy";
+
+void selectPath(World &world, int type) {
+	if (path1)
+		ImGui::Begin("Select path", &path1);
+	else
+		ImGui::Begin("Select path", &path2);
+	ImGui::InputText("Path (sorry)", input, 160);
+	if (ImGui::Button("Accept")) {
+		if (type == 1) {
+			try {
+				world.addModel(new Mesh(input));
+			}
+			catch (exception &e) {
+			}
+			path1 = false;
+		}
+		else if (type == 2) {
+			try {
+				world.addModel(new NormalMappedMesh(input));
+			}
+			catch (exception &e) {
+			}
+			path2 = false;
 		}
 	}
 	ImGui::End();
