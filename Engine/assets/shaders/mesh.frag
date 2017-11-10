@@ -15,8 +15,8 @@ void main() {
 	baseColor = texture(textSampler, textCoordFrag);
 	if (baseColor.a < 0.5f)
 		discard;
-	float coef = dot(normalToFrag, lightdir);
-	if (coef < 0.05f)
-		coef = 0.05f;
+	float coef = dot(normalToFrag, -lightdir);
+	if (coef < 0.1f)
+		coef = 0.1f;
 	color = baseColor * lightcolor * coef;
 }

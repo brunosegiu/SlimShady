@@ -15,12 +15,14 @@ World::World(Camera* cam) {
 	this->basicNM = new ShaderProgram("assets/shaders/mesh_normalmap.vert", "assets/shaders/mesh_normalmap.frag");
 	this->basicInst = new ShaderProgram("assets/shaders/meshInst.vert", "assets/shaders/meshInst.frag");
 
-	addModel(new Terrain("assets/textures/valley.png", 10.0f, 20, 20));
+	addModel(new Terrain("assets/textures/valley.png", 35.0f, 20, 20));
 	addModel(new Water(300, 300));
 	this->terrain = new Entity(models["Terrain"], this);
 	this->water = new Entity(models["Water"], this);
-	//	this->terrain->translate(glm::vec3(-256, 7.0f, -256));
-	//	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
+	this->water->scale(glm::vec3(2.0f, 2.0f, 2.0f));
+	//this->water->translate(glm::vec3(0.0f, -30.0f, 0.0f));
+	this->terrain->translate(glm::vec3(-256, 30.0f, -256));
+	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
 
 	this->lastDraw = clock();
 
@@ -69,7 +71,7 @@ void World::draw() {
 
 	//Render water
 	Water* w = dynamic_cast<Water*>(this->water->model);
-	w->mvp = this->cam->modelViewProjectionMatrix;
+	w->mvp = this->cam->modelViewProjectionMatrix * water->modelMatrix;
 	w->lastDraw = this->lastDraw;
 	w->camPos = this->cam->pos;
 	w->lightDir = sun->light->dir;

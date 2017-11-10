@@ -234,6 +234,38 @@ void showEntities(World &world) {
 			ImGui::SliderFloat("Z", &world.meshes_nm[i]->acumulatedScale.z, 0.1f, 5.0f);
 		}
 	}
+	if (ImGui::CollapsingHeader("Water-ent: ")) {
+		ImGui::Text("Translate:");
+		ImGui::SliderFloat("X ", &world.water->acumulatedTranslate.x, -50.0f, 50.0f);
+		ImGui::SliderFloat("Y ", &world.water->acumulatedTranslate.y, -50.0f, 50.0f);
+		ImGui::SliderFloat("Z ", &world.water->acumulatedTranslate.z, -50.0f, 50.0f);
+
+		ImGui::Text("Rotate:");
+		ImGui::SliderFloat("X  ", &world.water->acumulatedRotate.x, -5.0f, 5.0f);
+		ImGui::SliderFloat("Y  ", &world.water->acumulatedRotate.y, -5.0f, 5.0f);
+		ImGui::SliderFloat("Z  ", &world.water->acumulatedRotate.z, -5.0f, 5.0f);
+
+		ImGui::Text("Scale:");
+		ImGui::SliderFloat("X", &world.water->acumulatedScale.x, 0.1f, 5.0f);
+		ImGui::SliderFloat("Y", &world.water->acumulatedScale.y, 0.1f, 5.0f);
+		ImGui::SliderFloat("Z", &world.water->acumulatedScale.z, 0.1f, 5.0f);
+	}
+	if (ImGui::CollapsingHeader("Terrain-ent: ")) {
+		ImGui::Text("Translate:");
+		ImGui::SliderFloat("X ", &world.terrain->acumulatedTranslate.x, -50.0f, 50.0f);
+		ImGui::SliderFloat("Y ", &world.terrain->acumulatedTranslate.y, -50.0f, 50.0f);
+		ImGui::SliderFloat("Z ", &world.terrain->acumulatedTranslate.z, -50.0f, 50.0f);
+
+		ImGui::Text("Rotate:");
+		ImGui::SliderFloat("X  ", &world.terrain->acumulatedRotate.x, -5.0f, 5.0f);
+		ImGui::SliderFloat("Y  ", &world.terrain->acumulatedRotate.y, -5.0f, 5.0f);
+		ImGui::SliderFloat("Z  ", &world.terrain->acumulatedRotate.z, -5.0f, 5.0f);
+
+		ImGui::Text("Scale:");
+		ImGui::SliderFloat("X", &world.terrain->acumulatedScale.x, 0.1f, 5.0f);
+		ImGui::SliderFloat("Y", &world.terrain->acumulatedScale.y, 0.1f, 5.0f);
+		ImGui::SliderFloat("Z", &world.terrain->acumulatedScale.z, 0.1f, 5.0f);
+	}
 	if (ImGui::Button("Add entity")) {
 		addent = true;
 	}
@@ -251,7 +283,7 @@ void addEntity(World &world) {
 	ImGui::End();
 }
 
-char input[160] = "Write the file path here, you dummy";
+char input[160] = "";
 
 void selectPath(World &world, int type) {
 	if (path1)

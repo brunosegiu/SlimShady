@@ -11,8 +11,8 @@ uniform vec3 lightcolor;
 
 void main() {
 	vec4 baseColor = texture(textSampler, textureCoordToFrag);
-	float coef = dot(normalToFrag, lightdir);
-	if (coef < 0.05f)
-		coef = 0.05f;
+	float coef = dot(normalToFrag, -lightdir);
+	if (coef < 0.1f)
+		coef = 0.1f;
 	outColor = baseColor * lightcolor * coef;
 }

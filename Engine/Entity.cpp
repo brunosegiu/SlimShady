@@ -10,18 +10,22 @@ Entity::Entity(Model* model, World* world) {
 	this->acumulatedRotate = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->acumulatedTranslate = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->acumulatedScale = glm::vec3(1.0f, 1.0f, 1.0f);
+	this->modelMatrix = glm::translate(acumulatedTranslate) * glm::scale(this->acumulatedScale) * glm::rotate(acumulatedRotate.x, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::rotate(acumulatedRotate.y, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(acumulatedRotate.z, glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void Entity::rotate(float angle, glm::vec3 &dir) {
 	this->acumulatedRotate += angle * dir;
+	this->modelMatrix = glm::translate(acumulatedTranslate) * glm::scale(this->acumulatedScale) * glm::rotate(acumulatedRotate.x, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::rotate(acumulatedRotate.y, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(acumulatedRotate.z, glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void Entity::translate(glm::vec3 &trs) {
 	this->acumulatedTranslate += trs;
+	this->modelMatrix = glm::translate(acumulatedTranslate) * glm::scale(this->acumulatedScale) * glm::rotate(acumulatedRotate.x, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::rotate(acumulatedRotate.y, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(acumulatedRotate.z, glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void Entity::scale(glm::vec3 &scale) {
 	this->acumulatedScale *= scale;
+	this->modelMatrix = glm::translate(acumulatedTranslate) * glm::scale(this->acumulatedScale) * glm::rotate(acumulatedRotate.x, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::rotate(acumulatedRotate.y, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(acumulatedRotate.z, glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void Entity::draw(GLuint shaderID) {

@@ -49,15 +49,6 @@
     <ClCompile Include="OBJIndexer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
-      <Filter>Headers</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_sdl_gl3.cpp">
-      <Filter>Headers</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui.cpp">
-      <Filter>Headers</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -65,6 +56,15 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="MeshInstanced.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_sdl_gl3.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
