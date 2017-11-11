@@ -76,6 +76,10 @@ void World::draw() {
 	w->camPos = this->cam->pos;
 	w->lightDir = sun->light->dir;
 	w->lightColor = sun->light->color;
+	w->intensity = sun->intensity;
+	w->moonDir = sun->moon->dir;
+	w->moonColor = sun->moon->color;
+	w->mIntensity = sun->mIntensity;
 	w->draw(0);
 
 	//Render terrain

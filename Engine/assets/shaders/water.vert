@@ -22,15 +22,15 @@ float generateHeight(){
 }
 
 vec3 gradient(){ //F(x,y,x) = y - f(x,z)
-	vec3 wave1 = vec3(0.0, 0.3, cos(phi + position.z/16)/16*0.3);
-	vec3 wave2 = vec3(cos(phi + position.x/3)/3*0.5, 0.3, 0.0);
-	vec3 wave3 = vec3(cos(phi + position.x/7)/7*0.5, 0.3,0.0);
-	vec3 wave4 = vec3(cos(phi + position.x/16)/16*2, 0.3, 0.0);
+	vec3 wave1 = vec3(0.0, 0.3, cos(phi + position.z/16)/16*0.5*amplitude);
+	vec3 wave2 = vec3(cos(phi + position.x/3)/3*0.5*amplitude, 0.3, 0.0);
+	vec3 wave3 = vec3(cos(phi + position.x/7)/7*0.5*amplitude, 0.3,0.0);
+	vec3 wave4 = vec3(cos(phi + position.x/16)/16*2*amplitude, 0.3, 0.0);
 	return normalize(wave1+wave2+wave3+wave4);
 }
 
 void main(){
   gl_Position =  worldTransform*vec4(position.x,position.y + generateHeight(),position.z,1.0);
   normal = gradient();
-  passTextCoord = textureCoord;
+  passTextCoord = textureCoord + phi*(0.05,0.05)*0.2;
 }
