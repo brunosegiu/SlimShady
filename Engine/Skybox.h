@@ -9,7 +9,6 @@
 #include "ShaderProgram.h"
 
 class FreeMesh;
-class ShaderProgram;
 
 class Skybox{
 public:
