@@ -29,7 +29,7 @@ class World {
 		std::map<string, Model*> models;
 		Entity* terrain;
 		Entity* water;
-		Skybox* sky;
+		//Skybox* sky;
 		Camera* cam;
 		
 

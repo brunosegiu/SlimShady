@@ -28,7 +28,7 @@ World::World(Camera* cam) {
 	this->lastDraw = clock();
 
 	this->sun = new Sun(lastDraw);
-	this->sky = new Skybox(600);
+	//this->sky = new Skybox(600);
 }
 
 void World::draw() {
@@ -88,12 +88,12 @@ void World::draw() {
 	terrain->draw(0);
 
 	//Render Skybox
-	sky->mvp = this->cam->modelViewProjectionMatrix;
+	/*sky->mvp = this->cam->modelViewProjectionMatrix;
 	sky->lightColor = sun->light->color;
 	sky->intensity = sun->intensity;
 	sky->moonColor = sun->moon->color;
 	sky->mIntensity = sun->mIntensity;
-	sky->draw(0);
+	sky->draw(0);*/
 	
 	
 	
