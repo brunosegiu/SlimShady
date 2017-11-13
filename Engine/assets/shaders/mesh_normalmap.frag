@@ -17,7 +17,7 @@ void main() {
 	vec4 baseColor = texture(textSampler, textCoordFrag);
 	vec3 normal = normalize( toModelSpace * ((2*texture(normTextSampler, textCoordFrag)-1).xyz));
 	float coef = dot(normal, -lightdir);
-	if (coef < 0.1f)
-		coef = 0.1f;
-	outColor = baseColor * lightcolor * coef;
+	if (coef < 0.3f)
+		coef = 0.3f;
+	outColor = vec4(baseColor.xyz * lightcolor * coef,1.0f);
 }

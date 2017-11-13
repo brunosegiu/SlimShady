@@ -30,10 +30,10 @@ Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY){
 	}
 	FreeImage_Unload(bitmap);
 	this->blendMapID = Material::loadTexture("assets/textures/blendmap.png");
-	this->texture1ID = Material::loadTexture("assets/textures/grass.jpg");
+	this->texture1ID = Material::loadTexture("assets/textures/sand.jpg");
 	this->texture2ID = Material::loadTexture("assets/textures/rock.jpg");
 	this->texture3ID = Material::loadTexture("assets/textures/path.jpg");
-	this->texture4ID = Material::loadTexture("assets/textures/sand.jpg");
+	this->texture4ID = Material::loadTexture("assets/textures/grass.jpg");
 }
 
 void Terrain::draw(GLuint shaderID) {

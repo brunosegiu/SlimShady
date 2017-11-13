@@ -16,7 +16,7 @@ void main() {
 	if (baseColor.a < 0.5f)
 		discard;
 	float coef = dot(normalToFrag, -lightdir);
-	if (coef < 0.1f)
-		coef = 0.1f;
-	color = baseColor * lightcolor * coef;
+	if (coef < 0.3f)
+		coef = 0.3f;
+	color = vec4(baseColor.xyz * lightcolor * coef,1.0f);
 }

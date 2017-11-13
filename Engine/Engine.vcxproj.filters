@@ -73,6 +73,9 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="InterfaceController.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -154,6 +157,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceController.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

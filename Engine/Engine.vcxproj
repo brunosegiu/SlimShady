@@ -130,6 +130,7 @@
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_sdl_gl3.cpp" />
+    <ClCompile Include="InterfaceController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_sdl_gl3.h" />
     <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="InterfaceController.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshInstanced.h" />

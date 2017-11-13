@@ -28,7 +28,7 @@ World::World(Camera* cam) {
 	this->lastDraw = clock();
 
 	this->sun = new Sun(lastDraw);
-	this->sky = new Skybox(1000);
+	this->sky = new Skybox(2000);
 }
 
 void World::draw() {
