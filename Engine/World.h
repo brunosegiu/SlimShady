@@ -12,6 +12,7 @@
 #include "Terrain.h"
 #include "Water.h"
 #include "Sun.h"
+#include "Skybox.h"
 #include "Entity.h"
 
 using namespace std;
@@ -28,6 +29,7 @@ class World {
 		std::map<string, Model*> models;
 		Entity* terrain;
 		Entity* water;
+		Skybox* sky;
 		Camera* cam;
 		
 
