@@ -60,7 +60,7 @@ void Entity::draw(GLuint shaderID) {
 	GLuint lightColorID = glGetUniformLocation(shaderID, "lightcolor");
 
 	glUniform3fv(lightDirID, 1, &world->sun->light->dir[0]);
-	glUniform3fv(lightColorID, 1, &world->sun->light->color[0]);
+	glUniform3fv(lightColorID, 1, &(world->sun->light->color * world->sun->intensity)[0] );
 
 	MeshInstanced* meshi = dynamic_cast<MeshInstanced*>(this->model);
 	if (meshi) {

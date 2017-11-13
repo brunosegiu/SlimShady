@@ -92,11 +92,12 @@ int main(int argc, char* argv[]) {
 	Model* mesh = new Mesh("assets/models/boulder");
 	Model* mesh2 = new NormalMappedMesh("assets/models/boulder");
 	Model* mesh3 = new MeshInstanced("assets/models/boulder", "assets/models/boulder");
-	Animation anim = Animation("assets/models/model.dae");
+	//Animation anim = Animation("assets/models/model.dae");
 	test->addModel(mesh);
 	test->addModel(mesh2);
 	test->addModel(mesh3);
 	test->addEntity(mesh->name);
+
 	test->addEntity(mesh2->name);
 	test->addEntity(mesh3->name);
 
@@ -221,9 +222,9 @@ void showEntities(World &world) {
 	for (unsigned int i = 0; i < world.meshes_nm.size(); i++) {
 		if (ImGui::CollapsingHeader((world.meshes_nm[i]->model->name + "-ent: " + to_string(i)).c_str())) {
 			ImGui::Text("Translate:");
-			ImGui::SliderFloat("X ", &world.meshes_nm[i]->acumulatedTranslate.x, -50.0f, 50.0f);
-			ImGui::SliderFloat("Y ", &world.meshes_nm[i]->acumulatedTranslate.y, -50.0f, 50.0f);
-			ImGui::SliderFloat("Z ", &world.meshes_nm[i]->acumulatedTranslate.z, -50.0f, 50.0f);
+			ImGui::SliderFloat("X ", &world.meshes_nm[i]->acumulatedTranslate.x, -500.0f, 500.0f);
+			ImGui::SliderFloat("Y ", &world.meshes_nm[i]->acumulatedTranslate.y, -500.0f, 500.0f);
+			ImGui::SliderFloat("Z ", &world.meshes_nm[i]->acumulatedTranslate.z, -500.0f, 500.0f);
 
 			ImGui::Text("Rotate:");
 			ImGui::SliderFloat("X  ", &world.meshes_nm[i]->acumulatedRotate.x, -5.0f, 5.0f);
@@ -231,9 +232,9 @@ void showEntities(World &world) {
 			ImGui::SliderFloat("Z  ", &world.meshes_nm[i]->acumulatedRotate.z, -5.0f, 5.0f);
 
 			ImGui::Text("Scale:");
-			ImGui::SliderFloat("X", &world.meshes_nm[i]->acumulatedScale.x, 0.1f, 5.0f);
-			ImGui::SliderFloat("Y", &world.meshes_nm[i]->acumulatedScale.y, 0.1f, 5.0f);
-			ImGui::SliderFloat("Z", &world.meshes_nm[i]->acumulatedScale.z, 0.1f, 5.0f);
+			ImGui::SliderFloat("X", &world.meshes_nm[i]->acumulatedScale.x, 0.1f, 50.0f);
+			ImGui::SliderFloat("Y", &world.meshes_nm[i]->acumulatedScale.y, 0.1f, 50.0f);
+			ImGui::SliderFloat("Z", &world.meshes_nm[i]->acumulatedScale.z, 0.1f, 50.0f);
 		}
 	}
 	if (ImGui::CollapsingHeader("Water-ent: ")) {
@@ -252,21 +253,23 @@ void showEntities(World &world) {
 		ImGui::SliderFloat("Y", &world.water->acumulatedScale.y, 0.1f, 5.0f);
 		ImGui::SliderFloat("Z", &world.water->acumulatedScale.z, 0.1f, 5.0f);
 	}
-	if (ImGui::CollapsingHeader("Terrain-ent: ")) {
-		ImGui::Text("Translate:");
-		ImGui::SliderFloat("X ", &world.terrain->acumulatedTranslate.x, -50.0f, 50.0f);
-		ImGui::SliderFloat("Y ", &world.terrain->acumulatedTranslate.y, -50.0f, 50.0f);
-		ImGui::SliderFloat("Z ", &world.terrain->acumulatedTranslate.z, -50.0f, 50.0f);
+	for (unsigned int i = 0; i < world.terrains.size(); i++) {
+		if (ImGui::CollapsingHeader(("Terrain-ent: " + to_string(i)).c_str())) {
+			ImGui::Text("Translate:");
+			ImGui::SliderFloat("X ", &world.terrains[i]->acumulatedTranslate.x, -50.0f, 50.0f);
+			ImGui::SliderFloat("Y ", &world.terrains[i]->acumulatedTranslate.y, -50.0f, 50.0f);
+			ImGui::SliderFloat("Z ", &world.terrains[i]->acumulatedTranslate.z, -50.0f, 50.0f);
 
-		ImGui::Text("Rotate:");
-		ImGui::SliderFloat("X  ", &world.terrain->acumulatedRotate.x, -5.0f, 5.0f);
-		ImGui::SliderFloat("Y  ", &world.terrain->acumulatedRotate.y, -5.0f, 5.0f);
-		ImGui::SliderFloat("Z  ", &world.terrain->acumulatedRotate.z, -5.0f, 5.0f);
+			ImGui::Text("Rotate:");
+			ImGui::SliderFloat("X  ", &world.terrains[i]->acumulatedRotate.x, -5.0f, 5.0f);
+			ImGui::SliderFloat("Y  ", &world.terrains[i]->acumulatedRotate.y, -5.0f, 5.0f);
+			ImGui::SliderFloat("Z  ", &world.terrains[i]->acumulatedRotate.z, -5.0f, 5.0f);
 
-		ImGui::Text("Scale:");
-		ImGui::SliderFloat("X", &world.terrain->acumulatedScale.x, 0.1f, 5.0f);
-		ImGui::SliderFloat("Y", &world.terrain->acumulatedScale.y, 0.1f, 5.0f);
-		ImGui::SliderFloat("Z", &world.terrain->acumulatedScale.z, 0.1f, 5.0f);
+			ImGui::Text("Scale:");
+			ImGui::SliderFloat("X", &world.terrains[i]->acumulatedScale.x, 0.1f, 5.0f);
+			ImGui::SliderFloat("Y", &world.terrains[i]->acumulatedScale.y, 0.1f, 5.0f);
+			ImGui::SliderFloat("Z", &world.terrains[i]->acumulatedScale.z, 0.1f, 5.0f);
+		}
 	}
 	if (ImGui::Button("Add entity")) {
 		addent = true;

@@ -27,8 +27,8 @@ class World {
 		std::vector<Entity*> meshes_nm;
 		std::vector<Entity*> meshes_free;
 		std::vector<Entity*> meshes_inst;
+		vector<Entity*> terrains;
 		std::map<string, Model*> models;
-		Entity* terrain;
 		Entity* water;
 		Skybox* sky;
 		Camera* cam;

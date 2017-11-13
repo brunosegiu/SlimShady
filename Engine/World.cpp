@@ -18,17 +18,17 @@ World::World(Camera* cam) {
 	addModel(new Terrain("assets/textures/valley.png", 35.0f, 20, 20));
 	addModel(new Water(300, 300));
 	//addModel(new Skybox(600));
-	this->terrain = new Entity(models["Terrain"], this);
+	this->terrains.push_back(new Entity(models["Terrain"], this));
 	this->water = new Entity(models["Water"], this);
 	this->water->scale(glm::vec3(2.0f, 2.0f, 2.0f));
 	//this->water->translate(glm::vec3(0.0f, -30.0f, 0.0f));
-	this->terrain->translate(glm::vec3(-256, 30.0f, -256));
-	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
+	this->terrains[0]->translate(glm::vec3(-256, 30.0f, -256));
+	this->terrains[0]->scale(glm::vec3(1.5, 1.0f, 1.5f));
 
 	this->lastDraw = clock();
 
 	this->sun = new Sun(lastDraw);
-	this->sky = new Skybox(600);
+	this->sky = new Skybox(1000);
 }
 
 void World::draw() {
@@ -85,7 +85,9 @@ void World::draw() {
 	w->draw(0);
 
 	//Render terrain
-	terrain->draw(0);
+	for (unsigned int i = 0; i < terrains.size(); i++) {
+		terrains[i]->draw(0);
+	}
 
 	//Render Skybox
 	sky->mvp = this->cam->modelViewProjectionMatrix;
@@ -100,9 +102,11 @@ void World::draw() {
 }
 
 void World::addModel(Model* model) {
-	if (models.count(model->name) > 0) {
-		model->name += " bis";
+	string name = model->name;
+	while (models.count(name) > 0) {
+		name += " bis";
 	}
+	model->name = name;
 	this->models[model->name] = model;
 }
 
@@ -118,6 +122,9 @@ void World::addEntity(string name) {
 		}
 		else if (dynamic_cast<Mesh*>(model)) {
 			this->meshes.push_back(ent);
+		}
+		else if (dynamic_cast<Terrain*>(model)) {
+			this->terrains.push_back(ent);
 		}
 	}
 }
@@ -276,6 +283,9 @@ World::~World() {
 	for (unsigned int i = 0; i < meshes_free.size(); i++) {
 		delete this->meshes_free[i];
 	}
+	for (unsigned int i = 0; i < terrains.size(); i++) {
+		delete this->terrains[i];
+	}
 	for (auto &elem : this->models) {
 		delete elem.second;
 	}
@@ -285,5 +295,4 @@ World::~World() {
 	delete cam;
 	delete basic;
 	delete water;
-	delete terrain;
 }
