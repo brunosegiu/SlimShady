@@ -5,6 +5,10 @@ in vec2 passTextCoord;
 
 uniform vec3 lightdir;
 uniform vec3 lightcolor;
+uniform float intensity;
+uniform vec3 moondir;
+uniform vec3 mooncolor;
+uniform float mintensity;
 //uniform vec3 cameraPos;
 uniform sampler2D textSampler;
 
@@ -26,6 +30,9 @@ void main() {
 	//vec3 specular = specular(cameraPos, normal);
 	float factor = max(dot(-lightdir,normal),0.3);
 	vec4 baseColor = texture(textSampler, passTextCoord);
-	vec3 color = (baseColor.xyz*lightcolor*factor);
+	vec3 color = (baseColor.xyz*lightcolor*factor)*intensity;
+	factor = max(dot(-moondir,normal),0.3);
+	vec3 mcolor = (baseColor.xyz*mooncolor*factor)*mintensity;
+	color = color + mcolor;
 	outColor= vec4(color,1.0);
 }

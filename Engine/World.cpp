@@ -17,6 +17,7 @@ World::World(Camera* cam) {
 
 	addModel(new Terrain("assets/textures/valley.png", 35.0f, 20, 20));
 	addModel(new Water(300, 300));
+	//addModel(new Skybox(600));
 	this->terrain = new Entity(models["Terrain"], this);
 	this->water = new Entity(models["Water"], this);
 	this->water->scale(glm::vec3(2.0f, 2.0f, 2.0f));
@@ -27,6 +28,7 @@ World::World(Camera* cam) {
 	this->lastDraw = clock();
 
 	this->sun = new Sun(lastDraw);
+	this->sky = new Skybox(600);
 }
 
 void World::draw() {
@@ -76,10 +78,22 @@ void World::draw() {
 	w->camPos = this->cam->pos;
 	w->lightDir = sun->light->dir;
 	w->lightColor = sun->light->color;
+	w->intensity = sun->intensity;
+	w->moonDir = sun->moon->dir;
+	w->moonColor = sun->moon->color;
+	w->mIntensity = sun->mIntensity;
 	w->draw(0);
 
 	//Render terrain
 	terrain->draw(0);
+
+	//Render Skybox
+	sky->mvp = this->cam->modelViewProjectionMatrix;
+	sky->lightColor = sun->light->color;
+	sky->intensity = sun->intensity;
+	sky->moonColor = sun->moon->color;
+	sky->mIntensity = sun->mIntensity;
+	sky->draw(0);
 	
 	
 	

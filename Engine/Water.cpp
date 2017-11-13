@@ -65,6 +65,10 @@ void Water::draw(GLuint shaderID) {
 	GLuint camID = glGetUniformLocation(shader->getId(), "cameraPos");
 	GLuint lightDirID = glGetUniformLocation(shader->getId(), "lightdir");
 	GLuint lightColorID = glGetUniformLocation(shader->getId(), "lightcolor");
+	GLuint intensityID = glGetUniformLocation(shader->getId(), "intensity");
+	GLuint moonDirID = glGetUniformLocation(shader->getId(), "moondir");
+	GLuint moonColorID = glGetUniformLocation(shader->getId(), "mooncolor");
+	GLuint mintensityID = glGetUniformLocation(shader->getId(), "mintensity");
 	glUniform1f(phiID, this->lastDraw / double(CLOCKS_PER_SEC));
 	glm::mat4 toWorldCoords = mvp /** this->mesh->modelMatrix*/;
 	glm::vec3 camDir = this->camPos;
@@ -72,6 +76,10 @@ void Water::draw(GLuint shaderID) {
 	glUniform3fv(camID, 1, &camDir[0]);
 	glUniform3fv(lightDirID, 1, &this->lightDir[0]);
 	glUniform3fv(lightColorID, 1, &this->lightColor[0]);
+	glUniform1f(intensityID, this->intensity);
+	glUniform3fv(moonDirID, 1, &this->moonDir[0]);
+	glUniform3fv(moonColorID, 1, &this->moonColor[0]);
+	glUniform1f(mintensityID, this->mIntensity);
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->textureID);
