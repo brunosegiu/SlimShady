@@ -67,6 +67,9 @@
     <ClCompile Include="imgui_draw.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -142,6 +145,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

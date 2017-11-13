@@ -29,6 +29,7 @@ void Entity::scale(glm::vec3 &scale) {
 }
 
 void Entity::draw(GLuint shaderID) {
+	this->modelMatrix = glm::translate(acumulatedTranslate) * glm::scale(this->acumulatedScale) * glm::rotate(acumulatedRotate.x, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::rotate(acumulatedRotate.y, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(acumulatedRotate.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
 	if (shaderID == 0) {
 		Terrain* terr = dynamic_cast<Terrain*>(model);
@@ -37,7 +38,6 @@ void Entity::draw(GLuint shaderID) {
 		}
 		shaderID = terr->terrainShader->getId();
 	}
-	this->modelMatrix = glm::translate(acumulatedTranslate) * glm::scale(this->acumulatedScale) * glm::rotate(acumulatedRotate.x, glm::vec3(1.0f,0.0f,0.0f)) * glm::rotate(acumulatedRotate.y, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::rotate(acumulatedRotate.z, glm::vec3(0.0f, 0.0f, 1.0f));
 	GLuint worldTransformID = glGetUniformLocation(shaderID, "worldTransform");
 	glm::mat4 toWorldCoords = this->world->cam->modelViewProjectionMatrix * this->modelMatrix;
 	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);

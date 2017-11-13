@@ -18,7 +18,7 @@ class Terrain : public Model{
 
 		ShaderProgram* terrainShader;
 		vector<TerrainTile*> tiles;
-		GLuint textureID;
+		GLuint blendMapID, texture1ID, texture2ID, texture3ID,texture4ID;
 		string path;
 		float maxHeight;
 		int tilesX, tilesY;

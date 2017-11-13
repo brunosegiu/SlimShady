@@ -12,6 +12,7 @@
 #include "MeshInstanced.h"
 #include "Mesh.h"
 #include "Water.h"
+#include "Animation.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl_gl3.h"
@@ -91,6 +92,7 @@ int main(int argc, char* argv[]) {
 	Model* mesh = new Mesh("assets/models/boulder");
 	Model* mesh2 = new NormalMappedMesh("assets/models/boulder");
 	Model* mesh3 = new MeshInstanced("assets/models/boulder", "assets/models/boulder");
+	Animation anim = Animation("assets/models/model.dae");
 	test->addModel(mesh);
 	test->addModel(mesh2);
 	test->addModel(mesh3);

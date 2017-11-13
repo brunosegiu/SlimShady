@@ -45,8 +45,8 @@ TerrainTile::TerrainTile(int width, int height, int offsetx, int offsety, float 
 			positions.push_back((normalizedHeight)* maxHeight);
 			positions.push_back(float(offsetx) + float(i));
 			addNormal(normals, i+offsetx, j+offsety, widthHeightMap, heightHeightMap, bitmap);
-			textCoords.push_back(float(i) / width);
-			textCoords.push_back(float(j) / height);
+			textCoords.push_back(float(i+ offsetx) / float(widthHeightMap));
+			textCoords.push_back(float(j+ offsety) / float(heightHeightMap));
 		}
 	}
 	for (unsigned int i = 0; i <= width - 1; i++) {

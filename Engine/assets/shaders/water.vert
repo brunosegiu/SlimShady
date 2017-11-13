@@ -32,5 +32,5 @@ vec3 gradient(){ //F(x,y,x) = y - f(x,z)
 void main(){
   gl_Position =  worldTransform*vec4(position.x,position.y + generateHeight(),position.z,1.0);
   normal = gradient();
-  passTextCoord = textureCoord;
+  passTextCoord = textureCoord + phi * (0.05f,0.05f);
 }
