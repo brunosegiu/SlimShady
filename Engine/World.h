@@ -50,7 +50,7 @@ class World {
 
 		map<string, pair<bool,Filter*>> filters;
 
-		bool fxaa;
+		float gamma;
 
 	public:
 		World(Camera* cam);

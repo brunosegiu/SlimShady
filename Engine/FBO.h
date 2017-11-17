@@ -5,7 +5,7 @@
 class FBO {
 public:
 	GLuint id, textid;
-	GLuint depthrenderbuffer;
+	GLuint depthrenderbuffer, textDB;
 	unsigned int width, height;
 	FBO(unsigned int width, unsigned int height);
 	void bind();

@@ -15,6 +15,7 @@ class InterfaceController {
 		void draw();
 		void showEntities();
 		void addEntity();
+		void showGraphics();
 		void selectPath(int type);
 	public:
 		bool entities;
@@ -22,6 +23,7 @@ class InterfaceController {
 		bool path2;
 		bool addent;
 		bool editing;
+		bool graphics;
 		SDL_Window* window;
 		World* world;
 };

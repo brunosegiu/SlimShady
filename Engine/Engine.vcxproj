@@ -200,7 +200,7 @@
     <None Include="assets\shaders\terrain.vert" />
     <None Include="assets\shaders\water.frag" />
     <None Include="assets\shaders\water.vert" />
-    <None Include="caca.frag" />
+    <None Include="gammacorr.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

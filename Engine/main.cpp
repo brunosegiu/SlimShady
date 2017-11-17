@@ -109,7 +109,6 @@ int main(int argc, char* argv[]) {
 					else {
 						glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 					}*/
-					test->fxaa = !test->fxaa;
 					printf("Cambiando fxaa");
 				}
 			}

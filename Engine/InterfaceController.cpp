@@ -129,6 +129,7 @@ InterfaceController::InterfaceController(SDL_Window* window, World* world) {
 	path2 = false;
 	addent = false;
 	editing = false;
+	graphics = false;
 	ImGui_ImplSdlGL3_Init(window);
 	this->window = window;
 	this->world = world;
@@ -160,6 +161,10 @@ void InterfaceController::update() {
 				}
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Graphics settings")) {
+				graphics = true;
+				ImGui::EndMenu();
+			}
 			ImGui::EndMainMenuBar();
 		}
 		if (entities) {
@@ -174,12 +179,22 @@ void InterfaceController::update() {
 		if (path2) {
 			selectPath(2);
 		}
+		if (graphics) {
+			showGraphics();
+		}
 	}
 }
 
 void InterfaceController::draw() {
 	if (editing)
 		ImGui::Render();
+}
+
+void InterfaceController::showGraphics() {
+	ImGui::Begin("Graphics settings", &graphics);
+	ImGui::Checkbox("FXAA", &world->filters["FXAA"].first);
+	ImGui::SliderFloat("Gamma", &world->gamma, 0.1f, 5.0f);
+	ImGui::End();
 }
 
 void InterfaceController::processEvent(SDL_Event &event) {

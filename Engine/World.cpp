@@ -31,7 +31,9 @@ World::World(Camera* cam) {
 	this->sky = new Skybox(2000);
 
 	this->filters["FXAA"] = pair<bool, Filter*>(true, new Filter("assets/shaders/fxaa.frag", cam->width, cam->height));
-	this->filters["FXAA2"] = pair<bool, Filter*>(true, new Filter("caca.frag", cam->width, cam->height));
+	this->filters["GAMMACORR"] = pair<bool, Filter*>(true, new Filter("assets/shaders/gammacorr.frag", cam->width, cam->height));
+
+	gamma = 1.0f;
 }
 
 void World::draw() {
@@ -102,16 +104,20 @@ void World::draw() {
 	// Bind del buffer de pantalla
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textid);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textDB);
 	for (map<string, pair<bool, Filter*>>::iterator it = filters.begin(); it != filters.end(); it++) {
 		if (it->second.first) {
 			Filter* fil = it->second.second;
 			fil->bind();
 			GLuint texID = glGetUniformLocation(fil->shader->getId(), "sampler");
 			glUniform1i(texID, 0);
+			GLuint texDBID = glGetUniformLocation(fil->shader->getId(), "samplerDB");
+			glUniform1i(texDBID, 1);
 			GLuint invSizeID = glGetUniformLocation(fil->shader->getId(), "invScreenSize");
-			glUniform2f(invSizeID, 1.0f / float(cam->width), 1.0f / float(cam->height));
-			GLuint onID = glGetUniformLocation(fil->shader->getId(), "on");
-			glUniform1i(onID, fxaa);
+			glUniform2f(invSizeID, 1.0f / float(cam->width), 1.0f / float(cam->height));			
+			GLuint gammaID = glGetUniformLocation(fil->shader->getId(), "gamma");
+			glUniform1f(gammaID, gamma);
 			auto aux = it;
 			aux++;
 			if (aux++ == filters.end()) {

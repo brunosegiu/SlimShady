@@ -229,13 +229,13 @@
     <None Include="assets\shaders\fxaa.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="caca.frag">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="assets\shaders\skybox.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\skybox.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="gammacorr.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
