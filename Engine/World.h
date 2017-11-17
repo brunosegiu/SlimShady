@@ -4,6 +4,7 @@
 #include <ctime>
 #include <string>
 #include <map>
+#include <utility>
 
 #include "Camera.h"
 #include "ShaderProgram.h"
@@ -14,6 +15,7 @@
 #include "Sun.h"
 #include "Skybox.h"
 #include "Entity.h"
+#include "Filter.h"
 
 using namespace std;
 
@@ -45,6 +47,10 @@ class World {
 		ShaderProgram* veryBasic;
 
 		clock_t lastDraw;
+
+		map<string, pair<bool,Filter*>> filters;
+
+		bool fxaa;
 
 	public:
 		World(Camera* cam);

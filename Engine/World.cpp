@@ -29,6 +29,9 @@ World::World(Camera* cam) {
 
 	this->sun = new Sun(lastDraw);
 	this->sky = new Skybox(2000);
+
+	this->filters["FXAA"] = pair<bool, Filter*>(true, new Filter("assets/shaders/fxaa.frag", cam->width, cam->height));
+	this->filters["FXAA2"] = pair<bool, Filter*>(true, new Filter("caca.frag", cam->width, cam->height));
 }
 
 void World::draw() {
@@ -41,9 +44,8 @@ void World::draw() {
 
 	// Update Camera view
 	this->cam->update();
-
+	Filter::fbo->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	//Render meshes
 	if (meshes.size() > 0) {
 		this->basic->bind();
@@ -83,7 +85,7 @@ void World::draw() {
 	w->moonColor = sun->moon->color;
 	w->mIntensity = sun->mIntensity;
 	w->draw(0);
-
+	
 	//Render terrain
 	for (unsigned int i = 0; i < terrains.size(); i++) {
 		terrains[i]->draw(0);
@@ -96,9 +98,28 @@ void World::draw() {
 	sky->moonColor = sun->moon->color;
 	sky->mIntensity = sun->mIntensity;
 	sky->draw(0);
-	
-	
-	
+
+	// Bind del buffer de pantalla
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textid);
+	for (map<string, pair<bool, Filter*>>::iterator it = filters.begin(); it != filters.end(); it++) {
+		if (it->second.first) {
+			Filter* fil = it->second.second;
+			fil->bind();
+			GLuint texID = glGetUniformLocation(fil->shader->getId(), "sampler");
+			glUniform1i(texID, 0);
+			GLuint invSizeID = glGetUniformLocation(fil->shader->getId(), "invScreenSize");
+			glUniform2f(invSizeID, 1.0f / float(cam->width), 1.0f / float(cam->height));
+			GLuint onID = glGetUniformLocation(fil->shader->getId(), "on");
+			glUniform1i(onID, fxaa);
+			auto aux = it;
+			aux++;
+			if (aux++ == filters.end()) {
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			}
+			Filter::quad->draw();
+		}
+	}
 }
 
 void World::addModel(Model* model) {

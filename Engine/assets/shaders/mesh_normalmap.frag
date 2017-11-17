@@ -1,6 +1,6 @@
 #version 330 core
 
-out vec4 outColor;
+layout(location = 0) out vec3 outColor;
 
 in vec2 textCoordFrag;
 in vec3 normalToFrag;
@@ -19,5 +19,5 @@ void main() {
 	float coef = dot(normal, -lightdir);
 	if (coef < 0.3f)
 		coef = 0.3f;
-	outColor = vec4(baseColor.xyz * lightcolor * coef,1.0f);
+	outColor = baseColor.xyz * lightcolor * coef;
 }

@@ -76,6 +76,15 @@
     <ClCompile Include="InterfaceController.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="FBO.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="UniformQuad.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Filter.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -162,6 +171,15 @@
     <ClInclude Include="InterfaceController.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="FBO.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="UniformQuad.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Filter.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -203,6 +221,21 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\meshInst.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\pass.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\fxaa.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="caca.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\skybox.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\skybox.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

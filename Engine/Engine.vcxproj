@@ -126,6 +126,8 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="Filter.cpp" />
     <ClCompile Include="FreeMesh.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
@@ -146,6 +148,7 @@
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainTile.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
+    <ClCompile Include="UniformQuad.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -154,6 +157,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="FBO.h" />
+    <ClInclude Include="Filter.h" />
     <ClInclude Include="FreeMesh.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
@@ -176,20 +181,26 @@
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainTile.h" />
     <ClInclude Include="tinyxml2.h" />
+    <ClInclude Include="UniformQuad.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\fxaa.frag" />
     <None Include="assets\shaders\mesh.frag" />
     <None Include="assets\shaders\mesh.vert" />
     <None Include="assets\shaders\meshInst.frag" />
     <None Include="assets\shaders\meshInst.vert" />
     <None Include="assets\shaders\mesh_normalmap.frag" />
     <None Include="assets\shaders\mesh_normalmap.vert" />
+    <None Include="assets\shaders\pass.vert" />
+    <None Include="assets\shaders\skybox.frag" />
+    <None Include="assets\shaders\skybox.vert" />
     <None Include="assets\shaders\terrain.frag" />
     <None Include="assets\shaders\terrain.vert" />
     <None Include="assets\shaders\water.frag" />
     <None Include="assets\shaders\water.vert" />
+    <None Include="caca.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

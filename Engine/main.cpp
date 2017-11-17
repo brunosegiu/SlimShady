@@ -25,8 +25,8 @@ void close();
 SDL_Window* window = NULL;
 SDL_GLContext context;
 
-int WIDTH = 1200;
-int HEIGHT = 680;
+int WIDTH = 1600;
+int HEIGHT = 900;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -102,13 +102,15 @@ int main(int argc, char* argv[]) {
 					cam->in = !controller.editing;
 				}
 				else if (event.key.keysym.sym == SDLK_z) {
-					wireframe = !wireframe;
+					/*wireframe = !wireframe;
 					if (wireframe) {
 						glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 					}
 					else {
 						glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-					}
+					}*/
+					test->fxaa = !test->fxaa;
+					printf("Cambiando fxaa");
 				}
 			}
 			break;

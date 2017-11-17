@@ -3,7 +3,7 @@
 in vec3 normalToFrag;
 in vec2 textCoordFrag;
 
-out vec4 color;
+layout(location = 0) out vec3 outColor;
 
 uniform bool isTextured;
 uniform sampler2D textSampler;
@@ -18,5 +18,5 @@ void main() {
 	float coef = dot(normalToFrag, -lightdir);
 	if (coef < 0.3f)
 		coef = 0.3f;
-	color = vec4(baseColor.rgb * lightcolor * coef,1.0f);
+	outColor = baseColor.rgb * lightcolor * coef;
 }

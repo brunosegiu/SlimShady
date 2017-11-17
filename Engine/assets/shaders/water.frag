@@ -17,7 +17,7 @@ const vec3 watercolor = vec3(0.2,0.2,0.5);
 //const float reffactor = 0.5;
 const vec3 lightdirr = vec3(-1.0,-1.0,0);
 
-out vec4 outColor;
+layout(location = 0) out vec3 outColor;
 
 //vec3 specular(vec3 cameraPos, vec3 normal){
 	//vec3 view = normalize(cameraPos - gl_Position.xyz);
@@ -33,6 +33,5 @@ void main() {
 	vec3 color = (baseColor.xyz*lightcolor*factor)*intensity;
 	factor = max(dot(-moondir,normal),0.3);
 	vec3 mcolor = (baseColor.xyz*mooncolor*factor)*mintensity;
-	color = color + mcolor;
-	outColor= vec4(color,1.0);
+	outColor = color + mcolor;
 }

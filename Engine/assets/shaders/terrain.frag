@@ -3,7 +3,9 @@
 in vec3 normalToFrag;
 in vec2 textureCoordToFrag;
 
-out vec4 outColor;
+layout(location = 0) out vec3 outColor;
+
+//out vec4 outColor;
 
 uniform sampler2D blendMapSampler;
 uniform sampler2D texture1Sampler; //r
@@ -22,5 +24,5 @@ void main() {
 	float coef = dot(normalToFrag, -lightdir);
 	if (coef < 0.3f)
 		coef = 0.3f;
-	outColor = vec4(baseColor * lightcolor * coef, 1.0);
+	outColor = baseColor * lightcolor * coef;
 }

@@ -9,12 +9,11 @@ uniform float mintensity;
 //uniform vec3 cameraPos;
 uniform sampler2D textSampler;
 
-out vec4 outColor;
+layout(location = 0) out vec3 outColor;
 
 void main() {
 	vec4 baseColor = texture(textSampler, passTextCoord);
 	vec3 color = (baseColor.xyz*lightcolor)*intensity;
 	vec3 mcolor = (baseColor.xyz*mooncolor)*mintensity;
-	color = color + mcolor;
-	outColor= vec4(color,1.0);
+	outColor = color + mcolor;
 }
