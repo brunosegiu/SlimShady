@@ -9,5 +9,8 @@ uniform vec2 invScreenSize;
 uniform bool on;
 
 void main(){
-	color = vec3(texture(sampler, UV).x, 0, 0);
+	if (on)
+		color = (1.0f,1.0f,1.0f) - (texture(sampler, UV).xyz);
+	else 
+		color = texture(sampler, UV).xyz;
 }
