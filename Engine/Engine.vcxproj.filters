@@ -235,7 +235,7 @@
     <None Include="assets\shaders\skybox.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="gammacorr.frag">
+    <None Include="assets\shaders\colorcorrection.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

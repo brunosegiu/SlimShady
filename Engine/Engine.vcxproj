@@ -187,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\fxaa.frag" />
+    <None Include="assets\shaders\colorcorrection.frag" />
     <None Include="assets\shaders\mesh.frag" />
     <None Include="assets\shaders\mesh.vert" />
     <None Include="assets\shaders\meshInst.frag" />
@@ -200,7 +201,6 @@
     <None Include="assets\shaders\terrain.vert" />
     <None Include="assets\shaders\water.frag" />
     <None Include="assets\shaders\water.vert" />
-    <None Include="gammacorr.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

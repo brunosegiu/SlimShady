@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
 	World* test = new World(cam);
 
-	Model* mesh = new Mesh("assets/models/boulder");
+	Model* mesh = new Mesh("assets/models/trees/willow");
 	Model* mesh2 = new NormalMappedMesh("assets/models/boulder");
 	Model* mesh3 = new MeshInstanced("assets/models/boulder", "assets/models/boulder");
 	//Animation anim = Animation("assets/models/model.dae");
