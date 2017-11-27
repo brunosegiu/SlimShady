@@ -18,17 +18,24 @@ World::World(Camera* cam) {
 	addModel(new Terrain("assets/textures/valley.png", 35.0f, 20, 20));
 	addModel(new Water(300, 300));
 	//addModel(new Skybox(600));
-	this->terrain = new Entity(models["Terrain"], this);
+	this->terrains.push_back(new Entity(models["Terrain"], this));
 	this->water = new Entity(models["Water"], this);
 	this->water->scale(glm::vec3(2.0f, 2.0f, 2.0f));
 	//this->water->translate(glm::vec3(0.0f, -30.0f, 0.0f));
-	this->terrain->translate(glm::vec3(-256, 30.0f, -256));
-	this->terrain->scale(glm::vec3(1.5, 1.0f, 1.5f));
+	this->terrains[0]->translate(glm::vec3(-256, 30.0f, -256));
+	this->terrains[0]->scale(glm::vec3(1.5, 1.0f, 1.5f));
 
 	this->lastDraw = clock();
 
 	this->sun = new Sun(lastDraw);
-	this->sky = new Skybox(600);
+	this->sky = new Skybox(2000);
+
+	this->filters["FXAA"] = pair<bool, Filter*>(true, new Filter("assets/shaders/fxaa.frag", cam->width, cam->height));
+	this->filters["COLORCORR"] = pair<bool, Filter*>(true, new Filter("assets/shaders/colorcorrection.frag", cam->width, cam->height));
+
+	gamma = 1.0f;
+	contrast = 1.0f;
+	brightness = 0.0f;
 }
 
 void World::draw() {
@@ -42,9 +49,8 @@ void World::draw() {
 
 	// Update Camera view
 	this->cam->update();
-
+	Filter::fbo->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	//Render meshes
 	if (meshes.size() > 0) {
 		this->basic->bind();
@@ -84,9 +90,11 @@ void World::draw() {
 	w->moonColor = sun->moon->color;
 	w->mIntensity = sun->mIntensity;
 	w->draw(0);
-
+	
 	//Render terrain
-	terrain->draw(0);
+	for (unsigned int i = 0; i < terrains.size(); i++) {
+		terrains[i]->draw(0);
+	}
 
 	//Render Skybox
 	sky->mvp = this->cam->modelViewProjectionMatrix;
@@ -96,15 +104,47 @@ void World::draw() {
 	sky->mIntensity = sun->mIntensity;
 	//sky->lastDraw = daylight;
 	sky->draw(0);
-	
-	
-	
+
+	// Bind del buffer de pantalla
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textid);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textDB);
+	for (map<string, pair<bool, Filter*>>::iterator it = filters.begin(); it != filters.end(); it++) {
+		if (it->second.first) {
+			printf(it->first.c_str());
+			Filter* fil = it->second.second;
+			fil->bind();
+			GLuint texID = glGetUniformLocation(fil->shader->getId(), "sampler");
+			glUniform1i(texID, 0);
+		//	if (it->first == "FXAA") {
+				GLuint invSizeID = glGetUniformLocation(fil->shader->getId(), "invScreenSize");
+				glUniform2f(invSizeID, 1.0f / float(cam->width), 1.0f / float(cam->height));
+		//	}
+		//	else if (it->first == "COLORCORR") {
+				GLuint gammaID = glGetUniformLocation(fil->shader->getId(), "gamma");
+				glUniform1f(gammaID, gamma);
+				GLuint brightnessID = glGetUniformLocation(fil->shader->getId(), "brightness");
+				glUniform1f(brightnessID, brightness);
+				GLuint contrastID = glGetUniformLocation(fil->shader->getId(), "contrast");
+				glUniform1f(contrastID, contrast);
+		//	}
+			auto aux = it;
+			aux++;
+			if (aux++ == filters.end()) {
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			}
+			Filter::quad->draw();
+		}
+	}
 }
 
 void World::addModel(Model* model) {
-	if (models.count(model->name) > 0) {
-		model->name += " bis";
+	string name = model->name;
+	while (models.count(name) > 0) {
+		name += " bis";
 	}
+	model->name = name;
 	this->models[model->name] = model;
 }
 
@@ -120,6 +160,9 @@ void World::addEntity(string name) {
 		}
 		else if (dynamic_cast<Mesh*>(model)) {
 			this->meshes.push_back(ent);
+		}
+		else if (dynamic_cast<Terrain*>(model)) {
+			this->terrains.push_back(ent);
 		}
 	}
 }
@@ -278,6 +321,9 @@ World::~World() {
 	for (unsigned int i = 0; i < meshes_free.size(); i++) {
 		delete this->meshes_free[i];
 	}
+	for (unsigned int i = 0; i < terrains.size(); i++) {
+		delete this->terrains[i];
+	}
 	for (auto &elem : this->models) {
 		delete elem.second;
 	}
@@ -287,5 +333,4 @@ World::~World() {
 	delete cam;
 	delete basic;
 	delete water;
-	delete terrain;
 }

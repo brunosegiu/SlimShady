@@ -21,19 +21,19 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5AB4F720-5305-41FD-8321-56B384DBDDBC}</ProjectGuid>
     <RootNamespace>Engine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -123,12 +123,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="Filter.cpp" />
     <ClCompile Include="FreeMesh.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_sdl_gl3.cpp" />
+    <ClCompile Include="InterfaceController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -144,18 +148,23 @@
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainTile.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
+    <ClCompile Include="UniformQuad.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="FBO.h" />
+    <ClInclude Include="Filter.h" />
     <ClInclude Include="FreeMesh.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_sdl_gl3.h" />
     <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="InterfaceController.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshInstanced.h" />
@@ -172,16 +181,20 @@
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainTile.h" />
     <ClInclude Include="tinyxml2.h" />
+    <ClInclude Include="UniformQuad.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\fxaa.frag" />
+    <None Include="assets\shaders\colorcorrection.frag" />
     <None Include="assets\shaders\mesh.frag" />
     <None Include="assets\shaders\mesh.vert" />
     <None Include="assets\shaders\meshInst.frag" />
     <None Include="assets\shaders\meshInst.vert" />
     <None Include="assets\shaders\mesh_normalmap.frag" />
     <None Include="assets\shaders\mesh_normalmap.vert" />
+    <None Include="assets\shaders\pass.vert" />
     <None Include="assets\shaders\skybox.frag" />
     <None Include="assets\shaders\skybox.vert" />
     <None Include="assets\shaders\terrain.frag" />

@@ -29,14 +29,38 @@ Terrain::Terrain(string heightmapPath, float maxHeight, int tilesX, int tilesY){
 		}
 	}
 	FreeImage_Unload(bitmap);
-	this->textureID = Material::loadTexture("assets/textures/grass.jpg");
+	this->blendMapID = Material::loadTexture("assets/textures/blendmap.png");
+	this->texture1ID = Material::loadTexture("assets/textures/sand.jpg");
+	this->texture2ID = Material::loadTexture("assets/textures/rock.jpg");
+	this->texture3ID = Material::loadTexture("assets/textures/path.jpg");
+	this->texture4ID = Material::loadTexture("assets/textures/grass.jpg");
 }
 
 void Terrain::draw(GLuint shaderID) {
 	this->terrainShader->bind();
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, this->textureID);
+	glBindTexture(GL_TEXTURE_2D, this->blendMapID);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, this->texture1ID);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, this->texture2ID);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, this->texture3ID);
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, this->texture4ID);
+	GLuint blendID = glGetUniformLocation(shaderID, "blendMapSampler");
+	glUniform1i(blendID, 0);
+	GLuint text1ID = glGetUniformLocation(shaderID, "texture1Sampler");
+	glUniform1i(text1ID, 1);
+	GLuint text2ID = glGetUniformLocation(shaderID, "texture2Sampler");
+	glUniform1i(text2ID, 2);
+	GLuint text3ID = glGetUniformLocation(shaderID, "texture3Sampler");
+	glUniform1i(text3ID, 3);
+	GLuint text4ID = glGetUniformLocation(shaderID, "texture4Sampler");
+	glUniform1i(text4ID, 4);
+
+	glBindTexture(GL_TEXTURE_2D, this->texture4ID);
 	for (unsigned int i = 0; i < tiles.size(); i++) {
 		tiles[i]->draw();
 	}
@@ -47,5 +71,9 @@ Terrain::~Terrain() {
 	for (unsigned int i = 0; i < this->tiles.size(); i++) {
 		delete tiles[i];
 	}
-	glDeleteTextures(1, &this->textureID);
+	glDeleteTextures(1, &this->blendMapID);
+	glDeleteTextures(1, &this->texture1ID);
+	glDeleteTextures(1, &this->texture2ID);
+	glDeleteTextures(1, &this->texture3ID);
+	glDeleteTextures(1, &this->texture4ID);
 }

@@ -12,9 +12,8 @@
 #include "MeshInstanced.h"
 #include "Mesh.h"
 #include "Water.h"
-
-#include "imgui.h"
-#include "imgui_impl_sdl_gl3.h"
+#include "Animation.h"
+#include "InterfaceController.h"
 
 using namespace std;
 
@@ -23,17 +22,11 @@ void initGL();
 void draw(World &w);
 void close();
 
-// GUI functions
-
-void showEntities(World &world);
-void addEntity(World &world);
-void selectPath(World &world, int type);
-
 SDL_Window* window = NULL;
 SDL_GLContext context;
 
-int WIDTH = 1200;
-int HEIGHT = 680;
+int WIDTH = 1600;
+int HEIGHT = 900;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -67,19 +60,13 @@ void close() {
 	SDL_Quit();
 }
 
-bool entities = false;
-bool path1 = false;
-bool path2 = false;
-bool addent = false;
+
 
 int main(int argc, char* argv[]) {
 	init();
 
-	ImGui_ImplSdlGL3_Init(window);
-
 	bool exit = false;
-	bool editing = false;
-	
+
 	bool wireframe = false;
 
 	SDL_Event event;
@@ -88,16 +75,19 @@ int main(int argc, char* argv[]) {
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
 	World* test = new World(cam);
 
-	Model* mesh = new Mesh("assets/models/boulder");
+	Model* mesh = new Mesh("assets/models/trees/willow");
 	Model* mesh2 = new NormalMappedMesh("assets/models/boulder");
 	Model* mesh3 = new MeshInstanced("assets/models/boulder", "assets/models/boulder");
+	//Animation anim = Animation("assets/models/model.dae");
 	test->addModel(mesh);
 	test->addModel(mesh2);
 	test->addModel(mesh3);
 	test->addEntity(mesh->name);
+
 	test->addEntity(mesh2->name);
 	test->addEntity(mesh3->name);
 
+	InterfaceController controller = InterfaceController(window, test);
 	std::clock_t start;
 	while (!exit) {
 		start = clock();
@@ -108,26 +98,23 @@ int main(int argc, char* argv[]) {
 				break;
 			case SDL_KEYDOWN: {
 				if (event.key.keysym.sym == SDLK_ESCAPE) {
-					editing = !editing;
-					cam->in = !editing;
-
-					if (!editing) {
-						entities = false;
-					}
+					controller.editing = !controller.editing;
+					cam->in = !controller.editing;
 				}
 				else if (event.key.keysym.sym == SDLK_z) {
-					wireframe = !wireframe;
+					/*wireframe = !wireframe;
 					if (wireframe) {
 						glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 					}
 					else {
 						glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-					}
+					}*/
+					printf("Cambiando fxaa");
 				}
 			}
 			break;
 			case SDL_MOUSEBUTTONDOWN: {
-				cam->in = !cam->in && !editing;
+				cam->in = !cam->in && !controller.editing;
 				if (cam->in) {
 					SDL_ShowCursor(SDL_DISABLE);
 				}
@@ -136,56 +123,13 @@ int main(int argc, char* argv[]) {
 			}
 			break;
 			}
-			if (editing)
-				ImGui_ImplSdlGL3_ProcessEvent(&event);
+			controller.processEvent(event);
 		}
+		controller.update();
 
-		if (editing) {
-			ImGui_ImplSdlGL3_NewFrame(window);
-			if (ImGui::BeginMainMenuBar()) {
-				if (ImGui::BeginMenu("File")) {
-					if (ImGui::MenuItem("Open")) {
-					}
-					if (ImGui::MenuItem("Save")) {
-					}
-					ImGui::EndMenu();
-				}
-				if (ImGui::BeginMenu("Scene")) {
-					if (ImGui::BeginMenu("Add model")) {
-						if (ImGui::MenuItem("Mesh")) {
-							path1 = true;
-						}
-						if (ImGui::MenuItem("Normal mapped mesh")) {
-							path2 = true;
-						}
-						ImGui::EndMenu();
-					}
-					if (ImGui::MenuItem("Edit entities")) {
-						entities = true;
-					}
-					ImGui::EndMenu();
-				}
-				ImGui::EndMainMenuBar();
-			}
-			if (entities) {
-				showEntities(*test);
-			}
-			if (addent) {
-				addEntity(*test);
-			}
-			if (path1) {
-				selectPath(*test, 1);
-			}
-			if (path2) {
-				selectPath(*test, 2);
-			}
-		}
 		glClear(GL_COLOR_BUFFER_BIT);
-		
-
 		draw(*test);
-		if (editing)
-			ImGui::Render();
+		controller.draw();
 		double dif = frameTime - ((clock() - start) * (1000.0 / double(CLOCKS_PER_SEC)) );
 		if (dif > 0) {
 			Sleep(int(dif));
@@ -194,120 +138,4 @@ int main(int argc, char* argv[]) {
 	}
 	close();
 	return 0;
-}
-
-void showEntities(World &world) {
-	ImGui::Begin("Entities", &entities);
-	for (unsigned int i = 0; i < world.meshes.size(); i++) {
-		if (ImGui::CollapsingHeader( (world.meshes[i]->model->name + "-ent: " + to_string(i) ).c_str())) {
-			ImGui::Text("Translate:");
-			ImGui::SliderFloat("X ", &world.meshes[i]->acumulatedTranslate.x, -50.0f, 50.0f);
-			ImGui::SliderFloat("Y ", &world.meshes[i]->acumulatedTranslate.y, -50.0f, 50.0f);
-			ImGui::SliderFloat("Z ", &world.meshes[i]->acumulatedTranslate.z, -50.0f, 50.0f);
-
-			ImGui::Text("Rotate:");
-			ImGui::SliderFloat("X  ", &world.meshes[i]->acumulatedRotate.x, -5.0f, 5.0f);
-			ImGui::SliderFloat("Y  ", &world.meshes[i]->acumulatedRotate.y, -5.0f, 5.0f);
-			ImGui::SliderFloat("Z  ", &world.meshes[i]->acumulatedRotate.z, -5.0f, 5.0f);
-
-			ImGui::Text("Scale:");
-			ImGui::SliderFloat("X", &world.meshes[i]->acumulatedScale.x, 0.1f, 5.0f);
-			ImGui::SliderFloat("Y", &world.meshes[i]->acumulatedScale.y, 0.1f, 5.0f);
-			ImGui::SliderFloat("Z", &world.meshes[i]->acumulatedScale.z, 0.1f, 5.0f);
-		}
-	}
-	for (unsigned int i = 0; i < world.meshes_nm.size(); i++) {
-		if (ImGui::CollapsingHeader((world.meshes_nm[i]->model->name + "-ent: " + to_string(i)).c_str())) {
-			ImGui::Text("Translate:");
-			ImGui::SliderFloat("X ", &world.meshes_nm[i]->acumulatedTranslate.x, -50.0f, 50.0f);
-			ImGui::SliderFloat("Y ", &world.meshes_nm[i]->acumulatedTranslate.y, -50.0f, 50.0f);
-			ImGui::SliderFloat("Z ", &world.meshes_nm[i]->acumulatedTranslate.z, -50.0f, 50.0f);
-
-			ImGui::Text("Rotate:");
-			ImGui::SliderFloat("X  ", &world.meshes_nm[i]->acumulatedRotate.x, -5.0f, 5.0f);
-			ImGui::SliderFloat("Y  ", &world.meshes_nm[i]->acumulatedRotate.y, -5.0f, 5.0f);
-			ImGui::SliderFloat("Z  ", &world.meshes_nm[i]->acumulatedRotate.z, -5.0f, 5.0f);
-
-			ImGui::Text("Scale:");
-			ImGui::SliderFloat("X", &world.meshes_nm[i]->acumulatedScale.x, 0.1f, 5.0f);
-			ImGui::SliderFloat("Y", &world.meshes_nm[i]->acumulatedScale.y, 0.1f, 5.0f);
-			ImGui::SliderFloat("Z", &world.meshes_nm[i]->acumulatedScale.z, 0.1f, 5.0f);
-		}
-	}
-	if (ImGui::CollapsingHeader("Water-ent: ")) {
-		ImGui::Text("Translate:");
-		ImGui::SliderFloat("X ", &world.water->acumulatedTranslate.x, -50.0f, 50.0f);
-		ImGui::SliderFloat("Y ", &world.water->acumulatedTranslate.y, -50.0f, 50.0f);
-		ImGui::SliderFloat("Z ", &world.water->acumulatedTranslate.z, -50.0f, 50.0f);
-
-		ImGui::Text("Rotate:");
-		ImGui::SliderFloat("X  ", &world.water->acumulatedRotate.x, -5.0f, 5.0f);
-		ImGui::SliderFloat("Y  ", &world.water->acumulatedRotate.y, -5.0f, 5.0f);
-		ImGui::SliderFloat("Z  ", &world.water->acumulatedRotate.z, -5.0f, 5.0f);
-
-		ImGui::Text("Scale:");
-		ImGui::SliderFloat("X", &world.water->acumulatedScale.x, 0.1f, 5.0f);
-		ImGui::SliderFloat("Y", &world.water->acumulatedScale.y, 0.1f, 5.0f);
-		ImGui::SliderFloat("Z", &world.water->acumulatedScale.z, 0.1f, 5.0f);
-	}
-	if (ImGui::CollapsingHeader("Terrain-ent: ")) {
-		ImGui::Text("Translate:");
-		ImGui::SliderFloat("X ", &world.terrain->acumulatedTranslate.x, -50.0f, 50.0f);
-		ImGui::SliderFloat("Y ", &world.terrain->acumulatedTranslate.y, -50.0f, 50.0f);
-		ImGui::SliderFloat("Z ", &world.terrain->acumulatedTranslate.z, -50.0f, 50.0f);
-
-		ImGui::Text("Rotate:");
-		ImGui::SliderFloat("X  ", &world.terrain->acumulatedRotate.x, -5.0f, 5.0f);
-		ImGui::SliderFloat("Y  ", &world.terrain->acumulatedRotate.y, -5.0f, 5.0f);
-		ImGui::SliderFloat("Z  ", &world.terrain->acumulatedRotate.z, -5.0f, 5.0f);
-
-		ImGui::Text("Scale:");
-		ImGui::SliderFloat("X", &world.terrain->acumulatedScale.x, 0.1f, 5.0f);
-		ImGui::SliderFloat("Y", &world.terrain->acumulatedScale.y, 0.1f, 5.0f);
-		ImGui::SliderFloat("Z", &world.terrain->acumulatedScale.z, 0.1f, 5.0f);
-	}
-	if (ImGui::Button("Add entity")) {
-		addent = true;
-	}
-	ImGui::End();
-}
-
-void addEntity(World &world) {
-	ImGui::Begin("Add entity", &addent);
-	for (auto const &ent : world.models){
-		if (ImGui::Selectable(ent.first.c_str())){
-			world.addEntity(ent.first);
-			addent = false;
-		}
-	}
-	ImGui::End();
-}
-
-char input[160] = "";
-
-void selectPath(World &world, int type) {
-	if (path1)
-		ImGui::Begin("Select path", &path1);
-	else
-		ImGui::Begin("Select path", &path2);
-	ImGui::InputText("Path (sorry)", input, 160);
-	if (ImGui::Button("Accept")) {
-		if (type == 1) {
-			try {
-				world.addModel(new Mesh(input));
-			}
-			catch (exception &e) {
-			}
-			path1 = false;
-		}
-		else if (type == 2) {
-			try {
-				world.addModel(new NormalMappedMesh(input));
-			}
-			catch (exception &e) {
-			}
-			path2 = false;
-		}
-	}
-	ImGui::End();
 }

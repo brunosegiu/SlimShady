@@ -4,6 +4,7 @@
 #include <ctime>
 #include <string>
 #include <map>
+#include <utility>
 
 #include "Camera.h"
 #include "ShaderProgram.h"
@@ -14,6 +15,7 @@
 #include "Sun.h"
 #include "Skybox.h"
 #include "Entity.h"
+#include "Filter.h"
 
 using namespace std;
 
@@ -27,8 +29,8 @@ class World {
 		std::vector<Entity*> meshes_nm;
 		std::vector<Entity*> meshes_free;
 		std::vector<Entity*> meshes_inst;
+		vector<Entity*> terrains;
 		std::map<string, Model*> models;
-		Entity* terrain;
 		Entity* water;
 		Skybox* sky;
 		Camera* cam;
@@ -45,6 +47,10 @@ class World {
 		ShaderProgram* veryBasic;
 
 		clock_t lastDraw;
+
+		map<string, pair<bool,Filter*>> filters;
+
+		float gamma, contrast, brightness;
 
 	public:
 		World(Camera* cam);

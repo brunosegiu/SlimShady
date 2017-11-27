@@ -194,10 +194,7 @@ void Mesh::draw(GLuint shaderID) {
 		glActiveTexture(GL_TEXTURE0);
 		glEnableVertexAttribArray(2);
 	}
-	GLuint textured = glGetUniformLocation(shaderID, "isTextured");
-	GLuint kd = glGetUniformLocation(shaderID, "Kd");
 	for (unsigned int i = 0; i < this->indices.size(); i++) {
-		glUniform1i(textured, this->mats[i]->isTextured);
 		if (this->mats[i]->isTextured) {
 			glEnable(GL_TEXTURE_2D);
 			glActiveTexture(GL_TEXTURE0);
@@ -207,7 +204,6 @@ void Mesh::draw(GLuint shaderID) {
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, this->mats[i]->normalID);
 		}
-		glUniform3f(kd,this->mats[i]->diffuse.x, this->mats[i]->diffuse.y, this->mats[i]->diffuse.z);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indices[i]);
 		glDrawElements(GL_TRIANGLES,this->faces[i],	GL_UNSIGNED_INT,(void*)0);
 		if (this->mats[i]->isTextured) {
