@@ -36,7 +36,7 @@ void Sun::updateLight(float time) {
 		}
 		else {
 			float t = lastDraw;
-			light->dir = glm::vec3(-1.0, 0.0, 0.0);
+			light->dir = glm::vec3(1.0, 0.0, 0.0);
 			light->color = glm::vec3(1.0, 0.58, 0.16);
 			intensity = pow(cos(t), 2);						//Puedo usar intensity y 1-intensity para los parametros del skybox
 			mIntensity = pow(sin(t), 2)*0.4;
@@ -63,7 +63,7 @@ void Sun::updateLight(float time) {
 		}
 		else {
 			float t = lastDraw;
-			light->dir = glm::vec3(1.0, 0.0, 0.0);
+			light->dir = glm::vec3(-1.0, 0.0, 0.0);
 			light->color = glm::vec3(1.0, 0.58, 0.16);
 			intensity = pow(sin(t), 2);						//Puedo usar intensity y 1-intensity para los parametros del skybox
 			mIntensity = pow(cos(t), 2)*0.4;
