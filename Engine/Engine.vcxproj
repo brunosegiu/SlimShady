@@ -139,6 +139,7 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Sun.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainTile.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="OBJIndexer.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="stb_rect_pack.h" />
     <ClInclude Include="stb_textedit.h" />
     <ClInclude Include="stb_truetype.h" />
@@ -180,6 +182,8 @@
     <None Include="assets\shaders\meshInst.vert" />
     <None Include="assets\shaders\mesh_normalmap.frag" />
     <None Include="assets\shaders\mesh_normalmap.vert" />
+    <None Include="assets\shaders\skybox.frag" />
+    <None Include="assets\shaders\skybox.vert" />
     <None Include="assets\shaders\terrain.frag" />
     <None Include="assets\shaders\terrain.vert" />
     <None Include="assets\shaders\water.frag" />
