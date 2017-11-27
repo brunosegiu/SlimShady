@@ -238,5 +238,8 @@
     <None Include="assets\shaders\colorcorrection.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="assets\shaders\depthoffield.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

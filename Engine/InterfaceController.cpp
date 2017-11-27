@@ -192,7 +192,8 @@ void InterfaceController::draw() {
 
 void InterfaceController::showGraphics() {
 	ImGui::Begin("Graphics settings", &graphics);
-	ImGui::Checkbox("FXAA", &world->filters["FXAA"].first);
+	ImGui::Checkbox("FXAA", &world->filters[0].first);
+	ImGui::Checkbox("DOF", &world->filters[2].first);
 	ImGui::SliderFloat("Gamma", &world->gamma, 0.0f, 5.0f);
 	ImGui::SliderFloat("Brightness", &world->brightness, 0.0f, 1.0f);
 	ImGui::SliderFloat("Contrast", &world->contrast, 0.0f, 5.0f);

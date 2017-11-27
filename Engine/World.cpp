@@ -30,9 +30,11 @@ World::World(Camera* cam) {
 	this->sun = new Sun(lastDraw);
 	this->sky = new Skybox(2000);
 
-	this->filters["FXAA"] = pair<bool, Filter*>(true, new Filter("assets/shaders/fxaa.frag", cam->width, cam->height));
-	this->filters["COLORCORR"] = pair<bool, Filter*>(true, new Filter("assets/shaders/colorcorrection.frag", cam->width, cam->height));
-
+	
+	this->filters.push_back(pair<bool, Filter*>(true, new Filter("assets/shaders/fxaa.frag", cam->width, cam->height)));
+	this->filters.push_back(pair<bool, Filter*>(true, new Filter("assets/shaders/colorcorrection.frag", cam->width, cam->height)));
+	this->filters.push_back(pair<bool, Filter*>(true, new Filter("assets/shaders/depthoffield.frag", cam->width, cam->height)));
+	
 	gamma = 1.0f;
 	contrast = 1.0f;
 	brightness = 0.0f;
@@ -108,33 +110,30 @@ void World::draw() {
 	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textid);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textDB);
-	for (map<string, pair<bool, Filter*>>::iterator it = filters.begin(); it != filters.end(); it++) {
-		if (it->second.first) {
-			printf(it->first.c_str());
-			Filter* fil = it->second.second;
-			fil->bind();
-			GLuint texID = glGetUniformLocation(fil->shader->getId(), "sampler");
-			glUniform1i(texID, 0);
-		//	if (it->first == "FXAA") {
-				GLuint invSizeID = glGetUniformLocation(fil->shader->getId(), "invScreenSize");
-				glUniform2f(invSizeID, 1.0f / float(cam->width), 1.0f / float(cam->height));
-		//	}
-		//	else if (it->first == "COLORCORR") {
-				GLuint gammaID = glGetUniformLocation(fil->shader->getId(), "gamma");
-				glUniform1f(gammaID, gamma);
-				GLuint brightnessID = glGetUniformLocation(fil->shader->getId(), "brightness");
-				glUniform1f(brightnessID, brightness);
-				GLuint contrastID = glGetUniformLocation(fil->shader->getId(), "contrast");
-				glUniform1f(contrastID, contrast);
-		//	}
-			auto aux = it;
-			aux++;
-			if (aux++ == filters.end()) {
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			}
-			Filter::quad->draw();
+	glDisable(GL_DEPTH_TEST);
+	for (unsigned int i = 0; i < filters.size(); i++) {
+		Filter* fil = filters[i].second;
+		fil->bind();
+		GLuint onID = glGetUniformLocation(fil->shader->getId(), "on");
+		glUniform1i(onID, filters[i].first);
+		GLuint texID = glGetUniformLocation(fil->shader->getId(), "sampler");
+		glUniform1i(texID, 0);
+		GLuint texIDDB = glGetUniformLocation(fil->shader->getId(), "samplerDB");
+		glUniform1i(texIDDB, 1);
+		GLuint invSizeID = glGetUniformLocation(fil->shader->getId(), "invScreenSize");
+		glUniform2f(invSizeID, 1.0f / float(cam->width), 1.0f / float(cam->height));
+		GLuint gammaID = glGetUniformLocation(fil->shader->getId(), "gamma");
+		glUniform1f(gammaID, gamma);
+		GLuint brightnessID = glGetUniformLocation(fil->shader->getId(), "brightness");
+		glUniform1f(brightnessID, brightness);
+		GLuint contrastID = glGetUniformLocation(fil->shader->getId(), "contrast");
+		glUniform1f(contrastID, contrast);
+		if (i == filters.size()-1) {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
+		Filter::quad->draw();
 	}
+	glEnable(GL_DEPTH_TEST);
 }
 
 void World::addModel(Model* model) {

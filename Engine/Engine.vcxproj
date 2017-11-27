@@ -186,6 +186,7 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\depthoffield.frag" />
     <None Include="assets\shaders\fxaa.frag" />
     <None Include="assets\shaders\colorcorrection.frag" />
     <None Include="assets\shaders\mesh.frag" />

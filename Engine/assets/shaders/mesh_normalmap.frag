@@ -3,15 +3,14 @@
 layout(location = 0) out vec3 outColor;
 
 in vec2 textCoordFrag;
-in vec3 normalToFrag;
-in vec3 tangentToFrag;
-in vec3 bitangentToFrag;
 in mat3 toModelSpace;
 
 uniform sampler2D textSampler;
 uniform sampler2D normTextSampler;
 uniform vec3 lightdir;
 uniform vec3 lightcolor;
+uniform vec3 moondir;
+uniform vec3 mooncolor;
 
 void main() {
 	vec4 baseColor = texture(textSampler, textCoordFrag);
@@ -19,5 +18,8 @@ void main() {
 	float coef = dot(normal, -lightdir);
 	if (coef < 0.3f)
 		coef = 0.3f;
-	outColor = baseColor.xyz * lightcolor * coef;
+	float coefm = dot(normal,-moondir);
+	if (coefm < 0.1f)
+		coefm = 0.1f;
+	outColor = baseColor.rgb * (lightcolor * coef + mooncolor * coefm);
 }

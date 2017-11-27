@@ -5,15 +5,13 @@ in vec2 UV;
 out vec3 color;
 
 uniform sampler2D sampler;
-uniform sampler2D samplerDB;
 uniform float gamma;
 uniform float contrast;
 uniform float brightness;
 
 void main(){
-		/*float depth = texture(samplerDB,UV).r;
-		color = vec3(depth); //samplerDB (1.0f,1.0f,1.0f) - (texture(sampler, UV).xyz);*/
+		//Correccion de color
 		color = texture(sampler, UV).xyz;
-		color = vec3(pow(color.r,gamma),pow(color.g,gamma),pow(color.b,gamma));
+		color = vec3(pow(color.r,1.0/gamma),pow(color.g,1.0/gamma),pow(color.b,1.0/gamma));
 		color = color * contrast + vec3(brightness);
 }
