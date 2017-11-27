@@ -4,7 +4,6 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 textureCoord;
 
 uniform mat4 worldTransform;
-//uniform float phi;
 
 //const float PI = 3.1415926535897932384626433832795;
 //const float amplitude = 0.5;

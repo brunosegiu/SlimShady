@@ -35,9 +35,10 @@ void World::draw() {
 	// Update drawing timer
 	float elapsed = (clock() - this->lastDraw) / double(CLOCKS_PER_SEC);
 	this->lastDraw = clock();
+	float daylight = clock() / (double(CLOCKS_PER_SEC)*5);
 
 	//Update Sun
-	this->sun->updateLight(lastDraw);
+	this->sun->updateLight(elapsed/5);
 
 	// Update Camera view
 	this->cam->update();
@@ -93,6 +94,7 @@ void World::draw() {
 	sky->intensity = sun->intensity;
 	sky->moonColor = sun->moon->color;
 	sky->mIntensity = sun->mIntensity;
+	//sky->lastDraw = daylight;
 	sky->draw(0);
 	
 	
