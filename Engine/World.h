@@ -48,7 +48,7 @@ class World {
 
 		clock_t lastDraw;
 
-		map<string, pair<bool,Filter*>> filters;
+		vector<pair<bool,Filter*>> filters;
 
 		float gamma, contrast, brightness;
 

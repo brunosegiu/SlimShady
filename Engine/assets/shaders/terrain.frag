@@ -15,6 +15,8 @@ uniform sampler2D texture4Sampler; //0
 
 uniform vec3 lightdir;
 uniform vec3 lightcolor;
+uniform vec3 moondir;
+uniform vec3 mooncolor;
 
 void main() {
 	vec3 blend = texture(blendMapSampler, textureCoordToFrag).xyz;
@@ -24,5 +26,8 @@ void main() {
 	float coef = dot(normalToFrag, -lightdir);
 	if (coef < 0.3f)
 		coef = 0.3f;
-	outColor = baseColor * lightcolor * coef;
+	float coefm = dot(normalToFrag,-moondir);
+	if (coefm < 0.1f)
+		coefm = 0.1f;
+	outColor = baseColor.rgb * (lightcolor * coef + mooncolor * coefm);
 }

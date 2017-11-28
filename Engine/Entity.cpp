@@ -59,8 +59,14 @@ void Entity::draw(GLuint shaderID) {
 	GLuint lightDirID = glGetUniformLocation(shaderID, "lightdir");
 	GLuint lightColorID = glGetUniformLocation(shaderID, "lightcolor");
 
+	GLuint moonDirID = glGetUniformLocation(shaderID, "moondir");
+	GLuint moonColorID = glGetUniformLocation(shaderID, "mooncolor");
+
 	glUniform3fv(lightDirID, 1, &world->sun->light->dir[0]);
 	glUniform3fv(lightColorID, 1, &(world->sun->light->color * world->sun->intensity)[0] );
+
+	glUniform3fv(moonDirID, 1, &world->sun->moon->dir[0]);
+	glUniform3fv(moonColorID, 1, &(world->sun->moon->color * world->sun->mIntensity)[0]);
 
 	MeshInstanced* meshi = dynamic_cast<MeshInstanced*>(this->model);
 	if (meshi) {

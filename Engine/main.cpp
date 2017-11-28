@@ -75,14 +75,14 @@ int main(int argc, char* argv[]) {
 	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
 	World* test = new World(cam);
 
-	//Model* mesh = new Mesh("assets/models/trees/willow");
+	Model* mesh = new Mesh("assets/models/boulder");
 	Model* mesh2 = new NormalMappedMesh("assets/models/boulder");
 	Model* mesh3 = new MeshInstanced("assets/models/boulder", "assets/models/boulder");
 	//Animation anim = Animation("assets/models/model.dae");
-	//test->addModel(mesh);
+	test->addModel(mesh);
 	test->addModel(mesh2);
 	test->addModel(mesh3);
-	//test->addEntity(mesh->name);
+	test->addEntity(mesh->name);
 
 	test->addEntity(mesh2->name);
 	test->addEntity(mesh3->name);
