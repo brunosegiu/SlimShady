@@ -11,6 +11,7 @@ uniform vec3 mooncolor;
 uniform float mintensity;
 //uniform vec3 cameraPos;
 uniform sampler2D textSampler;
+uniform sampler2D normalSampler;
 
 const vec3 watercolor = vec3(0.2,0.2,0.5);
 //const vec3 speccol = vec3(1.0,1.0,1.0);
@@ -27,11 +28,14 @@ layout(location = 0) out vec3 outColor;
 //}
 
 void main() {
-	//vec3 specular = specular(cameraPos, normal);
-	float factor = max(dot(-lightdir,normal),0.3);
+	vec4 textNormal = texture(normalSampler, passTextCoord);
+	vec4 bNormal = vec4(normal, 1.0);
+	bNormal = normalize(bNormal + textNormal*2-1);
+	//vec3 specular = specular(cameraPos, bNormal.xyz);
+	float factor = max(dot(-lightdir,bNormal.xyz),0.3);
 	vec4 baseColor = texture(textSampler, passTextCoord);
 	vec3 color = (baseColor.xyz*lightcolor*factor)*intensity;
-	factor = max(dot(-moondir,normal),0.3);
+	factor = max(dot(-moondir,bNormal.xyz),0.3);
 	vec3 mcolor = (baseColor.xyz*mooncolor*factor)*mintensity;
 	outColor = color + mcolor;
 }
