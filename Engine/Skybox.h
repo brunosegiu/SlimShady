@@ -12,7 +12,7 @@ class FreeMesh;
 
 class Skybox{
 public:
-	FreeMesh *front, *up, *right, *back, *down, *left;
+	FreeMesh *front, *up, *right, *back, *down, *left, *left2;
 	ShaderProgram* shader;
 	GLuint frontID, upID, rightID, backID, downID, leftID;
 	GLuint nfrontID, nupID, nrightID, nbackID, ndownID, nleftID;

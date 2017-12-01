@@ -14,7 +14,7 @@ class Water : public Model{
 public:
 	FreeMesh* mesh;
 	ShaderProgram* shader;
-	GLuint textureID;
+	GLuint textureID, normalID;
 
 	//States
 	glm::mat4 mvp;

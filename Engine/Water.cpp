@@ -11,8 +11,8 @@ Water::Water(int width, int height){
 			positions.push_back((float)-height/2.0f + (j)); // n/2 = 50
 			positions.push_back(0.0f);
 			positions.push_back((float)-width/2.0f + (i));
-			textcoords.push_back(i/50);
-			textcoords.push_back(j/50);
+			textcoords.push_back(i/20);
+			textcoords.push_back(j/20);
 		}
 	}
 	for (unsigned int i = 0; i <= /*2**/width -1; i++) {
@@ -30,7 +30,8 @@ Water::Water(int width, int height){
 	this->mesh->addTexture(textcoords);
 	this->shader = new ShaderProgram("assets/shaders/water.vert", "assets/shaders/water.frag");
 
-	this->textureID = loadTexture("assets/textures/deep_water3.jpg");
+	this->textureID = loadTexture("assets/textures/water2.jpg");
+	this->normalID = loadTexture("assets/textures/waterNormal2.jpg");
 }
 
 GLuint Water::loadTexture(std::string path) {
@@ -85,6 +86,10 @@ void Water::draw(GLuint shaderID) {
 	glBindTexture(GL_TEXTURE_2D, this->textureID);
 	GLuint textID = glGetUniformLocation(shader->getId(), "textSampler");
 	glUniform1i(textID, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, this->normalID);
+	textID = glGetUniformLocation(shader->getId(), "normalSampler");
+	glUniform1i(textID, 1);
 	this->mesh->draw(0);
 	glEnable(GL_CULL_FACE);
 }

@@ -16,6 +16,7 @@ public:
 	float lastDraw;
 	float transition;
 	Cicle state;
+	bool stop;
 	
 public:
 	Sun(clock_t time);

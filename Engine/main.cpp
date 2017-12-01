@@ -111,6 +111,10 @@ int main(int argc, char* argv[]) {
 					}*/
 					printf("Cambiando fxaa");
 				}
+				else if (event.key.keysym.sym == SDLK_l) {
+					if (test->sun->stop) test->sun->stop = false;
+					else test->sun->stop = true;
+				}
 			}
 			break;
 			case SDL_MOUSEBUTTONDOWN: {

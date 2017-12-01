@@ -76,9 +76,12 @@ Skybox::Skybox(int size) {
 		-halfdist, -halfdist, -halfdist};
 	std::vector<float> left(arrL, arrL + sizeof(arrL) / sizeof(arrL[0]));
 	this->left = new FreeMesh(left, index);
+	this->left2 = new FreeMesh(left, index);
 	this->left->addTexture(textcoords);
+	this->left2->addTexture(textcoords);
 	this->leftID = loadTexture("assets/textures/bluecloud_rt.jpg");
 	this->nleftID = loadTexture("assets/textures/left.jpg");
+
 	this->shader = new ShaderProgram("assets/shaders/skybox.vert", "assets/shaders/skybox.frag");
 }
 
@@ -165,6 +168,7 @@ void Skybox::draw(GLuint coso) {
 	glBindTexture(GL_TEXTURE_2D, this->leftID);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->nleftID);
+	this->left2->draw(0);
 	this->left->draw(0);
 	glEnable(GL_CULL_FACE);
 }
