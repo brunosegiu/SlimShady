@@ -93,4 +93,6 @@ void main(){
 	}else{
 		color = texture(sampler, UV).xyz;
 	}
+
+	
 }
