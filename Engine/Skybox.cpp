@@ -118,6 +118,7 @@ void Skybox::draw(GLuint coso) {
 	//GLuint camID = glGetUniformLocation(shader->getId(), "cameraPos");
 	//GLuint lightDirID = glGetUniformLocation(shader->getId(), "lightdir");
 	GLuint lightColorID = glGetUniformLocation(shader->getId(), "lightcolor");
+
 	GLuint intensityID = glGetUniformLocation(shader->getId(), "intensity");
 	//GLuint moonDirID = glGetUniformLocation(shader->getId(), "moondir");
 	GLuint moonColorID = glGetUniformLocation(shader->getId(), "mooncolor");
@@ -169,6 +170,7 @@ void Skybox::draw(GLuint coso) {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->nleftID);
 	this->left2->draw(0);
+	//this->left2->draw(0);
 	this->left->draw(0);
 	glEnable(GL_CULL_FACE);
 }

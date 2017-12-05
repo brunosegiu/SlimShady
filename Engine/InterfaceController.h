@@ -19,11 +19,11 @@ class InterfaceController {
 		void selectPath(int type);
 	public:
 		bool entities;
-		bool path1;
-		bool path2;
+		bool path1, path2, path3, path4;
 		bool addent;
 		bool editing;
 		bool graphics;
+		bool save, load;
 		SDL_Window* window;
 		World* world;
 };

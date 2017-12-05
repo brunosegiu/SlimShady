@@ -1,0 +1,38 @@
+<world>
+    <camera posx="29.972586" posy="32.794743" posz="-140.75751" rx="29.157244" ry="32.262543" rz="-140.52951" upx="0" upy="1" upz="0" fov="45" sens="80" speed="50"/>
+    <models>
+        <item type="model" name="AG01_5" path="assets/models/trees/avena"/>
+        <item type="model" name="Cube" path="assets/models/boat"/>
+        <item type="model" name="EA02y" path="assets/models/trees/buckeye"/>
+        <item type="model" name="EU16m.001" path="assets/models/trees/willow"/>
+        <item type="model" name="Stone_F_3_LOD1" path="assets/models/boulder"/>
+        <item type="nmmodel" name="Stone_F_3_LOD1 bis" path="assets/models/boulder"/>
+        <item type="model" name="Stone_F_3_LOD1 bis bis" path="assets/models/boulder"/>
+        <item type="terrain" name="Terrain" path="assets/textures/valley.png" maxHeight="35" tilesX="10" tilesY="10"/>
+        <item type="terrain" name="Terrain bis" path="assets/textures/valley.png" maxHeight="35" tilesX="10" tilesY="10"/>
+        <item type="model" name="WoodCabin" path="assets/models/cabin"/>
+        <item type="nmmodel" name="dock.022" path="assets/models/dick"/>
+        <item type="model" name="leafactual" path="assets/models/trees/chestnut"/>
+        <item type="model" name="sub04" path="assets/models/trees/arbusto"/>
+    </models>
+    <mesh-entities>
+        <item model="EU16m.001" trsx="37.634003" trsy="5.3760004" trsz="-123.65601" rotx="0" roty="0" rotz="0" scalex="2.312" scaley="1.575" scalez="2.8040001"/>
+        <item model="EU16m.001" trsx="-21.505001" trsy="5.3760004" trsz="-161.29001" rotx="-0.26900002" roty="-0.17200001" rotz="0.215" scalex="1" scaley="1.0830001" scalez="1.3290001"/>
+        <item model="EA02y" trsx="-26.882002" trsy="0" trsz="-155.914" rotx="0" roty="0" rotz="0.108" scalex="1" scaley="1" scalez="1"/>
+        <item model="EA02y" trsx="37.634003" trsy="0" trsz="-161.29001" rotx="0.16100001" roty="0" rotz="0" scalex="1.4410001" scaley="1.978" scalez="1.978"/>
+        <item model="sub04" trsx="17.900002" trsy="7.5270004" trsz="-193.548" rotx="0" roty="-1.1290001" rotz="0" scalex="8.6850004" scaley="8.9530001" scalez="9.2220001"/>
+        <item model="WoodCabin" trsx="32.258003" trsy="9.1400003" trsz="-188.17201" rotx="0" roty="-0.48400003" rotz="0" scalex="0.36800003" scaley="0.36800003" scalez="0.36800003"/>
+        <item model="AG01_5" trsx="13.126" trsy="-1.074" trsz="-108.592" rotx="0" roty="0" rotz="0" scalex="20.108002" scaley="20.584002" scalez="20.465"/>
+        <item model="sub04" trsx="25.060001" trsy="5.131" trsz="-199.28401" rotx="0" roty="-4.9760003" rotz="0" scalex="12.486001" scaley="12.367001" scalez="12.486001"/>
+        <item model="leafactual" trsx="0" trsy="4.8930001" trsz="-177.804" rotx="0" roty="0" rotz="0" scalex="8.0790005" scaley="7.2460003" scalez="7.1260004"/>
+        <item model="Cube" trsx="-17.900002" trsy="2.029" trsz="-137.231" rotx="0.17900001" roty="2.2550001" rotz="0.10700001" scalex="1.1720001" scaley="1.529" scalez="1.4100001"/>
+    </mesh-entities>
+    <nmmesh-entities>
+        <item model="Stone_F_3_LOD1 bis" trsx="0" trsy="5.3760004" trsz="-145.16101" rotx="-1.774" roty="-1.2900001" rotz="0" scalex="2.7830002" scaley="3.0510001" scalez="2.2460001"/>
+        <item model="dock.022" trsx="-10.740001" trsy="-1.7900001" trsz="-113.36501" rotx="0" roty="1.348" rotz="0" scalex="39.996002" scaley="39.996002" scalez="50.000004"/>
+    </nmmesh-entities>
+    <terrain-entities>
+        <item model="Terrain" trsx="-256" trsy="30" trsz="-256" rotx="0" roty="0" rotz="0" scalex="1.5" scaley="1" scalez="1.5"/>
+    </terrain-entities>
+    <water model="Water" trsx="0" trsy="0" trsz="50.000004" rotx="0" roty="0" rotz="0" scalex="2.5150001" scaley="1.1730001" scalez="3.0510001"/>
+</world>

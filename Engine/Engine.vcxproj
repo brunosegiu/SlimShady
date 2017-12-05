@@ -21,19 +21,19 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5AB4F720-5305-41FD-8321-56B384DBDDBC}</ProjectGuid>
     <RootNamespace>Engine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -133,6 +133,7 @@
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_sdl_gl3.cpp" />
     <ClCompile Include="InterfaceController.cpp" />
+    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="imgui_impl_sdl_gl3.h" />
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="InterfaceController.h" />
+    <ClInclude Include="Joint.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshInstanced.h" />
@@ -186,6 +188,8 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\anim.frag" />
+    <None Include="assets\shaders\anim.vert" />
     <None Include="assets\shaders\depthoffield.frag" />
     <None Include="assets\shaders\fxaa.frag" />
     <None Include="assets\shaders\colorcorrection.frag" />

@@ -43,7 +43,7 @@ Camera::Camera(glm::vec3 pos, glm::vec3 ref, glm::vec3 up, float fov, float sens
 	this->lastUpdate = std::clock();
 	this->set = false;
 
-	this->projectionMatrix = glm::perspective(glm::radians(fov), width / height, 1.0f, 100.0f);
+	this->projectionMatrix = glm::perspective(glm::radians(fov), width / height, 0.5f, 5000.0f);
 	this->viewMatrix = glm::lookAt(pos, ref, up);
 	this->modelViewProjectionMatrix = this->projectionMatrix * this->viewMatrix;
 }

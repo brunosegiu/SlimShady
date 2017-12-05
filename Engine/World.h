@@ -16,6 +16,7 @@
 #include "Skybox.h"
 #include "Entity.h"
 #include "Filter.h"
+#include "Animation.h"
 
 using namespace std;
 
@@ -34,7 +35,6 @@ class World {
 		Entity* water;
 		Skybox* sky;
 		Camera* cam;
-		
 
 		//Luces
 		Sun* sun;
@@ -44,13 +44,15 @@ class World {
 		ShaderProgram* basic;
 		ShaderProgram* basicNM;
 		ShaderProgram* basicInst;
-		ShaderProgram* veryBasic;
+		ShaderProgram* veryBasic, *animationShader;
+
+		Animation* anim;
 
 		clock_t lastDraw;
 
 		vector<pair<bool,Filter*>> filters;
 
-		float gamma, contrast, brightness;
+		float gamma, contrast, brightness, fogFactor, vignette;
 
 	public:
 		World(Camera* cam);

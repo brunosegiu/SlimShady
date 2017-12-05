@@ -9,6 +9,8 @@ uniform sampler2D samplerDB;
 uniform float gamma;
 uniform float contrast;
 uniform float brightness;
+uniform float fogFactor;
+uniform float vignette;
 
 float linearize(float depth){
 	return (2 * 0.5)/ (5000.0f + 0.5 - depth * (5000.0f-0.5));
@@ -23,7 +25,13 @@ void main(){
 		//FOG
 		float depth = texture(samplerDB,UV).r;
 		depth = linearize(depth);
-		float factor = pow(depth, 0.3f);
-		color = color * (1-factor) + vec3(factor);
+		float factor = clamp(1.0f/exp(depth* fogFactor),0.0f,1.0f);
+		color = color * (factor) + vec3(1.0f-factor);
+
+		//Vignette
+		vec2 vig = UV * (1.0f-UV.yx);
+		float eff = pow(vig.x*vig.y*15.0f, vignette);
+		color = clamp(color, 0.0f, 1.0f);
+		color = color * eff;
 
 }

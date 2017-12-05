@@ -24,8 +24,8 @@ void main() {
 	vec2 tiledCoords = textureCoordToFrag * 40.0f;
 	vec3 baseColor = (texture(texture1Sampler, tiledCoords) * blend.x + texture(texture2Sampler, tiledCoords) * blend.y + texture(texture3Sampler, tiledCoords) * blend.z + texture(texture4Sampler, tiledCoords) * fourth).xyz;
 	float coef = dot(normalToFrag, -lightdir);
-	if (coef < 0.3f)
-		coef = 0.3f;
+	if (coef < 0.1f)
+		coef = 0.1f;
 	float coefm = dot(normalToFrag,-moondir);
 	if (coefm < 0.1f)
 		coefm = 0.1f;

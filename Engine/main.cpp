@@ -72,21 +72,9 @@ int main(int argc, char* argv[]) {
 	SDL_Event event;
 	
 	double frameTime = 1000.0f / 65.0f;
-	Camera* cam = new Camera(WIDTH, HEIGHT, 45.0f, window);
-	World* test = new World(cam);
 
-	Model* mesh = new Mesh("assets/models/boulder");
-	Model* mesh2 = new NormalMappedMesh("assets/models/boulder");
-	Model* mesh3 = new MeshInstanced("assets/models/boulder", "assets/models/boulder");
-	//Animation anim = Animation("assets/models/model.dae");
-	test->addModel(mesh);
-	test->addModel(mesh2);
-	test->addModel(mesh3);
-	test->addEntity(mesh->name);
-
-	test->addEntity(mesh2->name);
-	test->addEntity(mesh3->name);
-
+	World* test = World::load("test3",window,WIDTH, HEIGHT);
+	
 	InterfaceController controller = InterfaceController(window, test);
 	std::clock_t start;
 	while (!exit) {
@@ -99,17 +87,7 @@ int main(int argc, char* argv[]) {
 			case SDL_KEYDOWN: {
 				if (event.key.keysym.sym == SDLK_ESCAPE) {
 					controller.editing = !controller.editing;
-					cam->in = !controller.editing;
-				}
-				else if (event.key.keysym.sym == SDLK_z) {
-					/*wireframe = !wireframe;
-					if (wireframe) {
-						glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-					}
-					else {
-						glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-					}*/
-					printf("Cambiando fxaa");
+					controller.world->cam->in = !controller.editing;
 				}
 				else if (event.key.keysym.sym == SDLK_l) {
 					if (test->sun->stop) test->sun->stop = false;
@@ -118,8 +96,8 @@ int main(int argc, char* argv[]) {
 			}
 			break;
 			case SDL_MOUSEBUTTONDOWN: {
-				cam->in = !cam->in && !controller.editing;
-				if (cam->in) {
+				controller.world->cam->in = !controller.world->cam->in && !controller.editing;
+				if (controller.world->cam->in) {
 					SDL_ShowCursor(SDL_DISABLE);
 				}
 				else
@@ -130,6 +108,7 @@ int main(int argc, char* argv[]) {
 			controller.processEvent(event);
 		}
 		controller.update();
+		test = controller.world;
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		draw(*test);

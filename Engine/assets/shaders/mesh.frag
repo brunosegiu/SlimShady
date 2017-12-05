@@ -18,8 +18,8 @@ void main() {
 	if (baseColor.a < 1.0f)
 		discard;
 	float coef = dot(normalToFrag,-lightdir);
-	if (coef < 0.3f)
-		coef = 0.3f;
+	if (coef < 0.1f)
+		coef = 0.1f;
 	float coefm = dot(normalToFrag,-moondir);
 	if (coefm < 0.1f)
 		coefm = 0.1f;

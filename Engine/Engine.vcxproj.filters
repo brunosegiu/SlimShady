@@ -85,6 +85,9 @@
     <ClCompile Include="Filter.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Joint.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -180,6 +183,9 @@
     <ClInclude Include="Filter.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -239,6 +245,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\depthoffield.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\anim.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\anim.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
