@@ -27,7 +27,7 @@ void Particle::advance(float t, glm::vec3 force, int maxVelocity, int lenght)
 		float remainder = (float)fmod(abs(position.y), lenght);
 		position.y = lenght - remainder;
 		//this->mass = rand() % (maxMass - minMass) + minMass;
-		//this->velocity = glm::vec3(0, -1, 0) * (float)(minIVel + rand() % (maxIVel - minIVel));
+		this->velocity = glm::vec3(0, -1, 0) * (float)(minIVel + rand() % (maxIVel - minIVel));
 	}
 
 }

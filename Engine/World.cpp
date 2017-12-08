@@ -96,15 +96,6 @@ void World::draw() {
 	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 	anim->draw(animationShader->getId());*/
 
-	//Render particle effectcs
-	rain->mvp = this->cam->modelViewProjectionMatrix *glm::translate(cam->pos);
-	glEnable(GL_PROGRAM_POINT_SIZE);
-	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(2);
-	rain->advance(elapsed/10);
-	rain->draw();
-	glDisable(GL_LINE_SMOOTH);
-
 	//Render Skybox
 	sky->mvp = this->cam->modelViewProjectionMatrix;
 	sky->lightColor = sun->light->color;
@@ -118,6 +109,17 @@ void World::draw() {
 	for (unsigned int i = 0; i < terrains.size(); i++) {
 		terrains[i]->draw(0);
 	}
+
+	//Render particle effectcs
+	rain->mvp = this->cam->modelViewProjectionMatrix *glm::translate(cam->pos);
+	rain->advance(elapsed / 10);
+	glEnable(GL_PROGRAM_POINT_SIZE);
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(2);
+	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	rain->draw();
+	glDisable(GL_BLEND);
+	glDisable(GL_LINE_SMOOTH);
 
 	// Bind del buffer de pantalla
 	glActiveTexture(GL_TEXTURE0);
