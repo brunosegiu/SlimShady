@@ -19,7 +19,7 @@ World::World(Camera* cam) {
 
 	this->sun = new Sun(lastDraw);
 	this->sky = new Skybox(2000);
-	this->rain = new ParticleSystem(100,150,170,200,2,8,2000,5000);
+	this->rain = new ParticleSystem(100,150,170,200,2,8,2000,5000, this->cam->pos);
 
 	this->filters.push_back(pair<bool, Filter*>(true, new Filter("assets/shaders/fxaa.frag", cam->width, cam->height)));
 	this->filters.push_back(pair<bool, Filter*>(true, new Filter("assets/shaders/colorcorrection.frag", cam->width, cam->height)));
@@ -113,6 +113,7 @@ void World::draw() {
 	//Render particle effectcs
 	rain->mvp = this->cam->modelViewProjectionMatrix *glm::translate(cam->pos);
 	rain->advance(elapsed / 10);
+	rain->traslate(this->cam->pos);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(2);

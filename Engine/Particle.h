@@ -23,6 +23,8 @@ public:
 	//Function to advance state of particle by time t in ms and force in given direction
 	void advance(float, glm::vec3, int, int);
 
+	void traslate(glm::vec3 distance, float lenght);
+
 	//Function to get position
 	glm::vec3 getPos();
 

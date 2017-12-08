@@ -25,12 +25,13 @@ class ParticleSystem
 	FreeMesh* mesh;
 	ShaderProgram* shader;
 	bool firstDraw;
+	glm::vec3 camPos;
 
 public:
 	glm::mat4 mvp;
 
 	//construct system given n number of particles
-	ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVel, int minMass, int maxMass, int force, int maxN);
+	ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVel, int minMass, int maxMass, int force, int maxN, glm::vec3 camPos);
 	
 	//Function to advance state of particle system by time t in ms
 	void advance(float);
@@ -46,6 +47,9 @@ public:
 
 	//Function to draw particles
 	void draw();
+
+	//Funciton to traslate particles
+	void traslate(glm::vec3 newPos);
 
 	~ParticleSystem();
 };

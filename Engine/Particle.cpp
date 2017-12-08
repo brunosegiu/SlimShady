@@ -32,6 +32,22 @@ void Particle::advance(float t, glm::vec3 force, int maxVelocity, int lenght)
 
 }
 
+void Particle::traslate(glm::vec3 distance, float lenght) {
+	position = position - distance;
+
+	float remainder = (float)fmod(abs(position.x), lenght);
+	if (position.x <= -lenght) position.x = lenght - remainder;
+	else if (position.x >= lenght) position.x = -lenght + remainder;
+
+	remainder = (float)fmod(abs(position.y), lenght);
+	if (position.y <= -lenght) position.y = lenght - remainder;
+	else if (position.y >= lenght) position.y = -lenght + remainder;
+
+	remainder = (float)fmod(abs(position.z), lenght);
+	if (position.z <= -lenght) position.z = lenght - remainder;
+	else if (position.z >= lenght) position.z = -lenght + remainder;
+}
+
 
 Particle::~Particle(){
 }

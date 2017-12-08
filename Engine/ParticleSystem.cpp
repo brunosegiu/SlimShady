@@ -2,7 +2,7 @@
 #include <math.h>
 #include <GL/glew.h>
 
-ParticleSystem::ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVel, int minMass, int maxMass, int force, int maxN)
+ParticleSystem::ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVel, int minMass, int maxMass, int force, int maxN, glm::vec3 camPos)
 {
 	this->nParticles = abs(maxN/2);
 	this->lenght = lenght;
@@ -13,6 +13,7 @@ ParticleSystem::ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVe
 	this->maxMass = maxMass;
 	this->forceMagnitude = force;
 	this->maxParticles = maxN;
+	this->camPos = camPos;
 
 	this->gravity_point = glm::vec3(0.0, -1.0, 0.0);
 
@@ -109,6 +110,18 @@ void ParticleSystem::draw()
 	glm::mat4 toWorldCoords = mvp;
 	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 	this->mesh->draw(GL_POINTS);
+}
+
+void ParticleSystem::traslate(glm::vec3 newPos) {
+	if (this->camPos != newPos) {
+		glm::vec3 d = newPos - camPos;
+		std::vector<Particle>::iterator it;
+		for (it = particles.begin(); it != particles.end(); it++)
+		{
+			it->traslate(d, lenght);
+		}
+		this->camPos = newPos;
+	}
 }
 
 
