@@ -67,9 +67,6 @@
     <ClCompile Include="imgui_draw.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Skybox.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -86,6 +83,24 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Joint.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationChannel.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh_Anim.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Model_Anim.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -165,9 +180,6 @@
     <ClInclude Include="imconfig.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Skybox.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -185,6 +197,27 @@
     </ClInclude>
     <ClInclude Include="Joint.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationChannel.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh_Anim.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Model_Anim.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

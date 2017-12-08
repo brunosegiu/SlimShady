@@ -8,6 +8,12 @@
 #include "NormalMappedMesh.h"
 #include "MeshInstanced.h"
 
+#include <assimp.hpp>
+#include <aiScene.h>
+#include <aiPostProcess.h>
+#include "Mesh_Anim.h"
+#include "Model_Anim.h"
+
 World::World(Camera* cam) {
 	this->cam = cam;
 	//Shaders
@@ -30,8 +36,10 @@ World::World(Camera* cam) {
 	fogFactor = 1.0f;
 	vignette = 0.2f;
 
-	anim = new Animation("assets/models/cowboy.anim");
-	animationShader = new ShaderProgram("assets/shaders/anim.vert", "assets/shaders/anim.frag");
+	this->animationShader = new ShaderProgram("assets/shaders/anim.vert", "assets/shaders/anim.frag");
+	Assimp::Importer i;
+	scene = i.ReadFile("model.dae", aiProcess_GenSmoothNormals);
+	model = new Model_Anim(scene);
 }
 
 void World::draw() {
@@ -48,6 +56,12 @@ void World::draw() {
 	this->cam->update();
 	Filter::fbo->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	animationShader->bind();
+	glUniformMatrix4fv(glGetUniformLocation(animationShader->getId(), "worldTransform"), 1, GL_FALSE, &(this->cam->modelViewProjectionMatrix)[0][0]);
+	model->update(elapsed);
+	model->draw(glGetUniformLocation(animationShader->getId(), "bones"));
+	
 	//Render meshes
 	if (meshes.size() > 0) {
 		this->basic->bind();
@@ -87,19 +101,11 @@ void World::draw() {
 	w->moonColor = sun->moon->color;
 	w->mIntensity = sun->mIntensity;
 	w->draw(0);
-	
 	//Render terrain
 	for (unsigned int i = 0; i < terrains.size(); i++) {
 		terrains[i]->draw(0);
 	}
-
-	/*glDisable(GL_CULL_FACE);
-	animationShader->bind();
-	GLuint worldTransformID = glGetUniformLocation(animationShader->getId(), "worldTransform");
-	glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
-	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-	anim->draw(animationShader->getId());*/
-
+	
 	//Render Skybox
 	sky->mvp = this->cam->modelViewProjectionMatrix;
 	sky->lightColor = sun->light->color;

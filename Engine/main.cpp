@@ -25,8 +25,8 @@ void close();
 SDL_Window* window = NULL;
 SDL_GLContext context;
 
-int WIDTH = 1240;
-int HEIGHT = 680;
+int WIDTH = 1600;
+int HEIGHT = 900;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);

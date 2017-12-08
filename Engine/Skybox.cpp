@@ -169,8 +169,8 @@ void Skybox::draw(GLuint coso) {
 	glBindTexture(GL_TEXTURE_2D, this->leftID);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->nleftID);
-	this->left2->draw(0);
 	//this->left2->draw(0);
+	this->left2->draw(0);
 	this->left->draw(0);
 	glEnable(GL_CULL_FACE);
 }

@@ -51,6 +51,7 @@ void FreeMesh::draw(GLuint shaderID) {
 }
 
 void FreeMesh::addTexture(std::vector<float> textcoords) {
+	glBindVertexArray(vaoID);
 	glGenBuffers(1, &textureID);
 	glBindBuffer(GL_ARRAY_BUFFER, this->textureID);
 	glBufferData(GL_ARRAY_BUFFER, textcoords.size() * sizeof(float), &textcoords[0], GL_STATIC_DRAW);

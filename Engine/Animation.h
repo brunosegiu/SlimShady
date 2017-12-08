@@ -1,24 +1,43 @@
+/*
+	Author: Karl Zylinski
+	Portfolio and blog: http://zylinski.se
+
+	Use, modify and copy in any way you want
+*/
+
 #pragma once
 
-#include <string>
-#include <vector>
+#include "AnimationChannel.h"
 
-#include <GL/glew.h>
-#include <glm/vec3.hpp>
-
-#include "Joint.h"
-
-using namespace std;
-
-class Animation {
-	public:
-		Animation(string path);
-		void draw(GLuint shaderID);
-
-		Joint* root;
-		vector<glm::mat4> currentTransforms;
-		float elapsed;
-		int jointNumber;
-		//GPU
-		GLuint vaoID, indicesID, faces;
+// Represents a set of bone matrices for a specific point in time. Function recalcuate generates these
+struct BoneMatricesKey
+{
+	double time;
+	std::vector<aiMatrix4x4> matrices;
 };
+
+class Mesh_Anim;
+class Animation
+{
+public:
+	typedef std::map<std::string, std::vector<BoneMatricesKey>> NamedBoneMatricesKeys;
+	typedef std::vector<size_t> MeshIndexToMatrixKeyIndices;
+
+	Animation();
+	Animation(const aiAnimation* assimpAnim);
+	// Selects the correct matrices from m_matricesKeysByMeshName and sets in for the mesh
+	void update(float time, std::vector<Mesh_Anim*>& meshes);
+	// Fills m_matricesKeysByMeshName by precalculating the matrices (frames per second can be altered, normally 60)
+	void precalculate(std::vector<Mesh_Anim*>& meshes);
+
+private:
+	std::string m_name;
+	// A model can have multiple meshes, each one is represented by name here (should maybe use index???)
+	NamedBoneMatricesKeys m_matricesKeysByMeshName;
+	MeshIndexToMatrixKeyIndices m_previousMatrixKeyIndices;
+	std::vector<AnimationChannel> m_channels;
+	double m_previousTime;
+	double m_elapsedTime;
+	double m_duration;
+};
+

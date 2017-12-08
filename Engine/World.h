@@ -16,7 +16,7 @@
 #include "Skybox.h"
 #include "Entity.h"
 #include "Filter.h"
-#include "Animation.h"
+#include "Model_Anim.h"
 
 using namespace std;
 
@@ -46,8 +46,8 @@ class World {
 		ShaderProgram* basicInst;
 		ShaderProgram* veryBasic, *animationShader;
 
-		Animation* anim;
-
+		Model_Anim* model;
+		const aiScene* scene;
 		clock_t lastDraw;
 
 		vector<pair<bool,Filter*>> filters;
