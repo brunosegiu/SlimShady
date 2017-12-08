@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vector>
 #include "Particle.h"
 #include "FreeMesh.h"
+#include "ShaderProgram.h"
+#include <ctime>
 
 class ParticleSystem
 {
@@ -17,13 +18,20 @@ class ParticleSystem
 	int forceMagnitude;
 	int maxParticles; //Cantidad maxima de particulas en el sistema en todo momento
 
-	std::vector<Particle> particles;
+	std::vector<Particle> particles; //cambiar esto por un vector de vectores con sus propios timestamp
+	std::vector<unsigned int> index;
+	clock_t timestamp;
 	glm::vec3 gravity_point;
 	FreeMesh* mesh;
+	ShaderProgram* shader;
+	bool firstDraw;
+	glm::vec3 camPos;
 
 public:
+	glm::mat4 mvp;
+
 	//construct system given n number of particles
-	ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVel, int minMass, int maxMass, int force, int maxN);
+	ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVel, int minMass, int maxMass, int force, int maxN, glm::vec3 camPos);
 	
 	//Function to advance state of particle system by time t in ms
 	void advance(float);
@@ -40,6 +48,9 @@ public:
 	//Function to draw particles
 	void draw();
 
-	~ParticleSystem(void);
+	//Funciton to traslate particles
+	void traslate(glm::vec3 newPos);
+
+	~ParticleSystem();
 };
 

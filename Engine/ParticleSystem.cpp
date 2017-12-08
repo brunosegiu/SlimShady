@@ -1,8 +1,8 @@
 #include "ParticleSystem.h"
-//#include <GL/glut.h>
 #include <math.h>
+#include <GL/glew.h>
 
-ParticleSystem::ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVel, int minMass, int maxMass, int force, int maxN)
+ParticleSystem::ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVel, int minMass, int maxMass, int force, int maxN, glm::vec3 camPos)
 {
 	this->nParticles = abs(maxN/2);
 	this->lenght = lenght;
@@ -13,6 +13,9 @@ ParticleSystem::ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVe
 	this->maxMass = maxMass;
 	this->forceMagnitude = force;
 	this->maxParticles = maxN;
+	this->camPos = camPos;
+
+	this->gravity_point = glm::vec3(0.0, -1.0, 0.0);
 
 	//if(nParticles > MAX_PARTICLES)
 		//n = MAX_PARTICLES;
@@ -21,21 +24,52 @@ ParticleSystem::ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVe
 	{
 		Particle temp = Particle(lenght, minInitVelocity, maxInitVelocity, minMass, maxMass);
 		particles.push_back(temp);
+		index.push_back(i);
 	}
 
-	//this->mesh = new FreeMesh(particles,/*como son los indices de GL_POINTS?*/,/*Hay que agregar que se pueda elegir que tipo de figura quiero*/);
+	std::vector<Particle>::iterator it;
+	std::vector<float> positions;			//Hago todas las cuentas de las particulas y despues pido las posiciones, eso es lo q en definitiva dibujo
+	for (it = particles.begin(); it != particles.end(); it++) {
+		positions.push_back(it->getPos().x);
+		positions.push_back(it->getPos().y);
+		positions.push_back(it->getPos().z);
+	}
+
+	this->mesh = new FreeMesh(positions,index);
+
+	this->shader = new ShaderProgram();
+	shader->loadShader("assets/shaders/rain.vert", GL_VERTEX_SHADER);
+	shader->loadShader("assets/shaders/rain.geo",GL_GEOMETRY_SHADER);
+	shader->loadShader("assets/shaders/rain.frag", GL_FRAGMENT_SHADER);
+	if (!shader->loadProgram()) {
+		printf("Unable to load basic shader!\n");
+	}
+
+	this->timestamp = clock();
+	firstDraw = true;
 }
 
 	
 //Function to advance state of particle system by time t in ms
 void ParticleSystem::advance(float time)
 {
-	std::vector<Particle>::iterator it;
-	for(it = particles.begin(); it != particles.end(); it++)
-	{
-		glm::vec3 force = normalize(gravity_point - it->getPos()) * (float)forceMagnitude;
-		it->advance(time, force, maxVelocity, lenght);
+	if (!firstDraw) {
+		clock_t temp = clock();
+		float elapsed = ((temp - this->timestamp) / double(CLOCKS_PER_SEC))/5;
+		std::vector<float> positions;
+		std::vector<Particle>::iterator it;
+		for (it = particles.begin(); it != particles.end(); it++)
+		{
+			glm::vec3 force = gravity_point * (float)forceMagnitude;
+			it->advance(elapsed, force, maxVelocity, lenght);
+			positions.push_back(it->getPos().x);
+			positions.push_back(it->getPos().y);
+			positions.push_back(it->getPos().z);
+		}
+		this->mesh = new FreeMesh(positions, index);
+		this->timestamp = temp;
 	}
+	
 }
 
 //Function to set gravity point
@@ -70,18 +104,27 @@ bool ParticleSystem :: deleteParticles(int num)
 //Function to draw a particle
 void ParticleSystem::draw()
 {
-	std::vector<Particle>::iterator it;
-	for(it = particles.begin(); it != particles.end(); it++){
-		glm::vec3 pos = it->getPos();
-		float k = sqrt(glm::dot(gravity_point-pos, gravity_point - pos))/(1.5*lenght);
+	if (firstDraw) { firstDraw = false; this->timestamp = clock(); }
+	this->shader->bind();
+	GLuint worldTransformID = glGetUniformLocation(shader->getId(), "worldTransform");
+	glm::mat4 toWorldCoords = mvp;
+	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+	this->mesh->draw(GL_POINTS);
+}
 
-		glBegin(GL_POINTS);
-			glVertex3f(pos.x, pos.y, pos.z);
-		glEnd();
+void ParticleSystem::traslate(glm::vec3 newPos) {
+	if (this->camPos != newPos) {
+		glm::vec3 d = newPos - camPos;
+		std::vector<Particle>::iterator it;
+		for (it = particles.begin(); it != particles.end(); it++)
+		{
+			it->traslate(d, lenght);
+		}
+		this->camPos = newPos;
 	}
 }
 
 
-ParticleSystem::~ParticleSystem(void)
+ParticleSystem::~ParticleSystem()
 {
 }

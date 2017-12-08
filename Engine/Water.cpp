@@ -90,7 +90,7 @@ void Water::draw(GLuint shaderID) {
 	glBindTexture(GL_TEXTURE_2D, this->normalID);
 	textID = glGetUniformLocation(shader->getId(), "normalSampler");
 	glUniform1i(textID, 1);
-	this->mesh->draw(0);
+	this->mesh->draw(GL_TRIANGLES);
 	glEnable(GL_CULL_FACE);
 }
 

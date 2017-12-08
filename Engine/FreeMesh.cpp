@@ -41,11 +41,11 @@ FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index
 	textured = false;
 }
 
-void FreeMesh::draw(GLuint shaderID) {
+void FreeMesh::draw(GLenum primitive) {
 	glBindVertexArray(vaoID);
 	glEnableVertexAttribArray(0);
 	if(textured) glEnableVertexAttribArray(1);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(primitive, indexCount, GL_UNSIGNED_INT, (void*)0);
 	glDisableVertexAttribArray(0);
 	if(textured) glDisableVertexAttribArray(1);
 }

@@ -1,12 +1,11 @@
-//#include <Windows.h>
-//#include <gl/glut.h>
-
 #include "Particle.h"
+#include <math.h>
 
 Particle::Particle(int lenght, int minIVel, int maxIVel, int minMass, int maxMass) {
 	this->mass = rand() % (maxMass - minMass) + minMass;
-	this->velocity = glm::vec3(rand_float(), rand_float(), rand_float()) * (float)( minIVel + rand() % (maxIVel - minIVel));
+	this->velocity = glm::vec3(0, -1, 0) * (float)( minIVel + rand() % (maxIVel - minIVel));
 	this->position = glm::vec3((1 - 2 * rand_float())*lenght, (1 - 2 * rand_float())*lenght, (1 - 2 * rand_float())*lenght);
+	this->minIVel = minIVel; this->maxIVel = maxIVel; this->minMass = minMass; this->maxMass = maxMass;
 }
 
 //function to advance state by time t in ms
@@ -16,32 +15,41 @@ void Particle::advance(float t, glm::vec3 force, int maxVelocity, int lenght)
 	glm::vec3 acc = force / mass;
 
 	//calculating velocity
-	velocity = velocity + acc*(float)(t/1000.0);
+	velocity = velocity + acc*(float)(t);
 	
 	if(sqrt(glm::dot(velocity, velocity)) >= maxVelocity)
 		velocity = normalize(velocity) * (float)maxVelocity;
 
 	//changing position
-	position = position+velocity*(float)(t/1000.0);
+	position = position+velocity*(float)(t);
 
-	if(position.x <= -lenght)
-		position.x = lenght;
-	else if(position.x >= lenght)
-		position.x = -lenght;
+	if (position.y <= -lenght) {
+		float remainder = (float)fmod(abs(position.y), lenght);
+		position.y = lenght - remainder;
+		//this->mass = rand() % (maxMass - minMass) + minMass;
+		this->velocity = glm::vec3(0, -1, 0) * (float)(minIVel + rand() % (maxIVel - minIVel));
+	}
 
-	if(position.y <= -lenght)
-		position.y = lenght;
-	else if(position.y >= lenght)
-		position.y = -lenght;
+}
 
-	if(position.z <= -lenght)
-		position.z = lenght;
-	else if(position.z >= lenght)
-		position.z = -lenght;
+void Particle::traslate(glm::vec3 distance, float lenght) {
+	position = position - distance;
+
+	float remainder = (float)fmod(abs(position.x), lenght);
+	if (position.x <= -lenght) position.x = lenght - remainder;
+	else if (position.x >= lenght) position.x = -lenght + remainder;
+
+	remainder = (float)fmod(abs(position.y), lenght);
+	if (position.y <= -lenght) position.y = lenght - remainder;
+	else if (position.y >= lenght) position.y = -lenght + remainder;
+
+	remainder = (float)fmod(abs(position.z), lenght);
+	if (position.z <= -lenght) position.z = lenght - remainder;
+	else if (position.z >= lenght) position.z = -lenght + remainder;
 }
 
 
-Particle::~Particle(void){
+Particle::~Particle(){
 }
 
 //Function to get position
