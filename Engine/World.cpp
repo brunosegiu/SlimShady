@@ -19,6 +19,7 @@ World::World(Camera* cam) {
 
 	this->sun = new Sun(lastDraw);
 	this->sky = new Skybox(2000);
+	this->rain = new ParticleSystem(100,150,170,200,2,8,2000,5000);
 
 	this->filters.push_back(pair<bool, Filter*>(true, new Filter("assets/shaders/fxaa.frag", cam->width, cam->height)));
 	this->filters.push_back(pair<bool, Filter*>(true, new Filter("assets/shaders/colorcorrection.frag", cam->width, cam->height)));
@@ -87,11 +88,6 @@ void World::draw() {
 	w->moonColor = sun->moon->color;
 	w->mIntensity = sun->mIntensity;
 	w->draw(0);
-	
-	//Render terrain
-	for (unsigned int i = 0; i < terrains.size(); i++) {
-		terrains[i]->draw(0);
-	}
 
 	/*glDisable(GL_CULL_FACE);
 	animationShader->bind();
@@ -99,6 +95,15 @@ void World::draw() {
 	glm::mat4 toWorldCoords = this->cam->modelViewProjectionMatrix;
 	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
 	anim->draw(animationShader->getId());*/
+
+	//Render particle effectcs
+	rain->mvp = this->cam->modelViewProjectionMatrix *glm::translate(cam->pos);
+	glEnable(GL_PROGRAM_POINT_SIZE);
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(2);
+	rain->advance(elapsed/10);
+	rain->draw();
+	glDisable(GL_LINE_SMOOTH);
 
 	//Render Skybox
 	sky->mvp = this->cam->modelViewProjectionMatrix;
@@ -108,6 +113,11 @@ void World::draw() {
 	sky->mIntensity = sun->mIntensity;
 	//sky->lastDraw = daylight;
 	sky->draw(0);
+
+	//Render terrain
+	for (unsigned int i = 0; i < terrains.size(); i++) {
+		terrains[i]->draw(0);
+	}
 
 	// Bind del buffer de pantalla
 	glActiveTexture(GL_TEXTURE0);

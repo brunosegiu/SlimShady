@@ -1,12 +1,15 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <stdlib.h>
+#include <ctime>
 
 class Particle
 {	
 	float mass;
 	glm::vec3 velocity;
 	glm::vec3 position;
+	int minIVel,maxIVel,minMass,maxMass;
 
 public:
 	Particle(int lenght, int minIVel, int maxIVel, int minMass, int maxMass);
@@ -24,8 +27,8 @@ public:
 	glm::vec3 getPos();
 
 	//Function to draw a particle
-	void draw(int);
+	//void draw(int);
 
-	~Particle(void);
+	~Particle();
 };
 

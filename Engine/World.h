@@ -17,11 +17,13 @@
 #include "Entity.h"
 #include "Filter.h"
 #include "Animation.h"
+#include "ParticleSystem.h"
 
 using namespace std;
 
 class Entity;
 class Skybox;
+class ParticleSystem;
 
 class World {
 	public:
@@ -40,6 +42,9 @@ class World {
 		Sun* sun;
 		std::vector<DirectionalLight*> dirLights;
 		
+		//Efectos de particulas
+		ParticleSystem* rain;
+
 		//Shaders
 		ShaderProgram* basic;
 		ShaderProgram* basicNM;

@@ -41,16 +41,17 @@ FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index
 	textured = false;
 }
 
-void FreeMesh::draw(GLuint shaderID) {
+void FreeMesh::draw(GLenum primitive) {
 	glBindVertexArray(vaoID);
 	glEnableVertexAttribArray(0);
 	if(textured) glEnableVertexAttribArray(1);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(primitive, indexCount, GL_UNSIGNED_INT, (void*)0);
 	glDisableVertexAttribArray(0);
 	if(textured) glDisableVertexAttribArray(1);
 }
 
 void FreeMesh::addTexture(std::vector<float> textcoords) {
+	glBindVertexArray(vaoID);
 	glGenBuffers(1, &textureID);
 	glBindBuffer(GL_ARRAY_BUFFER, this->textureID);
 	glBufferData(GL_ARRAY_BUFFER, textcoords.size() * sizeof(float), &textcoords[0], GL_STATIC_DRAW);

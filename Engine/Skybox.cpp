@@ -75,9 +75,9 @@ Skybox::Skybox(int size) {
 		-halfdist, -halfdist, halfdist,
 		-halfdist, -halfdist, -halfdist};
 	std::vector<float> left(arrL, arrL + sizeof(arrL) / sizeof(arrL[0]));
-	this->left = new FreeMesh(left, index);
+	//this->left = new FreeMesh(left, index);
 	this->left2 = new FreeMesh(left, index);
-	this->left->addTexture(textcoords);
+	//this->left->addTexture(textcoords);
 	this->left2->addTexture(textcoords);
 	this->leftID = loadTexture("assets/textures/bluecloud_rt.jpg");
 	this->nleftID = loadTexture("assets/textures/left.jpg");
@@ -144,35 +144,36 @@ void Skybox::draw(GLuint coso) {
 	glBindTexture(GL_TEXTURE_2D, this->nfrontID);
 	textID = glGetUniformLocation(shader->getId(), "textSampler2");
 	glUniform1i(textID, 1);
-	this->front->draw(0);
+	this->front->draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->upID);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->nupID);
-	this->up->draw(0);
+	this->up->draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->rightID);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->nrightID);
-	this->right->draw(0);
+	this->right->draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->backID);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->nbackID);
-	this->back->draw(0);
+	this->back->draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->downID);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->ndownID);
-	this->down->draw(0);
+	this->down->draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->leftID);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->nleftID);
-	this->left2->draw(0);
+	this->left2->draw(GL_TRIANGLES);
 	//this->left2->draw(0);
-	this->left->draw(0);
+	//this->left->draw(GL_TRIANGLES);
 	glEnable(GL_CULL_FACE);
+	this->shader->unbind();
 }
 
 Skybox::~Skybox() {
