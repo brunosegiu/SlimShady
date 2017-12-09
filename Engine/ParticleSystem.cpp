@@ -29,13 +29,17 @@ ParticleSystem::ParticleSystem(float lenght, int minIVel, int maxIVel, int maxVe
 
 	std::vector<Particle>::iterator it;
 	std::vector<float> positions;			//Hago todas las cuentas de las particulas y despues pido las posiciones, eso es lo q en definitiva dibujo
+	std::vector<float> masses;
 	for (it = particles.begin(); it != particles.end(); it++) {
 		positions.push_back(it->getPos().x);
 		positions.push_back(it->getPos().y);
 		positions.push_back(it->getPos().z);
+		masses.push_back((float)it->getMass());
+		masses.push_back((float)it->getMass());
 	}
 
 	this->mesh = new FreeMesh(positions,index);
+	this->mesh->addTexture(masses);
 
 	this->shader = new ShaderProgram();
 	shader->loadShader("assets/shaders/rain.vert", GL_VERTEX_SHADER);
@@ -57,6 +61,7 @@ void ParticleSystem::advance(float time)
 		clock_t temp = clock();
 		float elapsed = ((temp - this->timestamp) / double(CLOCKS_PER_SEC))/5;
 		std::vector<float> positions;
+		std::vector<float> masses;
 		std::vector<Particle>::iterator it;
 		for (it = particles.begin(); it != particles.end(); it++)
 		{
@@ -65,8 +70,12 @@ void ParticleSystem::advance(float time)
 			positions.push_back(it->getPos().x);
 			positions.push_back(it->getPos().y);
 			positions.push_back(it->getPos().z);
+			masses.push_back((float)it->getMass());
+			masses.push_back((float)it->getMass());
 		}
+		delete(this->mesh);
 		this->mesh = new FreeMesh(positions, index);
+		this->mesh->addTexture(masses);
 		this->timestamp = temp;
 	}
 	
@@ -107,8 +116,10 @@ void ParticleSystem::draw()
 	if (firstDraw) { firstDraw = false; this->timestamp = clock(); }
 	this->shader->bind();
 	GLuint worldTransformID = glGetUniformLocation(shader->getId(), "worldTransform");
+	GLuint maxMassID = glGetUniformLocation(shader->getId(), "maxMass");
 	glm::mat4 toWorldCoords = mvp;
 	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+	glUniform1f(maxMassID, this->maxMass);
 	this->mesh->draw(GL_POINTS);
 }
 

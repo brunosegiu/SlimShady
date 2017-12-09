@@ -28,6 +28,9 @@ public:
 	//Function to get position
 	glm::vec3 getPos();
 
+	//Devuelve la masa
+	int getMass();
+
 	//Function to draw a particle
 	//void draw(int);
 
