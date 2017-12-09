@@ -55,7 +55,7 @@ void World::draw() {
 	this->sun->updateLight(elapsed/5);
 
 	// Update Camera view
-	glm::vec3 oldRef = this->cam->ref;
+	glm::vec3 oldDir = this->cam->ref - this->cam->pos;
 	this->cam->update();
 	Filter::fbo->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -168,7 +168,7 @@ void World::draw() {
 		GLuint vignetteID = glGetUniformLocation(fil->shader->getId(), "vignette");
 		glUniform1f(vignetteID, vignette);
 		GLuint blurStrID = glGetUniformLocation(fil->shader->getId(), "blurStr");
-		glUniform1f(blurStrID, glm::clamp(blurFactor * glm::abs(glm::distance(oldRef, this->cam->ref)), 0.05f, 0.8f) );
+		glUniform1f(blurStrID, glm::clamp(blurFactor * glm::abs(glm::distance(oldDir, this->cam->ref - this->cam->pos)), 0.05f, 0.8f) );
 		GLuint fp = glGetUniformLocation(fil->shader->getId(), "firstPass");
 		glUniform1i(fp, firstPass);
 		if (i == filters.size()-1) {
