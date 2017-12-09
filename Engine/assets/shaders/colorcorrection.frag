@@ -5,12 +5,16 @@ in vec2 UV;
 out vec3 color;
 
 uniform sampler2D sampler;
+uniform sampler2D samplerOld;
 uniform sampler2D samplerDB;
 uniform float gamma;
 uniform float contrast;
 uniform float brightness;
 uniform float fogFactor;
 uniform float vignette;
+uniform float blurStr;
+uniform bool firstPass;
+
 
 float linearize(float depth){
 	return (2 * 0.5)/ (5000.0f + 0.5 - depth * (5000.0f-0.5));
@@ -33,5 +37,8 @@ void main(){
 		float eff = pow(vig.x*vig.y*15.0f, vignette);
 		color = clamp(color, 0.0f, 1.0f);
 		color = color * eff;
-
+		
+		if (!firstPass){
+			color = color * (1-blurStr) + blurStr * texture(samplerOld, UV).xyz;// color * 0.5 + 0.5  * ;
+		}
 }

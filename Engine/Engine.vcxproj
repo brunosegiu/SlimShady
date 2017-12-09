@@ -136,7 +136,6 @@
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_sdl_gl3.cpp" />
     <ClCompile Include="InterfaceController.cpp" />
-    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -146,6 +145,8 @@
     <ClCompile Include="Model_Anim.cpp" />
     <ClCompile Include="NormalMappedMesh.cpp" />
     <ClCompile Include="OBJIndexer.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -174,7 +175,6 @@
     <ClInclude Include="imgui_impl_sdl_gl3.h" />
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="InterfaceController.h" />
-    <ClInclude Include="Joint.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshInstanced.h" />
@@ -183,6 +183,8 @@
     <ClInclude Include="Model_Anim.h" />
     <ClInclude Include="NormalMappedMesh.h" />
     <ClInclude Include="OBJIndexer.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Skybox.h" />
@@ -211,6 +213,9 @@
     <None Include="assets\shaders\mesh_normalmap.frag" />
     <None Include="assets\shaders\mesh_normalmap.vert" />
     <None Include="assets\shaders\pass.vert" />
+    <None Include="assets\shaders\rain.frag" />
+    <None Include="assets\shaders\rain.geo" />
+    <None Include="assets\shaders\rain.vert" />
     <None Include="assets\shaders\skybox.frag" />
     <None Include="assets\shaders\skybox.vert" />
     <None Include="assets\shaders\terrain.frag" />

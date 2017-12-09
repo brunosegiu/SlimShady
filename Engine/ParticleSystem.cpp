@@ -66,6 +66,7 @@ void ParticleSystem::advance(float time)
 			positions.push_back(it->getPos().y);
 			positions.push_back(it->getPos().z);
 		}
+		delete this->mesh; 
 		this->mesh = new FreeMesh(positions, index);
 		this->timestamp = temp;
 	}

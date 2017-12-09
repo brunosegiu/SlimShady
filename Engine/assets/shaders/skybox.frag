@@ -11,7 +11,7 @@ uniform float phi;
 uniform sampler2D textSampler1;
 uniform sampler2D textSampler2;
 
-layout(location = 0) out vec3 outColor;
+layout(location = 0) out vec4 outColor;
 
 void main() {
 	vec4 baseColor1 = texture(textSampler1, passTextCoord);
@@ -19,5 +19,5 @@ void main() {
 	vec4 baseColor = (1-intensity)*baseColor2 + intensity*baseColor1;
 	vec3 color = (baseColor.xyz*lightcolor)*intensity;
 	vec3 mcolor = (baseColor.xyz*mooncolor)*mintensity;
-	outColor = color + mcolor;
+	outColor = vec4(color + mcolor,1.0f);
 }

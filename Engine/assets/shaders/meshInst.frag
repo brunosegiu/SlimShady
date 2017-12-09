@@ -3,7 +3,7 @@
 in vec3 normalToFrag;
 in vec2 textCoordFrag;
 
-layout(location = 0) out vec3 outColor;
+layout(location = 0) out vec4 outColor;
 
 
 uniform bool isTextured;
@@ -24,5 +24,5 @@ void main() {
 	float coefm = dot(normalToFrag,-moondir);
 	if (coefm < 0.1f)
 		coefm = 0.1f;
-	outColor = baseColor.rgb * (lightcolor * coef + mooncolor * coefm);
+	outColor = vec4(baseColor.rgb * (lightcolor * coef + mooncolor * coefm),1.0f);
 }

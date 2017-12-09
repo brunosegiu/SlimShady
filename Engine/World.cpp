@@ -36,13 +36,14 @@ World::World(Camera* cam) {
 	brightness = 0.0f;
 	fogFactor = 1.0f;
 	vignette = 0.2f;
+	blurFactor = 0.0f;
 
 	this->animationShader = new ShaderProgram("assets/shaders/anim.vert", "assets/shaders/anim.frag");
 	Assimp::Importer i;
 	scene = i.ReadFile("model.dae", aiProcess_GenSmoothNormals);
 	model = new Model_Anim(scene);
 }
-
+bool firstPass = true;
 void World::draw() {
 	glEnable(GL_CULL_FACE);
 	// Update drawing timer
@@ -54,6 +55,7 @@ void World::draw() {
 	this->sun->updateLight(elapsed/5);
 
 	// Update Camera view
+	glm::vec3 oldRef = this->cam->ref;
 	this->cam->update();
 	Filter::fbo->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -138,6 +140,9 @@ void World::draw() {
 	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textid);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, Filter::fbo->textDB);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, Filter::fbo->oldtext);
+	
 	glDisable(GL_DEPTH_TEST);
 	for (unsigned int i = 0; i < filters.size(); i++) {
 		Filter* fil = filters[i].second;
@@ -148,6 +153,8 @@ void World::draw() {
 		glUniform1i(texID, 0);
 		GLuint texIDDB = glGetUniformLocation(fil->shader->getId(), "samplerDB");
 		glUniform1i(texIDDB, 1);
+		GLuint texIDOld = glGetUniformLocation(fil->shader->getId(), "samplerOld");
+		glUniform1i(texIDOld, 2);
 		GLuint invSizeID = glGetUniformLocation(fil->shader->getId(), "invScreenSize");
 		glUniform2f(invSizeID, 1.0f / float(cam->width), 1.0f / float(cam->height));
 		GLuint gammaID = glGetUniformLocation(fil->shader->getId(), "gamma");
@@ -160,12 +167,18 @@ void World::draw() {
 		glUniform1f(fogFactorID, fogFactor);
 		GLuint vignetteID = glGetUniformLocation(fil->shader->getId(), "vignette");
 		glUniform1f(vignetteID, vignette);
+		GLuint blurStrID = glGetUniformLocation(fil->shader->getId(), "blurStr");
+		glUniform1f(blurStrID, glm::clamp(blurFactor * glm::abs(glm::distance(oldRef, this->cam->ref)), 0.05f, 0.8f) );
+		GLuint fp = glGetUniformLocation(fil->shader->getId(), "firstPass");
+		glUniform1i(fp, firstPass);
 		if (i == filters.size()-1) {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 		Filter::quad->draw();
 	}
 	glEnable(GL_DEPTH_TEST);
+	glCopyImageSubData(Filter::fbo->textid, GL_TEXTURE_2D, 0, 0, 0, 0, Filter::fbo->oldtext, GL_TEXTURE_2D, 0, 0, 0, 0, this->cam->width, this->cam->height, 1);
+	firstPass = false;
 }
 
 void World::addModel(Model* model) {

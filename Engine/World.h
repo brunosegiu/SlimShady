@@ -57,7 +57,7 @@ class World {
 
 		vector<pair<bool,Filter*>> filters;
 
-		float gamma, contrast, brightness, fogFactor, vignette;
+		float gamma, contrast, brightness, fogFactor, vignette, blurFactor;
 
 	public:
 		World(Camera* cam);

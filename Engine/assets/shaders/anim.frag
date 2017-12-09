@@ -7,9 +7,9 @@
 in vec3 normal;
 in vec2 texCoord;
 
-layout(location = 0) out vec3 outColor;
+layout(location = 0) out vec4 outColor;
 
 // Animation-wise therse is nothing special about the fragment shader, it has texture and lightning-support
 void main(){
-	outColor = vec3(1.0f);
+	outColor = vec4(1.0f);
 }
