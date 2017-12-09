@@ -1,6 +1,6 @@
 #version 330 core
 
-layout(location = 0) out vec3 outColor;
+layout(location = 0) out vec4 outColor;
 
 in vec2 textCoordFrag;
 in mat3 toModelSpace;
@@ -21,5 +21,5 @@ void main() {
 	float coefm = dot(normal,-moondir);
 	if (coefm < 0.1f)
 		coefm = 0.1f;
-	outColor = baseColor.rgb * (lightcolor * coef + mooncolor * coefm);
+	outColor = vec4(baseColor.rgb * (lightcolor * coef + mooncolor * coefm),1.0f);
 }

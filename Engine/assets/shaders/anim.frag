@@ -1,7 +1,15 @@
-#version 330 core
+// Written by Karl Zylinski
+// Portfolio and website: http://zylinski.se
+// Use, modify and copy in any way you want
 
-layout(location = 0) out vec3 outColor;
+#version 330
 
-void main() {
-	outColor = vec3(1.0f,0.0f,0.0f);
+in vec3 normal;
+in vec2 texCoord;
+
+layout(location = 0) out vec4 outColor;
+
+// Animation-wise therse is nothing special about the fragment shader, it has texture and lightning-support
+void main(){
+	outColor = vec4(1.0f);
 }

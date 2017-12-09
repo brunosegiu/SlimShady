@@ -18,7 +18,7 @@ const vec3 speccol = vec3(0.5,0.5,0.5);
 const float reffactor = 0.5;
 //const vec3 lightdirr = vec3(-1.0,-1.0,0);
 
-layout(location = 0) out vec3 outColor;
+layout(location = 0) out vec4 outColor;
 
 vec3 specular(vec3 cameraPos, vec3 normal){
 	vec3 view = normalize(gl_FragCoord.xyz-cameraPos);
@@ -37,6 +37,6 @@ void main() {
 	vec3 color = (baseColor.xyz*lightcolor*factor)*intensity;
 	factor = max(dot(-moondir,bNormal.xyz),0.1);
 	vec3 mcolor = (baseColor.xyz*mooncolor*factor)*mintensity;
-	outColor = color + mcolor;
+	outColor = vec4(color + mcolor,1.0f);
 	//outColor += specular(cameraPos, bNormal.xyz);
 }

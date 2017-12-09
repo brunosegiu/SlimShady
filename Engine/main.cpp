@@ -25,13 +25,13 @@ void close();
 SDL_Window* window = NULL;
 SDL_GLContext context;
 
-int WIDTH = 1240;
-int HEIGHT = 680;
+int WIDTH = 1600;
+int HEIGHT = 900;
 
 void init() {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	window = SDL_CreateWindow("SlimShady", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);

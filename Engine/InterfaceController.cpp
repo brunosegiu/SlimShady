@@ -225,9 +225,10 @@ void InterfaceController::showGraphics() {
 	ImGui::SliderFloat("Gamma", &world->gamma, 0.0f, 5.0f);
 	ImGui::SliderFloat("Brightness", &world->brightness, 0.0f, 1.0f);
 	ImGui::SliderFloat("Contrast", &world->contrast, 0.0f, 5.0f);
-	ImGui::SliderFloat("Vignette", &world->vignette, 0.0f, 5.0f);
 	ImGui::LabelText("-.2", "Post-processing effects: ");
+	ImGui::SliderFloat("Vignette", &world->vignette, 0.0f, 5.0f);
 	ImGui::SliderFloat("Fog Exponent", &world->fogFactor, 0.0f, 10.0f);
+	ImGui::SliderFloat("Blur factor", &world->blurFactor, 0.0f, 50.0f);
 	ImGui::Checkbox("FXAA", &world->filters[0].first);
 	ImGui::Checkbox("DOF", &world->filters[2].first);
 	ImGui::LabelText("-.3", "Time parameters");

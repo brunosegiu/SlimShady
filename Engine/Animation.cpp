@@ -1,271 +1,146 @@
+/*
+	Author: Karl Zylinski
+	Portfolio and blog: http://zylinski.se
+
+	Use, modify and copy in any way you want
+*/
+
 #include "Animation.h"
+#include "Bone.h"
+#include "Mesh_Anim.h"
 
-#include "tinyxml2.h"
-#include <glm/glm.hpp>
+using namespace std;
 
-#include "OBJIndexer.h"
-
-vector<float> toFloatBuffer(char delimiter, string &input) {
-	string temp = "" ;
-	vector<float> final;
-	for (unsigned int i = 0; i < input.size(); i++) {
-		if (input[i] == delimiter && temp.size() > 0) {
-			final.push_back(stof(temp));
-			temp = "";
-		}
-		else {
-			temp += input[i];
-		}
-	}
-	if (temp != "")
-		final.push_back(stof(temp));
-	return final;
+Animation::Animation():
+m_duration(0.0),
+m_elapsedTime(0.0)
+{
 }
 
-vector<string> split(char delimiter, string &input) {
-	string temp = "";
-	vector<string> final;
-	for (unsigned int i = 0; i < input.size(); i++) {
-		if (input[i] == delimiter && temp.size() > 0) {
-			final.push_back(temp);
-			temp = "";
-		}
-		else {
-			temp += input[i];
-		}
+Animation::Animation(const aiAnimation* assimpAnim):
+m_name(assimpAnim->mName.data),
+m_duration(assimpAnim->mDuration),
+m_elapsedTime(0.0)
+{
+	for(size_t chanIndex = 0; chanIndex < assimpAnim->mNumChannels; ++chanIndex)
+	{
+		auto assimpChan = assimpAnim->mChannels[chanIndex];
+		m_channels.push_back(AnimationChannel(assimpChan, assimpAnim->mTicksPerSecond));
 	}
-	if (temp != "")
-		final.push_back(temp);
-	return final;
 }
 
-vector<unsigned int> toFloatBufferUINT(char delimiter, string &input) {
-	string temp = "";
-	vector<unsigned int> final;
-	for (unsigned int i = 0; i < input.size(); i++) {
-		if (input[i] == delimiter && temp.size() > 0) {
-			final.push_back(stof(temp));
-			temp = "";
-		}
-		else {
-			temp += input[i];
+void Animation::update(float time, std::vector<Mesh_Anim*>& meshes)
+{
+	if(time + m_elapsedTime > m_duration)
+	{
+		m_elapsedTime = fmod(float(time), float(m_duration)); // wrap around
+	}
+	else
+	{
+		m_elapsedTime += time;
+	}
+
+	// probably only runs once
+	if(m_previousMatrixKeyIndices.size() != meshes.size())
+	{
+		m_previousMatrixKeyIndices.resize(meshes.size(), 0);
+	}
+
+	for(size_t meshIndex = 0; meshIndex < meshes.size(); ++meshIndex)
+	{
+		std::vector<BoneMatricesKey>& matricesKeys = m_matricesKeysByMeshName[meshes[meshIndex]->getName()];
+
+		// Get previous matrix key index if time hasn't wrapped around, saves iteration time
+		size_t keyIndex = m_previousMatrixKeyIndices[meshIndex];
+		if(m_elapsedTime < m_previousTime)
+			keyIndex = 0;
+
+		for(; keyIndex < matricesKeys.size(); ++keyIndex)
+		{
+			BoneMatricesKey& matricesKey = matricesKeys[keyIndex];
+			
+			if(keyIndex == matricesKeys.size() - 1 ||
+				m_elapsedTime >= matricesKey.time && m_elapsedTime < matricesKeys[keyIndex + 1].time)
+			{
+				meshes[meshIndex]->setAbsoluteTransforms(&matricesKey.matrices[0].a1); // found current frame, set pointer to absolute tranformation matrix (only first float in first matrix, mesh knows the number of bones anyways)
+				m_previousMatrixKeyIndices[meshIndex] = keyIndex;
+				break;
+			}
 		}
 	}
-	if (temp != "")
-		final.push_back(stof(temp));
-	return final;
+
+	m_previousTime = m_elapsedTime;
 }
 
-vector<unsigned int> parseIndices(char delimiter, string &input) {
-	string temp = "";
-	int count = 0;
-	vector<unsigned int> final;
-	for (unsigned int i = 0; i < input.size(); i++) {
-		if (input[i] == delimiter && temp.size() > 0) {
-			count++;
-			if (count % 4 != 0)
-				final.push_back(stoi(temp));
-			temp = "";
+void Animation::precalculate(std::vector<Mesh_Anim*>& meshes)
+{
+	double time = 0.0;
+	while(time <= m_duration)
+	{
+		// Go through all channels and update transforms per channel for all meshes
+		for(size_t chanIndex = 0; chanIndex < m_channels.size(); ++chanIndex)
+		{
+			m_channels[chanIndex].calculate(time);
+
+			for(size_t meshIndex = 0; meshIndex < meshes.size(); ++meshIndex)
+			{
+				Mesh_Anim& mesh = *meshes[meshIndex];
+				AnimationChannel& channel = m_channels[chanIndex];
+				channel.updateTransform(mesh);
+			}	
 		}
-		else {
-			temp += input[i];
+
+		// Tell mesh to update skeleton hierarcially
+		for(size_t meshIndex = 0; meshIndex < meshes.size(); ++meshIndex)
+		{
+			meshes[meshIndex]->updateTransforms();
 		}
-	}
-	if (temp != "" && final.size() % 3 != 0)
-		final.push_back(stof(temp));
-	return final;
-}
 
-int findPos(string name, vector<string> &jointNames) {
-	for (unsigned int i = 0; i < jointNames.size(); i++) {
-		if (jointNames[i] == name) {
-			return i;
+		// The code below is quite complicated. It created key frames which are made up of matrices and times. Since we support multiple meshes, we need to know which matrices belong to which mesh while still working on the same key frame.
+		// Used to remember which matrix we're working on per mesh (index = mesh index). -1 means no matrix-key-list has been created yet
+		vector<size_t> currentMatricesIndices(meshes.size(), -1);
+		for(size_t chanIndex = 0; chanIndex < m_channels.size(); ++chanIndex)
+		{
+			for(size_t meshIndex = 0; meshIndex < meshes.size(); ++meshIndex)
+			{
+				Mesh_Anim& mesh = *meshes[meshIndex];
+				AnimationChannel& channel = m_channels[chanIndex];
+
+				const std::string& boneName = channel.getName();
+				Bone* bone = mesh.getBoneByName(boneName);
+				std::vector<BoneMatricesKey>& matrixKeys = m_matricesKeysByMeshName[mesh.getName()];
+
+				std::vector<aiMatrix4x4>* matrices = 0;
+				if(currentMatricesIndices[meshIndex] == -1)
+				{
+					// Create a list of matrices for this point in time, for this mesh. This code is quite confusing :(
+					BoneMatricesKey newMatricesKey;
+					newMatricesKey.time = time;
+					const Mesh_Anim::BoneVector& bones = mesh.getBones();
+					newMatricesKey.matrices.resize(bones.size());
+					for(size_t boneIndex = 0; boneIndex < bones.size(); ++boneIndex)
+					{
+						// We need to set a transformation for _all bones_, some may not have animations, so they wouldn't be included if we skipped this step.
+						newMatricesKey.matrices[boneIndex] = bones[boneIndex]->getOffsetMatrix() * bones[boneIndex]->getGlobalTransform();
+					}
+
+					currentMatricesIndices[meshIndex] = matrixKeys.size(); // will find this matrix-key-list next time, for this mesh
+					matrixKeys.push_back(newMatricesKey);
+					matrices = &matrixKeys.back().matrices;
+				}
+				else
+				{
+					matrices = &matrixKeys[currentMatricesIndices[meshIndex]].matrices;
+				}
+
+				// Unsure if m_transform should be multiplied with final transformation or not, it is the transformation from the mesh's node. Left out the multiplication for now. Not to be confused with a kind of position variable for the mesh, or maybe it could be used as this?
+				if (bone != NULL)
+					(*matrices)[mesh.getBoneIndex(boneName)] = bone->getOffsetMatrix() * bone->getGlobalTransform();
+				else
+					(*matrices)[mesh.getBoneIndex(boneName)] = aiMatrix4x4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0, 0, 0.0f, 0.0, 1.0f, 0.0, 0.0f, 0.0, 0.0, 1.0);
+			}	
 		}
+
+		time += 1.0/60.0; // One 60th of a second, i.e. 60 fps animation speed. Increase this to get even smoother animation at the expense of memory.
 	}
-	throw exception("NOOOOOOOOOOOO");
-}
-
-Joint* loadJoints(tinyxml2::XMLElement* root, vector<string> &jointNames) {
-	using namespace tinyxml2;
-	string name = root->Attribute("id");
-	int pos = findPos(name, jointNames);
-	Joint* joint = new Joint(name, pos);
-	string matrix = root->FirstChildElement("matrix")->GetText();
-	vector<float> mat = toFloatBuffer(' ', matrix);
-	glm::mat4 transfmat = glm::mat4(mat[0], mat[4], mat[8], mat[12], mat[1], mat[5], mat[9], mat[13], mat[2], mat[6], mat[10], mat[14], mat[3], mat[7], mat[11], mat[15]);
-	joint->transform = transfmat;
-	for (XMLElement* child = root->FirstChildElement("node"); child != NULL; child = child->NextSiblingElement("node")){
-		string id = child->Attribute("id");
-		joint->children.push_back(loadJoints(child, jointNames));
-	}
-	return joint;
-}
-
-Animation::Animation(string path) {
-	elapsed = 0;
-
-	using namespace tinyxml2;
-	XMLDocument doc;
-	doc.LoadFile(path.c_str());
-
-	XMLNode* pgeom = doc.FirstChildElement("geometry");
-	XMLNode* panim = doc.FirstChildElement("animation");
-	XMLNode* pskeleton = doc.FirstChildElement("skeleton");
-
-	//Load geometry
-	vector<float> vertexBuffer;
-	vector<float> normalBuffer;
-	vector<float> textBuffer;
-	vector<unsigned int> indexBuffer;
-	vector<float> weightBuffer;
-	vector<unsigned int> jointCount;
-	vector<unsigned int> skinBuffer;
-
-	string vertices = pgeom->FirstChildElement("vertices")->GetText();
-	vertexBuffer = toFloatBuffer(' ', vertices);
-
-	string normals = pgeom->FirstChildElement("normals")->GetText();
-	normalBuffer = toFloatBuffer(' ', normals);
-
-	string uvmap = pgeom->FirstChildElement("uvmap")->GetText();
-	textBuffer = toFloatBuffer(' ', uvmap);
-
-	string indices = pgeom->FirstChildElement("indices")->GetText();
-	indexBuffer = parseIndices(' ', indices);
-
-	string weights = pgeom->FirstChildElement("weights")->GetText();
-	weightBuffer = toFloatBuffer(' ', weights);
-
-	string sjointCounts = pgeom->FirstChildElement("jointCount")->GetText();
-	jointCount = toFloatBufferUINT(' ', sjointCounts);
-
-	string sskin = pgeom->FirstChildElement("skin")->GetText();
-	skinBuffer = toFloatBufferUINT(' ', sskin);
-
-	vector<float> finalWeights;
-	vector<unsigned int> finalJointIDs;
-	vector<float> finalNormalBuffer, finalVertexBuffer, finalUVBuffer;
-	vector<unsigned int> finalIndices;
-	unsigned int k = 0;
-	for (unsigned int i = 0; i < indexBuffer.size(); i += 3) {
-		finalIndices.push_back(k);
-		k++;
-		finalVertexBuffer.push_back(vertexBuffer[indexBuffer[i]]);
-		finalVertexBuffer.push_back(vertexBuffer[indexBuffer[i]+1]);
-		finalVertexBuffer.push_back(vertexBuffer[indexBuffer[i]+2]);
-		finalNormalBuffer.push_back(normalBuffer[indexBuffer[i+1]]);
-		finalNormalBuffer.push_back(normalBuffer[indexBuffer[i+1]+1]);
-		finalNormalBuffer.push_back(normalBuffer[indexBuffer[i+1]+2]);
-		finalUVBuffer.push_back(textBuffer[indexBuffer[i+2]]);
-		finalUVBuffer.push_back(textBuffer[indexBuffer[i+2] + 1]);
-	}
-	//Fix JC
-	unsigned int sbit = 0;
-	for (unsigned int i = 0; i < jointCount.size(); i++) {
-		vector<float> ws;
-		vector<unsigned int> joints;
-		ws.push_back(0);
-		ws.push_back(0);
-		ws.push_back(0);
-		joints.push_back(0);
-		joints.push_back(0);
-		joints.push_back(0);
-		for (unsigned int j = 0; j < jointCount[i] && j < 3; j++) {
-			joints[j] = skinBuffer[sbit];
-			ws[j] = weightBuffer[skinBuffer[sbit+1]];
-			sbit += 2;
-		}
-		if (int(jointCount[i]) - 3 > 0) {
-			sbit += 2 * (jointCount[i] - 3);
-		}
-		glm::vec3 normalized = glm::vec3(ws[0], ws[1], ws[2]);
-		normalized = glm::normalize(normalized);
-		finalJointIDs.push_back(joints[0]);
-		finalJointIDs.push_back(joints[1]);
-		finalJointIDs.push_back(joints[2]);
-		finalWeights.push_back(normalized.x);
-		finalWeights.push_back(normalized.y);
-		finalWeights.push_back(normalized.z);
-	}
-
-	// Skeleton
-	vector<string> jointNames = split(' ', string(pskeleton->FirstChildElement("jointNames")->GetText()));
-
-	this->root = loadJoints(pskeleton->FirstChildElement("node"), jointNames);
-	this->root->calcBindMatrix(glm::mat4(1.0f));
-	//Animation
-
-	//GPU
-	GLuint verticesID, normalsID, textID, weightsID, jointsID;
-
-	//Copy vertices to GPU
-	glGenBuffers(1, &verticesID);
-	glBindBuffer(GL_ARRAY_BUFFER, verticesID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * finalVertexBuffer.size(), &finalVertexBuffer[0], GL_STATIC_DRAW);
-
-	//Copy normals to GPU
-	glGenBuffers(1, &normalsID);
-	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * finalNormalBuffer.size(), &finalNormalBuffer[0], GL_STATIC_DRAW);
-
-	//Copy UV to GPU
-	glGenBuffers(1, &textID);
-	glBindBuffer(GL_ARRAY_BUFFER, textID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * finalUVBuffer.size(), &finalUVBuffer[0], GL_STATIC_DRAW);
-
-	//Copy WS to GPU
-	glGenBuffers(1, &weightsID);
-	glBindBuffer(GL_ARRAY_BUFFER, weightsID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * finalWeights.size(), &finalWeights[0], GL_STATIC_DRAW);
-
-	//Copy UV to GPU
-	glGenBuffers(1, &jointsID);
-	glBindBuffer(GL_ARRAY_BUFFER, jointsID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(unsigned int) * finalJointIDs.size(), &finalJointIDs[0], GL_STATIC_DRAW);
-
-	//Set up the VAO
-	glGenVertexArrays(1, &vaoID);
-	glBindVertexArray(vaoID);
-	//Bind Vertices
-	glBindBuffer(GL_ARRAY_BUFFER, verticesID);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	//Bind Normals
-	glBindBuffer(GL_ARRAY_BUFFER, normalsID);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	//Bind textures
-	glBindBuffer(GL_ARRAY_BUFFER, textID);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	/*//Bind Normals
-	glBindBuffer(GL_ARRAY_BUFFER, weightsID);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	//Bind Normals
-	glBindBuffer(GL_ARRAY_BUFFER, jointsID);
-	glVertexAttribPointer(4, 3, GL_UNSIGNED_INT, GL_FALSE, 0, (void*)0);*/
-	//Indices
-	glGenBuffers(1, &this->indicesID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indicesID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * finalIndices.size(), &finalIndices[0], GL_STATIC_DRAW);
-	faces = finalIndices.size();
-	jointNumber	= jointNames.size();
-
-}
-
-void Animation::draw(GLuint shaderID){
-	vector<glm::mat4> matrices = vector<glm::mat4>(jointNumber);
-	root->addMatrices(matrices);
-
-	glUniformMatrix4fv(glGetUniformLocation(shaderID, "jointTransforms"), 1, GL_FALSE, &matrices[0][0][0]);
-	glBindVertexArray(vaoID);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	/*glEnableVertexAttribArray(3);
-	glEnableVertexAttribArray(4);*/
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indicesID);
-	glDrawElements(GL_TRIANGLES, this->faces, GL_UNSIGNED_INT, (void*)0);
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-	/*glDisableVertexAttribArray(3);
-	glDisableVertexAttribArray(4);*/
 }
