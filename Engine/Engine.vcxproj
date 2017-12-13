@@ -69,12 +69,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\bruno\Source\Repos\SlimShady\Engine\libs\assimp\include;$(ProjectDir)libs\FreeImage\Dist\x32;$(ProjectDir)libs\glm;$(ProjectDir)libs\glew-2.1.0\include;$(ProjectDir)libs\SDL2-2.0.6\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\bruno\Source\Repos\SlimShady\Engine\libs\assimp\lib\assimp_release-dll_win32;$(ProjectDir)libs\FreeImage\Dist\x32;$(ProjectDir)libs\glew-2.1.0\lib\Win32;$(ProjectDir)libs\SDL2-2.0.6\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)libs\assimp\include;$(ProjectDir)libs\FreeImage\Dist\x32;$(ProjectDir)libs\glm;$(ProjectDir)libs\glew-2.1.0\include;$(ProjectDir)libs\SDL2-2.0.6\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)libs\assimp\lib\assimp_release-dll_win32;$(ProjectDir)libs\FreeImage\Dist\x32;$(ProjectDir)libs\glew-2.1.0\lib\Win32;$(ProjectDir)libs\SDL2-2.0.6\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\bruno\Source\Repos\SlimShady\Engine\libs\assimp\include;$(ProjectDir)libs\FreeImage\Dist\x32;$(ProjectDir)libs\glm;$(ProjectDir)libs\glew-2.1.0\include;$(ProjectDir)libs\SDL2-2.0.6\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\bruno\Source\Repos\SlimShady\Engine\libs\assimp\lib\assimp_release-dll_win32;$(ProjectDir)libs\FreeImage\Dist\x32;$(ProjectDir)libs\glew-2.1.0\lib\Win32;$(ProjectDir)libs\SDL2-2.0.6\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)libs\assimp\include;$(ProjectDir)libs\FreeImage\Dist\x32;$(ProjectDir)libs\glm;$(ProjectDir)libs\glew-2.1.0\include;$(ProjectDir)libs\SDL2-2.0.6\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)libs\assimp\lib\assimp_release-dll_win32;$(ProjectDir)libs\FreeImage\Dist\x32;$(ProjectDir)libs\glew-2.1.0\lib\Win32;$(ProjectDir)libs\SDL2-2.0.6\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
