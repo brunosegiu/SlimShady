@@ -66,6 +66,27 @@ void Terrain::draw(GLuint shaderID) {
 	}
 }
 
+std::vector<float> Terrain::grassPositions() {
+	std::vector<float> retPositions;
+	FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename("assets/textures/blendmap.png");
+	FIBITMAP* bitmap = FreeImage_Load(fif, "assets/textures/blendmap.png");
+
+	for (int i = 0; i < tiles.size(); i++) {
+		TerrainTile* iter = tiles.at(i);
+		for (int j = 0; j < iter->positions.size()-2; j+=3) {
+			float colorF;
+			RGBQUAD color;
+			FreeImage_GetPixelColor(bitmap, iter->losI.at(j/3), iter->losJ.at(j/3), &color);
+			if (color.rgbRed == 0 && color.rgbGreen == 0 && color.rgbBlue == 0) {
+				retPositions.push_back(iter->positions.at(j));
+				retPositions.push_back(iter->positions.at(j + 1));
+				retPositions.push_back(iter->positions.at(j + 2));
+			}
+		}
+	}
+	return retPositions;
+}
+
 Terrain::~Terrain() {
 	delete this->terrainShader;
 	for (unsigned int i = 0; i < this->tiles.size(); i++) {

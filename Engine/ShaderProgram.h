@@ -12,6 +12,7 @@ class ShaderProgram{
 public:
     ShaderProgram();
 	ShaderProgram(std::string vertPath, std::string fragPath);
+	ShaderProgram(std::string vertPath, std::string geomPath, std::string fragPath);
     bool bind();
     void unbind();
     GLuint getId();

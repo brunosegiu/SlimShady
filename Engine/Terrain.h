@@ -23,5 +23,5 @@ class Terrain : public Model{
 		float maxHeight;
 		int tilesX, tilesY;
 		glm::mat4 viewProjectionMatrix;
-		
+		std::vector<float> grassPositions();
 };

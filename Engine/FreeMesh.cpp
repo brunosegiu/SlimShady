@@ -14,10 +14,9 @@ FreeMesh::FreeMesh(std::vector<float> positions, std::vector<unsigned int> index
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-	//index buffer
-	GLuint indices;
-	glGenBuffers(1, &indices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices);
+	//index buffer;
+	glGenBuffers(1, &indicesID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index.size()*sizeof(unsigned int), &index[0], GL_STATIC_DRAW);
 
 
@@ -66,6 +65,7 @@ void FreeMesh::setShader(GLuint shaderID) {
 
 FreeMesh::~FreeMesh() {
 	glDeleteBuffers(1, &this->verticesID);
-	//glDeleteBuffers(1, &this->normalsID);
+	glDeleteBuffers(1, &this->indicesID);
+	if(textured)glDeleteBuffers(1, &this->textureID);
 	glDeleteVertexArrays(1, &vaoID);
 }

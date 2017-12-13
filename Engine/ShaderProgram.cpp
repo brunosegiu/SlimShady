@@ -22,6 +22,19 @@ ShaderProgram::ShaderProgram(std::string vertPath, std::string fragPath){
 	}
 }
 
+ShaderProgram::ShaderProgram(std::string vertPath, std::string geomPath, std::string fragPath) {
+	programId = 0;
+	vertexId = 0;
+	fragmentId = 0;
+	geometryId = 0;
+	this->loadShader(vertPath, GL_VERTEX_SHADER);
+	this->loadShader(fragPath, GL_FRAGMENT_SHADER);
+	this->loadShader(geomPath, GL_GEOMETRY_SHADER);
+	if (!this->loadProgram()) {
+		printf("Unable to load shader!\n");
+	}
+}
+
 GLuint ShaderProgram::getId(){
     return programId;
 }

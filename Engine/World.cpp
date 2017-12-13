@@ -108,7 +108,14 @@ void World::draw() {
 	for (unsigned int i = 0; i < terrains.size(); i++) {
 		terrains[i]->draw(0);
 	}
-	
+
+	//Render Grass
+	grass->modelMatrix = terrains[0]->modelMatrix;
+	grass->projMatrix = cam->projectionMatrix;
+	grass->viewMatrix = cam->viewMatrix;
+	grass->update(elapsed, cam->pos);
+	grass->draw(0);
+
 	//Render Skybox
 	sky->mvp = this->cam->modelViewProjectionMatrix;
 	sky->lightColor = sun->light->color;
@@ -118,16 +125,10 @@ void World::draw() {
 	//sky->lastDraw = daylight;
 	sky->draw(0);
 
-	//Render terrain
-	for (unsigned int i = 0; i < terrains.size(); i++) {
-		terrains[i]->draw(0);
-	}
-
 	//Render particle effectcs
 	rain->mvp = this->cam->modelViewProjectionMatrix *glm::translate(cam->pos);
-	rain->advance(elapsed / 10);
 	rain->traslate(this->cam->pos);
-	glEnable(GL_PROGRAM_POINT_SIZE);
+	rain->advance(elapsed / 10);
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(2);
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -489,6 +490,15 @@ World* World::load(string path, SDL_Window* win, float width, float height) {
 	world->water->acumulatedScale = scale;
 	world->water->acumulatedTranslate = tras;
 	
+	//aqui se agrega el grass, que precisa las matrices del terrain
+	Terrain* terr = dynamic_cast<Terrain*>(world->terrains[0]->model);
+	world->grass = new Grass(terr->grassPositions(), "assets/textures/grassPack.dds", 10, 10, 1);
+	world->grass->modelMatrix = world->terrains[0]->modelMatrix;
+	world->grass->projMatrix = cam->projectionMatrix;
+	world->grass->viewMatrix = cam->viewMatrix;
+	world->grass->vEyePosition = cam->pos;
+	world->grass->time = clock();
+
 	return world;
 }
 

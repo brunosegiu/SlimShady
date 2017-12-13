@@ -11,7 +11,7 @@ class FreeMesh{
 private:
 	bool textured;
 public:
-	GLuint verticesID, normalsID, vaoID, shaderID, textureID;
+	GLuint verticesID, indicesID, vaoID, shaderID, textureID;
 	unsigned int vertexCount, indexCount;
 public:
 	FreeMesh(std::vector<float> positions, std::vector<unsigned int>);

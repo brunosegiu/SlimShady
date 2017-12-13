@@ -26,7 +26,7 @@ void Particle::advance(float t, glm::vec3 force, int maxVelocity, int lenght)
 	if (position.y <= -lenght) {
 		float remainder = (float)fmod(abs(position.y), lenght);
 		position.y = lenght - remainder;
-		//this->mass = rand() % (maxMass - minMass) + minMass;
+		this->mass = rand() % (maxMass - minMass) + minMass;
 		this->velocity = glm::vec3(0, -1, 0) * (float)(minIVel + rand() % (maxIVel - minIVel));
 	}
 
@@ -56,6 +56,10 @@ Particle::~Particle(){
 glm::vec3 Particle :: getPos()
 {
 	return position;
+}
+
+int Particle::getMass() {
+	return mass;
 }
 
 /*/Function to draw a particle
