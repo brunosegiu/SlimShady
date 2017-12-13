@@ -18,6 +18,7 @@
 #include "Filter.h"
 #include "Model_Anim.h"
 #include "ParticleSystem.h"
+#include "Grass.h"
 
 using namespace std;
 
@@ -37,6 +38,7 @@ class World {
 		Entity* water;
 		Skybox* sky;
 		Camera* cam;
+		Grass* grass;
 
 		//Luces
 		Sun* sun;

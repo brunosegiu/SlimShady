@@ -1,6 +1,6 @@
 #include "TerrainTile.h"
 
-#include <vector>
+
 
 #include <glm/vec3.hpp>
 #include <glm/gtx/transform.hpp>
@@ -34,19 +34,17 @@ void addNormal(vector<float> &normals, int i, int j, int width, int height, FIBI
 TerrainTile::TerrainTile(int width, int height, int offsetx, int offsety, float maxHeight, FIBITMAP* bitmap) {
 	int heightHeightMap = FreeImage_GetHeight(bitmap);
 	int widthHeightMap = FreeImage_GetWidth(bitmap);
-	std::vector<float> positions;
-	std::vector<float> normals;
-	std::vector<float> textCoords;
-	std::vector<unsigned int> index;
 	for (int i = 0; i <= width; i++) {
 		for (int j = 0; j <= height; j++) {
-			positions.push_back(float(offsety) + float(j));
+			this->positions.push_back(float(offsety) + float(j));
 			float normalizedHeight = getHeight(bitmap, i+offsetx, j+offsety, widthHeightMap, heightHeightMap);
 			positions.push_back((normalizedHeight)* maxHeight);
 			positions.push_back(float(offsetx) + float(i));
 			addNormal(normals, i+offsetx, j+offsety, widthHeightMap, heightHeightMap, bitmap);
 			textCoords.push_back(float(i+ offsetx) / float(widthHeightMap));
 			textCoords.push_back(float(j+ offsety) / float(heightHeightMap));
+			losI.push_back(i + offsetx);
+			losJ.push_back(j + offsety);
 		}
 	}
 	for (unsigned int i = 0; i <= width - 1; i++) {
