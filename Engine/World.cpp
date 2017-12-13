@@ -2,6 +2,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <math.h>
 
 #include "tinyxml2.h"
 #include "Mesh.h"
@@ -13,6 +14,7 @@
 #include <aiPostProcess.h>
 #include "Mesh_Anim.h"
 #include "Model_Anim.h"
+
 
 World::World(Camera* cam) {
 	this->cam = cam;
@@ -38,10 +40,15 @@ World::World(Camera* cam) {
 	vignette = 0.2f;
 	blurFactor = 0.0f;
 
-	this->animationShader = new ShaderProgram("assets/shaders/anim.vert", "assets/shaders/anim.frag");
+	
 	Assimp::Importer i;
-	scene = i.ReadFile("model.dae", aiProcess_GenSmoothNormals);
-	model = new Model_Anim(scene);
+	scene = i.ReadFile("JaiquaFromXSI.dae", aiProcess_GenSmoothNormals);
+	model = new Model_Anim(scene, "assets/textures/tex.bmp");
+	vector<glm::vec3> wp;
+	wp.push_back(glm::vec3(-10, 4, -120));
+	wp.push_back(glm::vec3(-15, 4, -100));
+	Character* loca = new Character(model, wp, 1.0f, this, 0.2f);
+	this->characters.push_back(loca);
 }
 bool firstPass = true;
 void World::draw() {
@@ -60,11 +67,8 @@ void World::draw() {
 	Filter::fbo->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	animationShader->bind();
-	glUniformMatrix4fv(glGetUniformLocation(animationShader->getId(), "worldTransform"), 1, GL_FALSE, &(this->cam->modelViewProjectionMatrix)[0][0]);
-	model->update(elapsed);
-	model->draw(glGetUniformLocation(animationShader->getId(), "bones"));
-	
+	this->characters[0]->draw(elapsed);
+
 	//Render meshes
 	if (meshes.size() > 0) {
 		this->basic->bind();
@@ -114,6 +118,10 @@ void World::draw() {
 	grass->projMatrix = cam->projectionMatrix;
 	grass->viewMatrix = cam->viewMatrix;
 	grass->update(elapsed, cam->pos);
+	grass->l1 = sun->light->dir;
+	grass->i1 = sun->light->color * sun->intensity;
+	grass->l2 = sun->moon->dir;
+	grass->i2 = sun->moon->color * sun->mIntensity;
 	grass->draw(0);
 
 	//Render Skybox

@@ -22,7 +22,7 @@ struct aiNode;
 class Model_Anim
 {
 public:
-	Model_Anim(const aiScene* scene);
+	Model_Anim(const aiScene* scene, string textPath);
 	Model_Anim(const Model_Anim& rightHand);
 	Model_Anim& operator=(const Model_Anim& rightHand);
 	~Model_Anim();
@@ -35,5 +35,6 @@ private:
 	AnimationController		m_animationController;
 	std::vector<Mesh_Anim*>		m_meshes;
 	Material* mat;
+public:GLuint textID;
 };
 

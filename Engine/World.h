@@ -19,12 +19,14 @@
 #include "Model_Anim.h"
 #include "ParticleSystem.h"
 #include "Grass.h"
+#include "Character.h"
 
 using namespace std;
 
 class Entity;
 class Skybox;
 class ParticleSystem;
+class Character;
 
 class World {
 	public:
@@ -35,6 +37,7 @@ class World {
 		std::vector<Entity*> meshes_inst;
 		vector<Entity*> terrains;
 		std::map<string, Model*> models;
+		std::vector<Character*> characters;
 		Entity* water;
 		Skybox* sky;
 		Camera* cam;
@@ -51,7 +54,6 @@ class World {
 		ShaderProgram* basic;
 		ShaderProgram* basicNM;
 		ShaderProgram* basicInst;
-		ShaderProgram* veryBasic, *animationShader;
 
 		Model_Anim* model;
 		const aiScene* scene;

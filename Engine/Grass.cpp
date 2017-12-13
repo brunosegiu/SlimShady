@@ -90,6 +90,10 @@ void Grass::draw(GLuint shaderID) {
 	GLuint vEyePositionID = glGetUniformLocation(shader->getId(), "vEyePosition");
 	GLuint fAlphaTestID = glGetUniformLocation(shader->getId(), "fAlphaTest");
 	GLuint fAlphaMultiplierID = glGetUniformLocation(shader->getId(), "fAlphaMultiplier");
+	GLuint lightDirID = glGetUniformLocation(shaderID, "lightdir");
+	GLuint lightColorID = glGetUniformLocation(shaderID, "lightcolor");
+	GLuint moonDirID = glGetUniformLocation(shaderID, "moondir");
+	GLuint moonColorID = glGetUniformLocation(shaderID, "mooncolor");
 
 	glUniformMatrix4fv(projMatrixID, 1, GL_FALSE, &projMatrix[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
@@ -98,6 +102,10 @@ void Grass::draw(GLuint shaderID) {
 	glUniform3fv(vEyePositionID, 1, &vEyePosition[0]);
 	glUniform1f(fAlphaTestID, fAlphaTest);
 	glUniform1f(fAlphaMultiplierID, fAlphaMultiplier);
+	glUniform3fv(lightDirID, 1, &l1[0]);
+	glUniform3fv(lightColorID, 1, &(i1)[0]);
+	glUniform3fv(moonDirID, 1, &l2[0]);
+	glUniform3fv(moonColorID, 1, &(i2)[0]);
 
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);

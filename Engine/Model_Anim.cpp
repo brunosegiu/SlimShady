@@ -9,14 +9,16 @@
 #include "Model_Anim.h"
 #include "Bone.h"
 #include <aiScene.h>
+#include "Material.h"
 
 using namespace std;
 
-Model_Anim::Model_Anim(const aiScene* scene):
+Model_Anim::Model_Anim(const aiScene* scene, string textPath):
 m_animationController(scene)
 {
 	processNode(scene->mRootNode, scene, aiMatrix4x4());
 	m_animationController.precalculate(m_meshes);
+	this->textID = Material::loadTexture(textPath);
 }
 
 Model_Anim::~Model_Anim()

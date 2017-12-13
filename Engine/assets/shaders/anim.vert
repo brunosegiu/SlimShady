@@ -42,6 +42,8 @@ void main()
 	// totalWeight _should_ be 1, we adjust the position just in case it isn't
 	position /= totalWeight;
 	position.w = 1; // w will problaby have a weird value after all those additions
+	vec4 norm = worldTransform * vec4(normal, 0.0f);
+	normal = norm.xyz;
 	normalize(normal);
 	gl_Position =  worldTransform * position;
 }

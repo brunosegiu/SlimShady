@@ -13,6 +13,7 @@ public:
 	ShaderProgram* shader;
 	int sizeX, sizeY, density, vertexCount;
 	glm::mat4 modelMatrix, viewMatrix, projMatrix;
+	glm::vec3 l1, i1, l2, i2;
 	float time;
 	glm::vec3 vEyePosition;
 public:

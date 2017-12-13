@@ -109,6 +109,9 @@
     <ClCompile Include="Grass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -231,6 +234,9 @@
     <ClInclude Include="Grass.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -305,6 +311,15 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\rain.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\grass.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\grass.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\grass.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
